@@ -40,3 +40,7 @@ class StationTest(unittest.TestCase):
                         "password": "threezinedine"
                     }
                 )
+
+        user = self.user_controller.get_user_by_name(username="threezinedine")
+        assert user.username == "threezinedine"
+        assert user.userId == 1
