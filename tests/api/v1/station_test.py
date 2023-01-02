@@ -23,3 +23,9 @@ class StationTest(unittest.TestCase):
                 )
 
         assert response.status_code == 200
+
+        response_user_info = response.json()
+        self.assertDictEqual(response_user_info, {
+                "userId": 1,
+                "username": "threezinedine"
+            })
