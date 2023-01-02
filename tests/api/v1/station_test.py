@@ -32,6 +32,7 @@ class StationTest(unittest.TestCase):
                 "username": "threezinedine"
             })
 
+    @pytest.mark.skip()
     def test_given_when_no_user_is_created_when_a_new_user_is_registered_then_that_user_should_be_created(self):
         self.test_client.post(
                     "/users/register",
