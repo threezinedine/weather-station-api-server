@@ -7,3 +7,12 @@ class RegisterOrLoginUserInfo(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class RegisterResponseUserInfo(BaseModel):
+    userId: int
+    username: str 
+
+    class Config:
+        orm_mode = True
+    
