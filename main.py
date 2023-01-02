@@ -2,8 +2,11 @@ from fastapi import FastAPI
 from dotenv import load_dotenv
 import os
 
+from app.api.v1 import users
 
 app = FastAPI()
+
+app.include_router(users.router)
 
 
 if __name__ == "__main__":
