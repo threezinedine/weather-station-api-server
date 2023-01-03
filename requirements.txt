@@ -22,6 +22,7 @@ msgpack==1.0.4
 orjson==3.8.3
 packaging==22.0
 parso==0.8.3
+passlib==1.7.4
 pluggy==1.0.0
 pydantic==1.10.2
 pynvim==0.4.3
