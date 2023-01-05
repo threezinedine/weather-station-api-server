@@ -21,4 +21,4 @@ class UserController:
         self.session.commit()
 
     def get_all_users(self) -> List[User]:
-        return []
+        return self.session.query(User).all()
