@@ -70,8 +70,8 @@ class UserControllerTest(unittest.TestCase):
         self.user_controller.create_new_user(username=self.testing_username, password=self.testing_password)
         self.user_controller.create_new_user(username="threezinedineadasdf", password="daffasdgasd")
 
-        first_user = self.user_controller.get_user_by_id(id=1)
-        second_user = self.user_controller.get_user_by_id(id=2)
+        first_user = self.user_controller.get_user_by_id(1)
+        second_user = self.user_controller.get_user_by_id(2)
 
         self.assertUser(first_user, self.testing_username, self.testing_password)
         self.assertUser(second_user, "threezinedineadasdf", "daffasdgasd")
