@@ -14,12 +14,11 @@ class UserController:
     def get_user_by_name(self, username: str) -> Union[User, None]:
         return self.session.query(User).filter(User.username == username).first()
 
-    def get_user_by_id(self, userId:int) -> User:
+    def get_user_by_id(self, userId:int) -> Union[User, None]:
         return self.session.query(User).filter(User.userId == userId).first()
 
     def create_new_user(self, username: str, password: str) -> bool:
         result = False
-
         user = self.get_user_by_name(username=username)
 
         if user is None:
