@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from typing import (
     Union,
+    List,
 )
 
 from database.models import User
@@ -18,3 +19,6 @@ class UserController:
 
         self.session.add(user)
         self.session.commit()
+
+    def get_all_users(self) -> List[User]:
+        return []
