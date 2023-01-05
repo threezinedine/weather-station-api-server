@@ -10,6 +10,7 @@ from tests import get_testing_session
 class UserControllerTest(unittest.TestCase):
     testing_username = "threezinedine"
     testing_password = "threezinedine1"
+    wrong_testing_username = "threezinedine2"
 
     def setUp(self):
         self.session = next(get_testing_session())
@@ -31,3 +32,10 @@ class UserControllerTest(unittest.TestCase):
 
         assert user.username == self.testing_username
         assert user.is_match(self.testing_password)
+
+    def test_given_a_user_is_created_when_asking_the_wrong_user_then_returns_False(self):
+        self.user_controller.create_new_user(username=self.testing_username, password=self.testing_password)
+
+        user = self.user_controller.get_user_by_name(username=self.wrong_testing_username)
+
+        assert user is None
