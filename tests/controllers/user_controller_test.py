@@ -66,3 +66,12 @@ class UserControllerTest(unittest.TestCase):
         users = self.user_controller.get_all_users()
         assert len(users) == 1
 
+    def test_given_two_user_is_created_when_asking_by_id_that_is_existed_then_returns_correct_user(self):
+        self.user_controller.create_new_user(username=self.testing_username, password=self.testing_password)
+        self.user_controller.create_new_user(username="threezinedineadasdf", password="daffasdgasd")
+
+        first_user = self.user_controller.get_user_by_id(id=1)
+        second_user = self.user_controller.get_user_by_id(id=2)
+
+        self.assertUser(first_user, self.testing_username, self.testing_password)
+        self.assertUser(second_user, "threezinedineadasdf", "daffasdgasd")
