@@ -21,6 +21,10 @@ class UserControllerTest(unittest.TestCase):
         self.session.commit()
         self.session.close()
 
+    def assertUser(self, user: User, username: str, password: str) -> None:
+        assert user.username == username
+        assert user.is_match(password)
+
     def test_given_no_user_is_created_when_controller_get_a_user_by_name_then_receives_None(self):
         user = self.user_controller.get_user_by_name(username=self.testing_username)
         assert user is None
@@ -30,8 +34,7 @@ class UserControllerTest(unittest.TestCase):
 
         user = self.user_controller.get_user_by_name(username=self.testing_username)
 
-        assert user.username == self.testing_username
-        assert user.is_match(self.testing_password)
+        self.assertUser(user, self.testing_username, self.testing_password)
 
     def test_given_a_user_is_created_when_asking_the_wrong_user_then_returns_False(self):
         self.user_controller.create_new_user(username=self.testing_username, password=self.testing_password)
@@ -51,5 +54,4 @@ class UserControllerTest(unittest.TestCase):
         users = self.user_controller.get_all_users()
 
         assert len(users) == 1
-        assert users[0].username == self.testing_username
-        assert users[0].is_match(self.testing_password)
+        self.assertUser(users[0], self.testing_username, self.testing_password)
