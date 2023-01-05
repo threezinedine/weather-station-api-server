@@ -39,3 +39,8 @@ class UserControllerTest(unittest.TestCase):
         user = self.user_controller.get_user_by_name(username=self.wrong_testing_username)
 
         assert user is None
+        
+    def test_given_no_user_is_created_when_asking_all_users_then_returns_an_empty_string(self):
+        users = self.user_controller.get_all_users()
+
+        self.assertListEqual(users, [])
