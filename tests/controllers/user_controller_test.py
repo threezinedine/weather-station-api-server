@@ -3,14 +3,18 @@ import pytest
 
 from app.controllers import UserController
 from database.connection import get_db
+from database.models import User
+from tests import get_testing_session
 
 
 class UserControllerTest(unittest.TestCase):
     def setUp(self):
-        self.session = next(get_db())
+        self.session = next(get_testing_session())
         self.user_controller = UserController(self.session)
 
     def tearDown(self):
+        self.session.query(User).delete()
+        self.session.commit()
         self.session.close()
 
     def test_given_no_user_is_created_when_controller_get_a_user_by_name_then_receives_None(self):

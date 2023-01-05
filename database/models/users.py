@@ -25,8 +25,9 @@ class User(Base):
     def __repr__(self) -> str:
         return f"<User username={self.username}>"
 
-    def _encode_the_password(password: str) -> str:
+    def _encode_the_password(self, password: str) -> str:
         return pbkdf2_sha256.hash(password)
 
     def is_match(self, password: str) -> bool:
-        return pbkdf2_sha256.verify(self.password, password)
+        print(password)
+        return pbkdf2_sha256.verify(password, self.password)
