@@ -44,3 +44,12 @@ class UserControllerTest(unittest.TestCase):
         users = self.user_controller.get_all_users()
 
         self.assertListEqual(users, [])
+
+    def test_given_a_user_is_created_when_asking_all_users_then_returns_the_list_contains_that_user(self):
+        self.user_controller.create_new_user(username=self.testing_username, password=self.testing_password)
+
+        users = self.user_controller.get_all_users()
+
+        assert len(users) == 1
+        assert users[0].username == self.testing_username
+        assert users[0].is_match(self.testing_password)
