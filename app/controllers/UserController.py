@@ -12,6 +12,8 @@ from app.exceptions import (
     DETAIL_KEY,
     USERNAME_DOES_NOT_EXISTED_DETAIL,
     USERNAME_DOES_NOT_EXISTED_STATUS_CODE,
+    USERNAME_EXISTED_DETAIL,
+    USERNAME_EXISTED_STATUS_CODE,
     HTTP_200_OK,
 )
 
@@ -42,8 +44,8 @@ class UserController:
         new_user = None
 
         if user is not None:
-            status[STATUS_CODE_KEY] = 409
-            status[DETAIL_KEY] = "The username existed."
+            status[STATUS_CODE_KEY] = USERNAME_EXISTED_STATUS_CODE
+            status[DETAIL_KEY] = USERNAME_EXISTED_DETAIL
         else:
             new_user = User(username, password)
 

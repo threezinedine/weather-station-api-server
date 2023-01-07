@@ -10,6 +10,8 @@ from app.exceptions import (
     DETAIL_KEY,
     USERNAME_DOES_NOT_EXISTED_DETAIL,
     USERNAME_DOES_NOT_EXISTED_STATUS_CODE,
+    USERNAME_EXISTED_DETAIL,
+    USERNAME_EXISTED_STATUS_CODE,
     HTTP_200_OK,
 )
 
@@ -89,8 +91,8 @@ class UserControllerTest(unittest.TestCase):
 
         status, user = self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_new_user_password)
 
-        assert status[STATUS_CODE_KEY] == 409
-        assert status[DETAIL_KEY] == "The username existed."
+        assert status[STATUS_CODE_KEY] == USERNAME_EXISTED_STATUS_CODE
+        assert status[DETAIL_KEY] == USERNAME_EXISTED_DETAIL
         assert user is None
         _, users = self.user_controller.get_all_users()
         assert len(users) == 1
