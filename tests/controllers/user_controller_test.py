@@ -58,12 +58,13 @@ class UserControllerTest(unittest.TestCase):
         assert status[DETAIL_KEY] is None
         self.assertUser(user, username=self.first_testing_username, password=self.testing_password)
 
-    @unittest.skip("")
-    def test_given_a_user_is_created_when_asking_the_wrong_user_then_returns_None(self):
+    def test_given_a_user_is_created_when_asking_the_wrong_user_then_returns_username_does_not_exist_and_none(self):
         self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_password)
 
-        user = self.user_controller.get_user_by_name(username=self.wrong_first_testing_username)
+        status, user = self.user_controller.get_user_by_name(username=self.wrong_first_testing_username)
 
+        assert status[STATUS_CODE_KEY] == USERNAME_DOES_NOT_EXISTED_STATUS_CODE
+        assert status[DETAIL_KEY] == USERNAME_DOES_NOT_EXISTED_DETAIL
         assert user is None
         
     @unittest.skip("")
