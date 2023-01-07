@@ -222,3 +222,17 @@ class UserControllerTest(unittest.TestCase):
         _, remain_users = self.user_controller.get_all_users()
         assert len(remain_users) == 1
         self.assertUser(remain_users[0], self.second_first_testing_username, self.second_testing_password)
+
+    def test_given_two_user_are_created_when_deleting_user_by_invalid_username_then_returns_username_does_not_existed_exception_and_none(self):
+        self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_password)
+        self.user_controller.create_new_user(username=self.second_first_testing_username, password=self.second_testing_password)
+
+        status, user = self.user_controller.delete_user_by_username(self.wrong_first_testing_username)
+
+        self.assertStatus(status, USERNAME_DOES_NOT_EXISTED_STATUS_CODE, USERID_DOES_NOT_EXISTED_DETAIL)
+        assert user is None
+
+        _, remain_users = self.user_controller.get_all_users()
+        assert len(remain_users) == 2
+        self.assertUser(remain_users[0], self.first_testing_username, self.testing_password)
+        self.assertUser(remain_users[1], self.second_first_testing_username, self.second_testing_password)
