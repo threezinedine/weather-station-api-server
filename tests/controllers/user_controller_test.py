@@ -1,5 +1,9 @@
 import unittest
 import pytest 
+from typing import (
+    Dict,
+    Union,
+)
 
 from app.controllers import UserController
 from database.connection import get_db
@@ -33,6 +37,10 @@ class UserControllerTest(unittest.TestCase):
         self.session.commit()
         self.session.close()
 
+    def assertStatus(self, status: Dict[str, Union[int, Union[str, None]]], status_code: int, status_detail: Union[str, None] = None):
+        assert status[STATUS_CODE_KEY] == status_code
+        assert status[DETAIL_KEY] == status_detail
+
     def assertUser(self, user: User, username: str, password: str) -> None:
         assert user.username == username
         assert user.is_match(password)
@@ -40,15 +48,13 @@ class UserControllerTest(unittest.TestCase):
     def test_given_no_user_is_created_when_controller_get_a_user_by_name_then_receives_username_does_not_exist_and_None(self):
         status, user = self.user_controller.get_user_by_name(username=self.first_testing_username)
 
-        assert status[STATUS_CODE_KEY] == USERNAME_DOES_NOT_EXISTED_STATUS_CODE
-        assert status[DETAIL_KEY] == USERNAME_DOES_NOT_EXISTED_DETAIL
+        self.assertStatus(status, USERNAME_DOES_NOT_EXISTED_STATUS_CODE, USERNAME_DOES_NOT_EXISTED_DETAIL)
         assert user is None
 
     def test_given_no_user_is_created_when_create_a_new_user_then_return_ok_and_None(self):
         status, user = self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_password)
 
-        assert status[STATUS_CODE_KEY] == HTTP_200_OK
-        assert status[DETAIL_KEY] is None
+        self.assertStatus(status, HTTP_200_OK)
         self.assertUser(user, self.first_testing_username, self.testing_password)
         
     def test_given_a_user_is_created_when_querying_user_by_username_then_that_returns_ok_and_that_user(self):
@@ -56,8 +62,7 @@ class UserControllerTest(unittest.TestCase):
 
         status, user = self.user_controller.get_user_by_name(username=self.first_testing_username)
 
-        assert status[STATUS_CODE_KEY] == HTTP_200_OK
-        assert status[DETAIL_KEY] is None
+        self.assertStatus(status, HTTP_200_OK)
         self.assertUser(user, username=self.first_testing_username, password=self.testing_password)
 
     def test_given_a_user_is_created_when_asking_the_wrong_user_then_returns_username_does_not_exist_and_none(self):
@@ -65,15 +70,13 @@ class UserControllerTest(unittest.TestCase):
 
         status, user = self.user_controller.get_user_by_name(username=self.wrong_first_testing_username)
 
-        assert status[STATUS_CODE_KEY] == USERNAME_DOES_NOT_EXISTED_STATUS_CODE
-        assert status[DETAIL_KEY] == USERNAME_DOES_NOT_EXISTED_DETAIL
+        self.assertStatus(status, USERNAME_DOES_NOT_EXISTED_STATUS_CODE, USERNAME_DOES_NOT_EXISTED_DETAIL)
         assert user is None
         
     def test_given_no_user_is_created_when_asking_all_users_then_returns_an_empty_string(self):
         status, users = self.user_controller.get_all_users()
 
-        assert status[STATUS_CODE_KEY] == HTTP_200_OK
-        assert status[DETAIL_KEY] is None
+        self.assertStatus(status, HTTP_200_OK)
         self.assertListEqual(users, [])
 
     def test_given_a_user_is_created_when_asking_all_users_then_returns_the_list_contains_that_user(self):
@@ -81,8 +84,7 @@ class UserControllerTest(unittest.TestCase):
 
         status, users = self.user_controller.get_all_users()
 
-        assert status[STATUS_CODE_KEY] == HTTP_200_OK
-        assert status[DETAIL_KEY] is None
+        self.assertStatus(status, HTTP_200_OK)
         assert len(users) == 1
         self.assertUser(users[0], self.first_testing_username, self.testing_password)
 
@@ -91,23 +93,20 @@ class UserControllerTest(unittest.TestCase):
 
         status, user = self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_new_user_password)
 
-        assert status[STATUS_CODE_KEY] == USERNAME_EXISTED_STATUS_CODE
-        assert status[DETAIL_KEY] == USERNAME_EXISTED_DETAIL
+        self.assertStatus(status, USERNAME_EXISTED_STATUS_CODE, USERNAME_EXISTED_DETAIL)
         assert user is None
         _, users = self.user_controller.get_all_users()
         assert len(users) == 1
 
-    def test_given_two_users_are_created_when_asking_by_id_that_is_existed_then_returns_correct_user(self):
+    def test_given_two_users_are_created_when_asking_by_id_that_is_existed_then_returns_ok_and_user(self):
         self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_password)
         self.user_controller.create_new_user(username=self.second_first_testing_username, password=self.second_testing_password)
 
         first_status, first_user = self.user_controller.get_user_by_id(1)
         second_status, second_user = self.user_controller.get_user_by_id(2)
 
-        assert first_status[STATUS_CODE_KEY] == HTTP_200_OK
-        assert first_status[DETAIL_KEY] is None
-        assert second_status[STATUS_CODE_KEY] == HTTP_200_OK
-        assert second_status[DETAIL_KEY] is None
+        self.assertStatus(first_status, HTTP_200_OK)
+        self.assertStatus(second_status, HTTP_200_OK)
 
         self.assertUser(first_user, self.first_testing_username, self.testing_password)
         self.assertUser(second_user, self.second_first_testing_username, self.second_testing_password)
