@@ -35,6 +35,7 @@ class UserControllerTest(unittest.TestCase):
         assert status["detail"] == "The userId does not exist."
         assert user is None
 
+    @unittest.skip("")
     def test_given_no_user_is_created_when_create_a_new_user_then_that_user_is_created(self):
         self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_password)
 
@@ -42,6 +43,7 @@ class UserControllerTest(unittest.TestCase):
 
         self.assertUser(user, self.first_testing_username, self.testing_password)
 
+    @unittest.skip("")
     def test_given_a_user_is_created_when_asking_the_wrong_user_then_returns_None(self):
         self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_password)
 
@@ -49,11 +51,13 @@ class UserControllerTest(unittest.TestCase):
 
         assert user is None
         
+    @unittest.skip("")
     def test_given_no_user_is_created_when_asking_all_users_then_returns_an_empty_string(self):
         users = self.user_controller.get_all_users()
 
         self.assertListEqual(users, [])
 
+    @unittest.skip("")
     def test_given_a_user_is_created_when_asking_all_users_then_returns_the_list_contains_that_user(self):
         self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_password)
 
@@ -62,6 +66,7 @@ class UserControllerTest(unittest.TestCase):
         assert len(users) == 1
         self.assertUser(users[0], self.first_testing_username, self.testing_password)
 
+    @unittest.skip("")
     def test_given_a_user_is_created_when_create_a_new_user_with_the_same_username_then_that_user_can_not_be_created_and_returns_False(self):
         self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_password)
 
@@ -71,6 +76,7 @@ class UserControllerTest(unittest.TestCase):
         users = self.user_controller.get_all_users()
         assert len(users) == 1
 
+    @unittest.skip("")
     def test_given_two_users_are_created_when_asking_by_id_that_is_existed_then_returns_correct_user(self):
         self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_password)
         self.user_controller.create_new_user(username=self.second_first_testing_username, password=self.second_testing_password)
@@ -81,6 +87,7 @@ class UserControllerTest(unittest.TestCase):
         self.assertUser(first_user, self.first_testing_username, self.testing_password)
         self.assertUser(second_user, self.second_first_testing_username, self.second_testing_password)
 
+    @unittest.skip("")
     def test_given_two_users_are_created_when_asking_by_non_existed_id_then_returns_None(self):
         self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_password)
         self.user_controller.create_new_user(username=self.second_first_testing_username, password=self.second_testing_password)

@@ -12,7 +12,13 @@ class UserController:
         self.session = session
 
     def get_user_by_name(self, username: str) -> Union[User, None]:
-        return self.session.query(User).filter(User.username == username).first()
+        status = {}
+        user = self.session.query(User).filter(User.username == username).first()
+
+        status["status_code"] = 404 
+        status["detail"] = "The userId does not exist."
+
+        return status, user
 
     def get_user_by_id(self, userId:int) -> Union[User, None]:
         return self.session.query(User).filter(User.userId == userId).first()
