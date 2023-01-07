@@ -38,14 +38,22 @@ class UserController:
 
     def create_new_user(self, username: str, password: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], User]:
         status = {}
-        user = User(username, password)
+        _, user = self.get_user_by_name(username=username)
+        new_user = None
 
-        status[STATUS_CODE_KEY] = HTTP_200_OK 
-        status[DETAIL_KEY] = None
-        self.session.add(user)
-        self.session.commit()
+        if user is not None:
+            status[STATUS_CODE_KEY] = 409
+            status[DETAIL_KEY] = "The username existed."
+        else:
+            new_user = User(username, password)
 
-        return status, user
+            status[STATUS_CODE_KEY] = HTTP_200_OK 
+            status[DETAIL_KEY] = None
+
+            self.session.add(new_user)
+            self.session.commit()
+
+        return status, new_user
 
     def get_all_users(self) -> Tuple[Dict[str, Union[int, Union[str, None]]], List[User]]:
         return {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}, self.session.query(User).all()
