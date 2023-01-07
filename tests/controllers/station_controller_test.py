@@ -124,3 +124,12 @@ class StationControllerTest(unittest.TestCase):
 
         assertStatus(status, HTTP_200_OK)
         self.assertListEqual(stations, [])
+
+    def test_given_a_station_is_created_and_a_user_is_created_when_the_relationship_is_created_then_returns_ok_and_station(self):
+        self.station_controller.create_new_station(self.test_station_name, self.test_station_position)
+        self.user_controller.create_new_user(username="threezinedine", password="threezinedine")
+
+        staus, station = self.station_controller.add_username(username="threezinedine")
+
+        assertStatus(status, HTTP_200_OK)
+        assertStation(stations, self.test_station_name, self.test_station_position)
