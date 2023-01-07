@@ -197,3 +197,12 @@ class UserControllerTest(unittest.TestCase):
         self.assertUser(user, self.testing_changed_username, self.testing_changed_password)
         _, modified_user = self.user_controller.get_user_by_name(self.testing_changed_username)
         self.assertUser(modified_user, self.testing_changed_username, self.testing_changed_password)
+
+    def test_given_two_users_are_created_when_delete_all_users_then_returns_ok_and_None(self):
+        self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_password)
+        self.user_controller.create_new_user(username=self.second_first_testing_username, password=self.second_testing_password)
+
+        status, user = self.user_controller.delete_all_users()
+
+        self.assertStatus(status, HTTP_200_OK)
+        assert user is None
