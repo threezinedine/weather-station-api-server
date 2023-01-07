@@ -85,6 +85,28 @@ class UserController:
 
         return status, user 
 
+    def _change_username(self, user: User, status: Dict[str, Union[int, Union[str, None]]], username: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], User]:
+        if username is not None:
+            _, user_with_username = self.get_user_by_name(username)
+
+            if user_with_username is None:
+                user.username = username
+                self.session.commit()
+                result = True
+            else:
+                status[STATUS_CODE_KEY] = USERNAME_EXISTED_STATUS_CODE
+                status[DETAIL_KEY] = USERNAME_EXISTED_DETAIL
+                user = None
+
+        return status, user
+
+    def _change_password(self, user: User, status: Dict[str, Union[int, Union[str, None]]], password: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], User]:
+        if password is not None:
+            user.set_new_password(password)
+            self.session.commit()
+
+        return status, user
+
     def change_user(self, username: str, new_username: str = None, new_password: str = None) -> Tuple[Dict[str, Union[int, Union[str, None]]], User]:
         status = {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}
         _, user = self.get_user_by_name(username=username)
@@ -93,17 +115,7 @@ class UserController:
             status[STATUS_CODE_KEY] = USERNAME_DOES_NOT_EXISTED_STATUS_CODE
             status[DETAIL_KEY] = USERNAME_DOES_NOT_EXISTED_DETAIL
         else:
-            if new_username is not None:
-                _, user_with_new_username = self.get_user_by_name(username=new_username)
-                if user_with_new_username is None:
-                    user.username = new_username
-                    self.session.commit()
-                else:
-                    status[STATUS_CODE_KEY] = USERNAME_EXISTED_STATUS_CODE
-                    status[DETAIL_KEY] = USERNAME_EXISTED_DETAIL
-                    user = None
-            elif new_password is not None:
-                user.set_new_password(new_password)
-                self.session.commit()
+            status, user = self._change_username(user, status, new_username)
+            status, user = self._change_password(user, status, new_password)
 
         return status, user
