@@ -83,3 +83,11 @@ class StationControllerTest(unittest.TestCase):
 
         assertStatus(status, STATION_DOES_NOT_EXIST_STATUS_CODE, STATION_DOES_NOT_EXIST_DETAIL)
         assert station is None
+
+    def test_given_a_station_is_created_when_creating_a_new_station_with_the_existed_station_name_then_returns_station_exist_and_none(self):
+        self.station_controller.create_new_station(self.test_station_name, self.test_station_position)
+
+        status, station = self.station_controller.create_new_station(self.wrong_testing_station_name, self.test_station_position)
+
+        assertStatus(status, 409, "The station exists.")
+        assert station is None
