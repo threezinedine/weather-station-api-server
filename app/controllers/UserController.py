@@ -48,4 +48,4 @@ class UserController:
         return status, user
 
     def get_all_users(self) -> List[User]:
-        return self.session.query(User).all()
+        return {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}, self.session.query(User).all()
