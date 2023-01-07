@@ -24,3 +24,7 @@ class StationController:
 
     def get_all_stations(self) -> Tuple[Dict[str, Union[int, Union[str, None]]], List[Station]]:
         return {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}, []
+
+    def create_new_station(self, stationName: str, stationPosition: str, pushingDataIntervalInSeconds: int = 5) -> Tuple[Dict[str, Union[int, Union[str, None]]], Station]:
+        station = Station(stationName=stationName, stationPosition=stationPosition, pushingDataIntervalInSeconds=pushingDataIntervalInSeconds)
+        return {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}, station
