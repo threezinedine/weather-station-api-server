@@ -97,13 +97,17 @@ class UserControllerTest(unittest.TestCase):
         _, users = self.user_controller.get_all_users()
         assert len(users) == 1
 
-    @unittest.skip("")
     def test_given_two_users_are_created_when_asking_by_id_that_is_existed_then_returns_correct_user(self):
         self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_password)
         self.user_controller.create_new_user(username=self.second_first_testing_username, password=self.second_testing_password)
 
-        first_user = self.user_controller.get_user_by_id(1)
-        second_user = self.user_controller.get_user_by_id(2)
+        first_status, first_user = self.user_controller.get_user_by_id(1)
+        second_status, second_user = self.user_controller.get_user_by_id(2)
+
+        assert first_status[STATUS_CODE_KEY] == HTTP_200_OK
+        assert first_status[DETAIL_KEY] is None
+        assert second_status[STATUS_CODE_KEY] == HTTP_200_OK
+        assert second_status[DETAIL_KEY] is None
 
         self.assertUser(first_user, self.first_testing_username, self.testing_password)
         self.assertUser(second_user, self.second_first_testing_username, self.second_testing_password)
