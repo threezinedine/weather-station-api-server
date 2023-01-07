@@ -1,4 +1,8 @@
 import unittest
+from typing import (
+    Dict,
+    Union,
+)
 
 from database.models import (
     User,
@@ -9,6 +13,11 @@ from app.controllers import (
 )
 from tests import (
     get_testing_session,
+)
+from app.exceptions import (
+    STATUS_CODE_KEY,
+    DETAIL_KEY,
+    HTTP_200_OK,
 )
 
 
@@ -24,4 +33,9 @@ class StationControllerTest(unittest.TestCase):
         self.session.close()
 
     def test_given_no_user_is_created_when_querying_all_stations_then_returns_ok_and_empty_array(self):
-        pass
+        status, stations = self.station_controller.get_all_stations()
+
+        assert status[STATUS_CODE_KEY] == HTTP_200_OK
+        assert status[DETAIL_KEY] is None
+
+        self.assertListEqual(stations, [])
