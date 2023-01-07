@@ -111,11 +111,11 @@ class UserControllerTest(unittest.TestCase):
         self.assertUser(first_user, self.first_testing_username, self.testing_password)
         self.assertUser(second_user, self.second_first_testing_username, self.second_testing_password)
 
-    @unittest.skip("")
-    def test_given_two_users_are_created_when_asking_by_non_existed_id_then_returns_None(self):
+    def test_given_two_users_are_created_when_asking_by_non_existed_id_then_returns_username_is_not_existed_and_none(self):
         self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_password)
         self.user_controller.create_new_user(username=self.second_first_testing_username, password=self.second_testing_password)
 
-        non_existed_user = self.user_controller.get_user_by_id(3)
+        status, user = self.user_controller.get_user_by_id(3)
 
+        self.assertStatus(status, USERNAME_DOES_NOT_EXISTED_STATUS_CODE, USERNAME_DOES_NOT_EXISTED_DETAIL)
         assert non_existed_user is None
