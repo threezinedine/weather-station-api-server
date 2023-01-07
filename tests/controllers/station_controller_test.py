@@ -28,6 +28,7 @@ from tests.controllers import (
 class StationControllerTest(unittest.TestCase):
     test_station_name = "Ha Noi"
     test_station_position = "Dong Da, Ha Noi"
+    wrong_testing_station_name = "HA Noi"
 
     def setUp(self):
         self.session = next(get_testing_session())
@@ -72,3 +73,11 @@ class StationControllerTest(unittest.TestCase):
 
         assertStatus(status, HTTP_200_OK)
         assertStation(station, self.test_station_name, self.test_station_position)
+
+    def test_given_a_station_is_created_when_querying_station_by_non_existed_station_name_then_returns_station_does_not_exist_and_none(self):
+        self.station_controller.create_new_station(self.test_station_name, self.test_station_position)
+
+        status, station = self.station_controller.get_station_by_station_name(stationName=self.wrong_testing_station_name)
+
+        assertStatus(status, 404, "The station does not exist.")
+        assert station is None
