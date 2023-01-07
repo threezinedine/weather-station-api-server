@@ -17,6 +17,8 @@ from app.exceptions import (
     USERID_DOES_NOT_EXISTED_STATUS_CODE,
     USERID_DOES_NOT_EXISTED_DETAIL,
     HTTP_200_OK,
+    WRONG_PASSWORD_DETAIL,
+    WRONG_PASSWORD_STATUS_CODE,
 )
 
 
@@ -76,5 +78,9 @@ class UserController:
         if user is None:
             status[STATUS_CODE_KEY] = USERNAME_DOES_NOT_EXISTED_STATUS_CODE
             status[DETAIL_KEY] = USERNAME_DOES_NOT_EXISTED_DETAIL
+        elif user is not None and not user.is_match(password):
+            status[STATUS_CODE_KEY] = WRONG_PASSWORD_STATUS_CODE
+            status[DETAIL_KEY] = WRONG_PASSWORD_DETAIL
+            user = None
 
         return status, user 

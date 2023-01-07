@@ -29,5 +29,4 @@ class User(Base):
         return pbkdf2_sha256.hash(password)
 
     def is_match(self, password: str) -> bool:
-        print(password)
         return pbkdf2_sha256.verify(password, self.password)
