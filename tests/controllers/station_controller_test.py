@@ -10,6 +10,7 @@ from database.models import (
 )
 from app.controllers import (
     StationController,
+    UserController,
 )
 from tests import (
     get_testing_session,
@@ -35,6 +36,7 @@ class StationControllerTest(unittest.TestCase):
     def setUp(self):
         self.session = next(get_testing_session())
         self.station_controller = StationController(self.session)
+        self.user_controller = UserController(self.session)
 
     def tearDown(self):
         self.session.query(User).delete()
@@ -113,3 +115,12 @@ class StationControllerTest(unittest.TestCase):
 
         assertStatus(status, STATION_DOES_NOT_EXIST_STATUS_CODE, STATION_DOES_NOT_EXIST_DETAIL)
         assert station is None
+
+    def test_given_a_station_is_created_and_a_user_is_created_without_any_relationship_when_querying_all_stations_by_username_then_returns_ok_and_stations_array(self):
+        self.station_controller.create_new_station(self.test_station_name, self.test_station_position)
+        self.user_controller.create_new_user(username="threezinedine", password="threezinedine")
+
+        status, stations = self.station_controller.get_station_by_username(username="threezinedine")
+
+        assertStatus(status, HTTP_200_OK)
+        self.assertListEqual(stations, [])
