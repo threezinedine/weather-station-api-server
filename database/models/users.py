@@ -4,10 +4,12 @@ from sqlalchemy import (
     String,
     DateTime,
 )
+from sqlalchemy.orm import relationship
 from passlib.hash import pbkdf2_sha256
 from datetime import datetime
 
 from database.base import Base
+from database.models.stations_users import StationUser
 
 
 class User(Base):
@@ -17,6 +19,8 @@ class User(Base):
     username = Column(String(length=50), unique=True)
     password = Column(String(length=100))
     lastLoginTime = Column(DateTime, default=datetime.utcnow())
+
+    stations = relationship("Station", secondary="stations_users")
 
     def __init__(self, username: str, password: str):
         self.username = username

@@ -4,8 +4,10 @@ from sqlalchemy import (
     Integer,
     String,
 )
+from sqlalchemy.orm import relationship
 
 from database.base import Base
+from database.models.stations_users import StationUser
 
 
 class Station(Base):
@@ -24,6 +26,8 @@ class Station(Base):
         self.stationPosition = stationPosition
         self.stationKey = self.__generate_the_station_key()
         self.pushingDataIntervalInSeconds = pushingDataIntervalInSeconds
+
+        users = relationship("User", secondary="stations_users")
 
     def __generate_the_station_key(self, secret_key_length: int = 100) -> str:
         return secrets.token_urlsafe(secret_key_length)
