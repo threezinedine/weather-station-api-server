@@ -18,6 +18,8 @@ from app.exceptions import (
     STATUS_CODE_KEY,
     DETAIL_KEY,
     HTTP_200_OK,
+    STATION_DOES_NOT_EXIST_DETAIL,
+    STATION_DOES_NOT_EXIST_STATUS_CODE,
 )
 from tests.controllers import (
     assertStatus,
@@ -79,5 +81,5 @@ class StationControllerTest(unittest.TestCase):
 
         status, station = self.station_controller.get_station_by_station_name(stationName=self.wrong_testing_station_name)
 
-        assertStatus(status, 404, "The station does not exist.")
+        assertStatus(status, STATION_DOES_NOT_EXIST_STATUS_CODE, STATION_DOES_NOT_EXIST_DETAIL)
         assert station is None
