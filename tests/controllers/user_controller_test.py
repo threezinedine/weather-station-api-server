@@ -147,3 +147,10 @@ class UserControllerTest(unittest.TestCase):
 
         self.assertStatus(status, WRONG_PASSWORD_STATUS_CODE, WRONG_PASSWORD_DETAIL)
         assert user is None
+
+    def test_given_no_user_is_created_when_change_the_name_of_non_existed_username_then_returns_user_does_not_existed_exception_and_none(self):
+        self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_new_user_password)
+        status, user = self.user_controller.change_user_username(self, username=self.wrong_first_testing_username, new_username="thethao")
+
+        self.assertStatus(status, USERNAME_DOES_NOT_EXISTED_STATUS_CODE, USERNAME_DOES_NOT_EXISTED_DETAIL)
+        assert user is None
