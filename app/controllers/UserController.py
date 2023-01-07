@@ -86,4 +86,14 @@ class UserController:
         return status, user 
 
     def change_user(self, username: str, new_username: str = None, new_password: str = None) -> Tuple[Dict[str, Union[int, Union[str, None]]], User]:
-        return {STATUS_CODE_KEY: USERNAME_DOES_NOT_EXISTED_STATUS_CODE, DETAIL_KEY: USERNAME_DOES_NOT_EXISTED_DETAIL}, None
+        status = {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}
+        _, user = self.get_user_by_name(username=username)
+
+        if user is None:
+            status[STATUS_CODE_KEY] = USERNAME_DOES_NOT_EXISTED_STATUS_CODE
+            status[DETAIL_KEY] = USERNAME_DOES_NOT_EXISTED_DETAIL
+        else:
+            user.username = new_username
+            self.session.commit()
+
+        return status, user
