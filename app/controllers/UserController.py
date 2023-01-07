@@ -119,3 +119,8 @@ class UserController:
             status, user = self._change_password(user, status, new_password)
 
         return status, user
+
+    def delete_all_users(self) -> Tuple[Dict[str, Union[int, Union[str, None]]], None]:
+        status = {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}
+
+        return status, None
