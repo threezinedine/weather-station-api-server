@@ -93,7 +93,13 @@ class UserController:
             status[STATUS_CODE_KEY] = USERNAME_DOES_NOT_EXISTED_STATUS_CODE
             status[DETAIL_KEY] = USERNAME_DOES_NOT_EXISTED_DETAIL
         else:
-            user.username = new_username
-            self.session.commit()
+            _, user_with_new_username = self.get_user_by_name(username=new_username)
+            if user_with_new_username is None:
+                user.username = new_username
+                self.session.commit()
+            else:
+                status[STATUS_CODE_KEY] = USERNAME_EXISTED_STATUS_CODE
+                status[DETAIL_KEY] = USERNAME_EXISTED_DETAIL
+                user = None
 
         return status, user
