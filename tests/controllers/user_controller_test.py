@@ -74,12 +74,13 @@ class UserControllerTest(unittest.TestCase):
         assert status[DETAIL_KEY] is None
         self.assertListEqual(users, [])
 
-    @unittest.skip("")
     def test_given_a_user_is_created_when_asking_all_users_then_returns_the_list_contains_that_user(self):
         self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_password)
 
-        users = self.user_controller.get_all_users()
+        status, users = self.user_controller.get_all_users()
 
+        assert status[STATUS_CODE_KEY] == HTTP_200_OK
+        assert status[DETAIL_KEY] is None
         assert len(users) == 1
         self.assertUser(users[0], self.first_testing_username, self.testing_password)
 
