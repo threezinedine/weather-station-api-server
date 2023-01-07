@@ -131,7 +131,13 @@ class UserController:
     def delete_user_by_username(self, username: str) ->Tuple[Dict[str, Union[int, Union[str, None]]], None]:
         status = {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}
 
-        self.session.query(User).filter(User.username == username).delete()
-        self.session.commit()
+        _, user_with_username = self.get_user_by_name(username)
+
+        if user_with_username is None:
+            status[STATUS_CODE_KEY] = USERNAME_DOES_NOT_EXISTED_STATUS_CODE
+            status[DETAIL_KEY] = USERNAME_DOES_NOT_EXISTED_DETAIL
+        else:
+            self.session.delete(user_with_username)
+            self.session.commit()
 
         return status, None

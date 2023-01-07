@@ -229,7 +229,7 @@ class UserControllerTest(unittest.TestCase):
 
         status, user = self.user_controller.delete_user_by_username(self.wrong_first_testing_username)
 
-        self.assertStatus(status, USERNAME_DOES_NOT_EXISTED_STATUS_CODE, USERID_DOES_NOT_EXISTED_DETAIL)
+        self.assertStatus(status, USERNAME_DOES_NOT_EXISTED_STATUS_CODE, USERNAME_DOES_NOT_EXISTED_DETAIL)
         assert user is None
 
         _, remain_users = self.user_controller.get_all_users()
