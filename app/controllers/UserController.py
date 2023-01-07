@@ -104,5 +104,6 @@ class UserController:
                     user = None
             elif new_password is not None:
                 user.set_new_password(new_password)
+                self.session.commit()
 
         return status, user
