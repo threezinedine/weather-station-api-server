@@ -105,3 +105,11 @@ class StationControllerTest(unittest.TestCase):
         assertStation(station, self.test_station_name, self.test_station_position) 
 
         assert oldStationKey != new_station.stationKey
+
+    def test_given_a_station_is_created_when_querying_refresh_the_station_key_of_non_existed_station_then_returns_statin_does_not_exist_and_none(self):
+        self.station_controller.create_new_station(self.test_station_name, self.test_station_position)
+
+        status, station = self.station_controller.reset_station_key(self.wrong_testing_station_name)
+
+        assertStatus(status, STATION_DOES_NOT_EXIST_STATUS_CODE, STATION_DOES_NOT_EXIST_DETAIL)
+        assert station is None
