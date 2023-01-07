@@ -70,4 +70,11 @@ class UserController:
         return {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}, self.session.query(User).all()
 
     def get_user_by_username_and_password(self, username: str, password: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], User]:
-        return {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}, self.session.query(User).filter(User.username == username).first()
+        status = {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}
+        user = self.session.query(User).filter(User.username == username).first()
+
+        if user is None:
+            status[STATUS_CODE_KEY] = USERNAME_DOES_NOT_EXISTED_STATUS_CODE
+            status[DETAIL_KEY] = USERNAME_DOES_NOT_EXISTED_DETAIL
+
+        return status, user 
