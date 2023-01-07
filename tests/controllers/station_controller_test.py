@@ -20,7 +20,8 @@ from app.exceptions import (
     HTTP_200_OK,
 )
 from tests.controllers import (
-    assertStatus
+    assertStatus,
+    assertStation,
 )
 
 
@@ -53,7 +54,7 @@ class StationControllerTest(unittest.TestCase):
         status, station = self.station_controller.create_new_station(stationName=self.test_station_name, stationPosition=self.test_station_position)
 
         assertStatus(status, HTTP_200_OK)
-        self.assertStation(station, self.test_station_name, self.test_station_position)
+        assertStation(station, self.test_station_name, self.test_station_position)
 
     def test_given_a_station_is_created_when_querying_all_stations_then_returns_ok_and_station_list(self):
         self.station_controller.create_new_station(self.test_station_name, self.test_station_position)
@@ -62,4 +63,4 @@ class StationControllerTest(unittest.TestCase):
 
         assertStatus(status, HTTP_200_OK)
         assert len(stations) == 1
-        self.assertStation(stations[0], self.test_station_name, self.test_station_position)
+        assertStation(stations[0], self.test_station_name, self.test_station_position)
