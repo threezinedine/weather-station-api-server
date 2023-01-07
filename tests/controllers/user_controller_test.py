@@ -163,3 +163,12 @@ class UserControllerTest(unittest.TestCase):
         
         self.assertStatus(status, HTTP_200_OK)
         self.assertUser(user, "thethao", self.testing_new_user_password)
+
+    def test_given_two_users_are_created_when_change_the_name_of_the_first_user_with_the_name_of_the_second_user_then_returns_username_existed_and_None(self):
+        self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_password)
+        self.user_controller.create_new_user(username=self.second_first_testing_username, password=self.second_testing_password)
+
+        status, user = self.user_controller.change_user(username=self.first_testing_username, new_username=self.second_first_testing_username)
+
+        self.assertStatus(status, USERNAME_EXISTED_STATUS_CODE, USERNAME_EXISTED_DETAIL)
+        assert user is None
