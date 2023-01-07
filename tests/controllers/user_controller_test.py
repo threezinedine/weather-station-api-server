@@ -41,12 +41,11 @@ class UserControllerTest(unittest.TestCase):
         assert status[DETAIL_KEY] == USERID_DOES_NOT_EXISTED_DETAIL
         assert user is None
 
-    @unittest.skip("")
     def test_given_no_user_is_created_when_create_a_new_user_then_that_user_is_created(self):
-        self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_password)
+        status, user = self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_password)
 
-        user = self.user_controller.get_user_by_name(username=self.first_testing_username)
-
+        assert status[STATUS_CODE_KEY] == 200
+        assert status[DETAIL_KEY] is None
         self.assertUser(user, self.first_testing_username, self.testing_password)
 
     @unittest.skip("")
