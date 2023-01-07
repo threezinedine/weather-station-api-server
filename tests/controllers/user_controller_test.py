@@ -84,14 +84,15 @@ class UserControllerTest(unittest.TestCase):
         assert len(users) == 1
         self.assertUser(users[0], self.first_testing_username, self.testing_password)
 
-    @unittest.skip("")
-    def test_given_a_user_is_created_when_create_a_new_user_with_the_same_username_then_that_user_can_not_be_created_and_returns_False(self):
+    def test_given_a_user_is_created_when_create_a_new_user_with_the_same_username_then_returns_username_existed_and_None(self):
         self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_password)
 
-        result = self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_new_user_password)
+        status, user = self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_new_user_password)
 
-        assert result == False
-        users = self.user_controller.get_all_users()
+        assert status[STATUS_CODE_KEY] == 409
+        assert status[DETAIL_KEY] == "The username existed."
+        assert user is None
+        _, users = self.user_controller.get_all_users()
         assert len(users) == 1
 
     @unittest.skip("")
