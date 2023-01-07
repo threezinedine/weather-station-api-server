@@ -15,6 +15,8 @@ from app.exceptions import (
     HTTP_200_OK,
     DETAIL_KEY,
     STATUS_CODE_KEY,
+    STATION_DOES_NOT_EXIST_STATUS_CODE,
+    STATION_DOES_NOT_EXIST_DETAIL,
 )
 
 
@@ -32,4 +34,11 @@ class StationController:
         return {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}, station
 
     def get_station_by_station_name(self, stationName: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], Union[Station, None]]:
-        return {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}, self.session.query(Station).filter(Station.stationName == stationName).first()
+        status = {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}
+        station = self.session.query(Station).filter(Station.stationName == stationName).first()
+
+        if station is None:
+            status[STATUS_CODE_KEY] = STATION_DOES_NOT_EXIST_STATUS_CODE
+            status[DETAIL_KEY] = STATION_DOES_NOT_EXIST_DETAIL
+
+        return status, station
