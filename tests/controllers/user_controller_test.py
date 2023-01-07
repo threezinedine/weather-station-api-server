@@ -209,3 +209,11 @@ class UserControllerTest(unittest.TestCase):
 
         _, users = self.user_controller.get_all_users()
         self.assertListEqual(users, [])
+
+    def test_given_a_user_is_created_when_deleting_that_user_by_valid_username_then_returns_ok_and_none(self):
+        self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_password)
+
+        status, user = self.user_controller.delete_user_by_username(username)
+
+        self.assertStatus(status, HTTP_200_OK)
+        assert user is None
