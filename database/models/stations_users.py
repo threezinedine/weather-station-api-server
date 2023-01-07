@@ -9,6 +9,9 @@ from sqlalchemy import (
 from database.base import Base
 
 
-StationUser = Table("stations_users", Base.metadata, 
-            Column("userId", Integer, ForeignKey("users.userId")),
-            Column("stationId", Integer, ForeignKey("stations.stationId")))
+class StationUser(Base):
+    __tablename__ = "stations_users"
+
+    id = Column(Integer, primary_key=True)
+    userId = Column(Integer, ForeignKey("users.userId"))
+    stationId = Column(Integer, ForeignKey("stations.stationId"))

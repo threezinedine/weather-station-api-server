@@ -10,6 +10,8 @@ from sqlalchemy.orm import (
 
 from database.models import (
     Station,
+    User,
+    StationUser,
 )
 from app.exceptions import (
     HTTP_200_OK,
@@ -28,6 +30,9 @@ class StationController:
 
     def get_all_stations(self) -> Tuple[Dict[str, Union[int, Union[str, None]]], List[Station]]:
         return {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}, self.session.query(Station).all() 
+
+    def _get_user_by_username(self, username: str) -> Union[User, None]:
+        return self.session.query(User).filter(User.username == username).first()
 
     def create_new_station(self, stationName: str, stationPosition: str, pushingDataIntervalInSeconds: int = 5) -> Tuple[Dict[str, Union[int, Union[str, None]]], Station]:
         status = {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}
@@ -67,12 +72,19 @@ class StationController:
 
     def get_station_by_username(self, username: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], List[Station]]:
         status = {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}
+
+        user = self.session.query(User).filter(User.username == username).first()
         
-        return status, []
+        return status, user.stations
 
     def add_username(self, username: str, stationName: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], Station]:
         status = {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}
 
         _, station = self.get_station_by_station_name(stationName)
+        user = self._get_user_by_username(username)
+
+        association = StationUser(stationId=station.stationId, userId=user.userId)
+        self.session.add(association)
+        self.session.commit()
 
         return status, station

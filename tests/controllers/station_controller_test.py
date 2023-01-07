@@ -7,6 +7,7 @@ from typing import (
 from database.models import (
     User,
     Station,
+    StationUser,
 )
 from app.controllers import (
     StationController,
@@ -41,6 +42,7 @@ class StationControllerTest(unittest.TestCase):
     def tearDown(self):
         self.session.query(User).delete()
         self.session.query(Station).delete()
+        self.session.query(StationUser).delete()
         self.session.commit()
         self.session.close()
 
@@ -138,8 +140,9 @@ class StationControllerTest(unittest.TestCase):
         self.station_controller.create_new_station(self.test_station_name, self.test_station_position)
         self.user_controller.create_new_user(username="threezinedine", password="threezinedine")
 
+        self.station_controller.add_username(username="threezinedine", stationName=self.test_station_name)
         status, stations = self.station_controller.get_station_by_username(username="threezinedine")
 
         assertStatus(status, HTTP_200_OK)
-        assert stations == 1
+        assert len(stations) == 1
         assertStation(stations[0], self.test_station_name, self.test_station_position)
