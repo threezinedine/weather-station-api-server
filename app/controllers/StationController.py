@@ -64,3 +64,8 @@ class StationController:
             status[DETAIL_KEY] = STATION_DOES_NOT_EXIST_DETAIL
 
         return status, station
+
+    def get_station_by_username(self, username: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], List[Station]]:
+        status = {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}
+        
+        return status, []
