@@ -40,7 +40,7 @@ class UserController:
         status = {}
         user = User(username, password)
 
-        status[STATUS_CODE_KEY] = 200 
+        status[STATUS_CODE_KEY] = HTTP_200_OK 
         status[DETAIL_KEY] = None
         self.session.add(user)
         self.session.commit()
