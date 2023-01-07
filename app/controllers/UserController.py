@@ -84,3 +84,6 @@ class UserController:
             user = None
 
         return status, user 
+
+    def change_user(self, username: str, new_username: str = None, new_password: str = None) -> Tuple[Dict[str, Union[int, Union[str, None]]], User]:
+        return {STATUS_CODE_KEY: USERNAME_DOES_NOT_EXISTED_STATUS_CODE, DETAIL_KEY: USERNAME_DOES_NOT_EXISTED_DETAIL}, None
