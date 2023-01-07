@@ -47,7 +47,6 @@ class StationControllerTest(unittest.TestCase):
         status, stations = self.station_controller.get_all_stations()
 
         assertStatus(status, HTTP_200_OK)
-
         self.assertListEqual(stations, [])
 
     def test_given_no_station_is_created_when_creating_new_station_then_returns_ok_and_that_station(self):
@@ -55,3 +54,12 @@ class StationControllerTest(unittest.TestCase):
 
         assertStatus(status, HTTP_200_OK)
         self.assertStation(station, self.test_station_name, self.test_station_position)
+
+    def test_given_a_station_is_created_when_querying_all_stations_then_returns_ok_and_station_list(self):
+        self.station_controller.create_new_station(self.test_station_name, self.test_station_position)
+
+        status, stations = self.station_controller.get_all_stations()
+
+        assertStatus(status, HTTP_200_OK)
+        assert len(stations) == 1
+        self.assertStation(stations[0], self.test_station_name, self.test_station_position)
