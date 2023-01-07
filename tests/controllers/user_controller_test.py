@@ -5,6 +5,12 @@ from app.controllers import UserController
 from database.connection import get_db
 from database.models import User
 from tests import get_testing_session
+from app.exceptions import (
+    STATUS_CODE_KEY,
+    DETAIL_KEY,
+    USERID_DOES_NOT_EXISTED_DETAIL,
+    USERID_DOES_NOT_EXISTED_STATUS_CODE,
+)
 
 
 class UserControllerTest(unittest.TestCase):
@@ -31,8 +37,8 @@ class UserControllerTest(unittest.TestCase):
     def test_given_no_user_is_created_when_controller_get_a_user_by_name_then_receives_None(self):
         status, user = self.user_controller.get_user_by_name(username=self.first_testing_username)
 
-        assert status["status_code"] == 404
-        assert status["detail"] == "The userId does not exist."
+        assert status[STATUS_CODE_KEY] == USERID_DOES_NOT_EXISTED_STATUS_CODE
+        assert status[DETAIL_KEY] == USERID_DOES_NOT_EXISTED_DETAIL
         assert user is None
 
     @unittest.skip("")
