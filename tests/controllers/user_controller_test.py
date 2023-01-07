@@ -29,7 +29,10 @@ class UserControllerTest(unittest.TestCase):
         assert user.is_match(password)
 
     def test_given_no_user_is_created_when_controller_get_a_user_by_name_then_receives_None(self):
-        user = self.user_controller.get_user_by_name(username=self.first_testing_username)
+        status, user = self.user_controller.get_user_by_name(username=self.first_testing_username)
+
+        assert status["status_code"] == 404
+        assert status["detail"] == "The userId does not exist."
         assert user is None
 
     def test_given_no_user_is_created_when_create_a_new_user_then_that_user_is_created(self):
@@ -39,7 +42,7 @@ class UserControllerTest(unittest.TestCase):
 
         self.assertUser(user, self.first_testing_username, self.testing_password)
 
-    def test_given_a_user_is_created_when_asking_the_wrong_user_then_returns_False(self):
+    def test_given_a_user_is_created_when_asking_the_wrong_user_then_returns_None(self):
         self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_password)
 
         user = self.user_controller.get_user_by_name(username=self.wrong_first_testing_username)
