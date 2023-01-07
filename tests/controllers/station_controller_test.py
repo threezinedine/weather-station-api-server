@@ -19,9 +19,15 @@ from app.exceptions import (
     DETAIL_KEY,
     HTTP_200_OK,
 )
+from tests.controllers import (
+    assertStatus
+)
 
 
 class StationControllerTest(unittest.TestCase):
+    test_station_name = "Ha Noi"
+    test_station_position = "Dong Da, Ha Noi"
+
     def setUp(self):
         self.session = next(get_testing_session())
         self.station_controller = StationController(self.session)
@@ -32,19 +38,20 @@ class StationControllerTest(unittest.TestCase):
         self.session.commit()
         self.session.close()
 
+    def assertStation(self, station: Station, stationName: str, stationPosition: str, pushingDataIntervalInSeconds: int = 5):
+        assert station.stationName == stationName
+        assert station.stationPosition == stationPosition
+        assert station.pushingDataIntervalInSeconds == pushingDataIntervalInSeconds
+
     def test_given_no_station_is_created_when_querying_all_stations_then_returns_ok_and_empty_array(self):
         status, stations = self.station_controller.get_all_stations()
 
-        assert status[STATUS_CODE_KEY] == HTTP_200_OK
-        assert status[DETAIL_KEY] is None
+        assertStatus(status, HTTP_200_OK)
 
         self.assertListEqual(stations, [])
 
     def test_given_no_station_is_created_when_creating_new_station_then_returns_ok_and_that_station(self):
-        status, station = self.station_controller.create_new_station(stationName="Ha Noi", stationPosition="Ha Noi")
+        status, station = self.station_controller.create_new_station(stationName=self.test_station_name, stationPosition=self.test_station_position)
 
-        assert status[STATUS_CODE_KEY] == HTTP_200_OK
-        assert status[DETAIL_KEY] is None
-
-        assert station.stationName == "Ha Noi"
-        assert station.stationPosition == "Ha Noi"
+        assertStatus(status, HTTP_200_OK)
+        self.assertStation(station, self.test_station_name, self.test_station_position)
