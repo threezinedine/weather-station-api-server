@@ -10,6 +10,7 @@ from app.exceptions import (
     DETAIL_KEY,
     USERNAME_DOES_NOT_EXISTED_DETAIL,
     USERNAME_DOES_NOT_EXISTED_STATUS_CODE,
+    HTTP_200_OK,
 )
 
 
@@ -34,26 +35,26 @@ class UserControllerTest(unittest.TestCase):
         assert user.username == username
         assert user.is_match(password)
 
-    def test_given_no_user_is_created_when_controller_get_a_user_by_name_then_receives_None(self):
+    def test_given_no_user_is_created_when_controller_get_a_user_by_name_then_receives_username_does_not_exist_and_None(self):
         status, user = self.user_controller.get_user_by_name(username=self.first_testing_username)
 
         assert status[STATUS_CODE_KEY] == USERNAME_DOES_NOT_EXISTED_STATUS_CODE
         assert status[DETAIL_KEY] == USERNAME_DOES_NOT_EXISTED_DETAIL
         assert user is None
 
-    def test_given_no_user_is_created_when_create_a_new_user_then_that_user_is_created(self):
+    def test_given_no_user_is_created_when_create_a_new_user_then_return_ok_and_None(self):
         status, user = self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_password)
 
-        assert status[STATUS_CODE_KEY] == 200
+        assert status[STATUS_CODE_KEY] == HTTP_200_OK
         assert status[DETAIL_KEY] is None
         self.assertUser(user, self.first_testing_username, self.testing_password)
         
-    def test_given_a_user_is_created_when_querying_user_by_username_then_that_returns_200_and_that_user(self):
+    def test_given_a_user_is_created_when_querying_user_by_username_then_that_returns_ok_and_that_user(self):
         self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_password)
 
         status, user = self.user_controller.get_user_by_name(username=self.first_testing_username)
 
-        assert status[STATUS_CODE_KEY] == 200
+        assert status[STATUS_CODE_KEY] == HTTP_200_OK
         assert status[DETAIL_KEY] is None
         self.assertUser(user, username=self.first_testing_username, password=self.testing_password)
 
