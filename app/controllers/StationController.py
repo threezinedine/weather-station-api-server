@@ -23,8 +23,10 @@ class StationController:
         self.session = session
 
     def get_all_stations(self) -> Tuple[Dict[str, Union[int, Union[str, None]]], List[Station]]:
-        return {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}, []
+        return {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}, self.session.query(Station).all() 
 
     def create_new_station(self, stationName: str, stationPosition: str, pushingDataIntervalInSeconds: int = 5) -> Tuple[Dict[str, Union[int, Union[str, None]]], Station]:
         station = Station(stationName=stationName, stationPosition=stationPosition, pushingDataIntervalInSeconds=pushingDataIntervalInSeconds)
+        self.session.add(station)
+        self.session.commit()
         return {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}, station
