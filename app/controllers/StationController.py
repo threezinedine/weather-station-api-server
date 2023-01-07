@@ -30,3 +30,6 @@ class StationController:
         self.session.add(station)
         self.session.commit()
         return {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}, station
+
+    def get_station_by_station_name(self, stationName: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], Union[Station, None]]:
+        return {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}, self.session.query(Station).filter(Station.stationName == stationName).first()
