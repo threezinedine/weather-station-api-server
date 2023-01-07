@@ -129,7 +129,7 @@ class StationControllerTest(unittest.TestCase):
         self.station_controller.create_new_station(self.test_station_name, self.test_station_position)
         self.user_controller.create_new_user(username="threezinedine", password="threezinedine")
 
-        staus, station = self.station_controller.add_username(username="threezinedine")
+        status, station = self.station_controller.add_username(username="threezinedine", stationName=self.test_station_name)
 
         assertStatus(status, HTTP_200_OK)
-        assertStation(stations, self.test_station_name, self.test_station_position)
+        assertStation(station, self.test_station_name, self.test_station_position)

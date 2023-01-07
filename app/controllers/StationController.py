@@ -69,3 +69,10 @@ class StationController:
         status = {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}
         
         return status, []
+
+    def add_username(self, username: str, stationName: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], Station]:
+        status = {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}
+
+        _, station = self.get_station_by_station_name(stationName)
+
+        return status, station
