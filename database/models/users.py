@@ -20,10 +20,13 @@ class User(Base):
 
     def __init__(self, username: str, password: str):
         self.username = username
-        self.password = self._encode_the_password(password)
+        self.set_new_password(password)
 
     def __repr__(self) -> str:
         return f"<User username={self.username}>"
+
+    def set_new_password(self, new_password: str) -> None: 
+        self.password = self._encode_the_password(new_password)
 
     def _encode_the_password(self, password: str) -> str:
         return pbkdf2_sha256.hash(password)
