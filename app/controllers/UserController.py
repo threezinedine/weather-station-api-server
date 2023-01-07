@@ -11,7 +11,8 @@ from app.exceptions import (
     STATUS_CODE_KEY,
     DETAIL_KEY,
     USERNAME_DOES_NOT_EXISTED_DETAIL,
-    USERNAME_DOES_NOT_EXISTED_STATUS_CODE
+    USERNAME_DOES_NOT_EXISTED_STATUS_CODE,
+    HTTP_200_OK,
 )
 
 
@@ -23,8 +24,12 @@ class UserController:
         status = {}
         user = self.session.query(User).filter(User.username == username).first()
 
-        status[STATUS_CODE_KEY] = USERNAME_DOES_NOT_EXISTED_STATUS_CODE 
-        status[DETAIL_KEY] = USERNAME_DOES_NOT_EXISTED_DETAIL
+        if user is None:
+            status[STATUS_CODE_KEY] = USERNAME_DOES_NOT_EXISTED_STATUS_CODE 
+            status[DETAIL_KEY] = USERNAME_DOES_NOT_EXISTED_DETAIL
+        else:
+            status[STATUS_CODE_KEY] = HTTP_200_OK
+            status[DETAIL_KEY] = None
 
         return status, user
 
@@ -37,6 +42,8 @@ class UserController:
 
         status[STATUS_CODE_KEY] = 200 
         status[DETAIL_KEY] = None
+        self.session.add(user)
+        self.session.commit()
 
         return status, user
 
