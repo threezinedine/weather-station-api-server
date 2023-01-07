@@ -14,6 +14,8 @@ from app.exceptions import (
     USERNAME_DOES_NOT_EXISTED_STATUS_CODE,
     USERNAME_EXISTED_DETAIL,
     USERNAME_EXISTED_STATUS_CODE,
+    USERID_DOES_NOT_EXISTED_STATUS_CODE,
+    USERID_DOES_NOT_EXISTED_DETAIL,
     HTTP_200_OK,
 )
 
@@ -36,7 +38,14 @@ class UserController:
         return status, user
 
     def get_user_by_id(self, userId:int) -> Tuple[Dict[str, Union[int, Union[str, None]]], User]:
-        return {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}, self.session.query(User).filter(User.userId == userId).first()
+        status_code = {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None} 
+        user = self.session.query(User).filter(User.userId == userId).first()
+
+        if user is None:
+            status_code[STATUS_CODE_KEY] = USERID_DOES_NOT_EXISTED_STATUS_CODE
+            status_code[DETAIL_KEY] = USERID_DOES_NOT_EXISTED_DETAIL
+
+        return status_code, user
 
     def create_new_user(self, username: str, password: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], User]:
         status = {}

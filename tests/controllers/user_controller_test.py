@@ -16,6 +16,8 @@ from app.exceptions import (
     USERNAME_DOES_NOT_EXISTED_STATUS_CODE,
     USERNAME_EXISTED_DETAIL,
     USERNAME_EXISTED_STATUS_CODE,
+    USERID_DOES_NOT_EXISTED_DETAIL,
+    USERID_DOES_NOT_EXISTED_STATUS_CODE,
     HTTP_200_OK,
 )
 
@@ -117,5 +119,5 @@ class UserControllerTest(unittest.TestCase):
 
         status, user = self.user_controller.get_user_by_id(3)
 
-        self.assertStatus(status, USERNAME_DOES_NOT_EXISTED_STATUS_CODE, USERNAME_DOES_NOT_EXISTED_DETAIL)
-        assert non_existed_user is None
+        self.assertStatus(status, USERID_DOES_NOT_EXISTED_STATUS_CODE, USERID_DOES_NOT_EXISTED_DETAIL)
+        assert user is None

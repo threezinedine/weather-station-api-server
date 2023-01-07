@@ -5,3 +5,4 @@ HTTP_200_OK = 200
 
 from .UserNameNotExistException import *
 from .UsernameExistedException import *
+from .UserIdNotExistedException import *
