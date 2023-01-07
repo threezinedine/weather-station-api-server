@@ -206,3 +206,6 @@ class UserControllerTest(unittest.TestCase):
 
         self.assertStatus(status, HTTP_200_OK)
         assert user is None
+
+        _, users = self.user_controller.get_all_users()
+        self.assertListEqual(users, [])
