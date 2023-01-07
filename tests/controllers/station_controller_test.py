@@ -91,3 +91,6 @@ class StationControllerTest(unittest.TestCase):
 
         assertStatus(status, 409, "The station exists.")
         assert station is None
+
+        _, stations = self.station_controller.get_all_stations()
+        assert len(stations) == 1
