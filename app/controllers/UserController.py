@@ -68,3 +68,6 @@ class UserController:
 
     def get_all_users(self) -> Tuple[Dict[str, Union[int, Union[str, None]]], List[User]]:
         return {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}, self.session.query(User).all()
+
+    def get_user_by_username_and_password(self, username: str, password: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], User]:
+        return {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}, self.session.query(User).filter(User.username == username).first()
