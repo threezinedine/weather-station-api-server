@@ -129,3 +129,11 @@ class UserControllerTest(unittest.TestCase):
 
         self.assertStatus(status, HTTP_200_OK)
         self.assertUser(user, self.first_testing_username, self.testing_password)
+
+    def test_given_no_user_created_when_querying_user_by_invalid_username_then_return_user_does_not_exist_and_none(self):
+        self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_password)
+
+        status, user = self.user_controller.get_user_by_username_and_password(self.wrong_first_testing_username, self.testing_password)
+
+        self.assertStatus(status, USERNAME_DOES_NOT_EXISTED_STATUS_CODE, USERNAME_DOES_NOT_EXISTED_DETAIL)
+        assert user is None
