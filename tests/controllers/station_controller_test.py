@@ -133,3 +133,13 @@ class StationControllerTest(unittest.TestCase):
 
         assertStatus(status, HTTP_200_OK)
         assertStation(station, self.test_station_name, self.test_station_position)
+
+    def test_given_a_station_is_created_and_a_user_is_created_and_the_relationship_is_created_when_querying_all_stations_by_username_then_returns_ok_and_tthe_array_of_that_station(self):
+        self.station_controller.create_new_station(self.test_station_name, self.test_station_position)
+        self.user_controller.create_new_user(username="threezinedine", password="threezinedine")
+
+        status, stations = self.station_controller.get_station_by_username(username="threezinedine")
+
+        assertStatus(status, HTTP_200_OK)
+        assert stations == 1
+        assertStation(stations[0], self.test_station_name, self.test_station_position)
