@@ -67,10 +67,11 @@ class UserControllerTest(unittest.TestCase):
         assert status[DETAIL_KEY] == USERNAME_DOES_NOT_EXISTED_DETAIL
         assert user is None
         
-    @unittest.skip("")
     def test_given_no_user_is_created_when_asking_all_users_then_returns_an_empty_string(self):
-        users = self.user_controller.get_all_users()
+        status, users = self.user_controller.get_all_users()
 
+        assert status[STATUS_CODE_KEY] == HTTP_200_OK
+        assert status[DETAIL_KEY] is None
         self.assertListEqual(users, [])
 
     @unittest.skip("")
