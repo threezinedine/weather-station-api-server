@@ -64,3 +64,11 @@ class StationControllerTest(unittest.TestCase):
         assertStatus(status, HTTP_200_OK)
         assert len(stations) == 1
         assertStation(stations[0], self.test_station_name, self.test_station_position)
+
+    def test_given_a_station_is_created_when_querying_station_by_valid_station_name_then_returns_ok_and_station(self):
+        self.station_controller.create_new_station(self.test_station_name, self.test_station_position)
+
+        status, station = self.station_controller.get_station_by_station_name(stationName=self.test_station_name)
+
+        assertStatus(status, HTTP_200_OK)
+        assertStation(station, self.test_station_name, self.test_station_position)
