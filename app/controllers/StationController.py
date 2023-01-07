@@ -17,6 +17,8 @@ from app.exceptions import (
     STATUS_CODE_KEY,
     STATION_DOES_NOT_EXIST_STATUS_CODE,
     STATION_DOES_NOT_EXIST_DETAIL,
+    STATION_EXIST_DETAIL,
+    STATION_EXIST_STATUS_CODE,
 )
 
 
@@ -28,10 +30,18 @@ class StationController:
         return {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}, self.session.query(Station).all() 
 
     def create_new_station(self, stationName: str, stationPosition: str, pushingDataIntervalInSeconds: int = 5) -> Tuple[Dict[str, Union[int, Union[str, None]]], Station]:
-        station = Station(stationName=stationName, stationPosition=stationPosition, pushingDataIntervalInSeconds=pushingDataIntervalInSeconds)
-        self.session.add(station)
-        self.session.commit()
-        return {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}, station
+        status = {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}
+        _, station_with_station_name = self.get_station_by_station_name(stationName=stationName)
+        station = None
+
+        if station_with_station_name is None:
+            station = Station(stationName=stationName, stationPosition=stationPosition, pushingDataIntervalInSeconds=pushingDataIntervalInSeconds)
+            self.session.add(station)
+            self.session.commit()
+        else:
+            status[STATUS_CODE_KEY] = STATION_EXIST_STATUS_CODE
+            status[DETAIL_KEY] = STATION_EXIST_DETAIL
+        return status, station
 
     def get_station_by_station_name(self, stationName: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], Union[Station, None]]:
         status = {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}
