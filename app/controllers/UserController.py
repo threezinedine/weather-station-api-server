@@ -127,3 +127,11 @@ class UserController:
         self.session.commit()
 
         return status, None
+
+    def delete_user_by_username(self, username: str) ->Tuple[Dict[str, Union[int, Union[str, None]]], None]:
+        status = {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}
+
+        self.session.query(User).filter(User.username == username).delete()
+        self.session.commit()
+
+        return status, None
