@@ -184,6 +184,8 @@ class UserControllerTest(unittest.TestCase):
 
         self.assertStatus(status, HTTP_200_OK)
         self.assertUser(user, self.first_testing_username, self.testing_changed_password)
+        _, modified_user = self.user_controller.get_user_by_name(self.first_testing_username)
+        self.assertUser(modified_user, self.first_testing_username, self.testing_changed_password)
 
     def test_given_a_user_is_created_when_change_both_valid_username_and_password_then_returns_ok_and_that_user(self):
         self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_password)
@@ -193,3 +195,5 @@ class UserControllerTest(unittest.TestCase):
 
         self.assertStatus(status, HTTP_200_OK)
         self.assertUser(user, self.testing_changed_username, self.testing_changed_password)
+        _, modified_user = self.user_controller.get_user_by_name(self.testing_changed_username)
+        self.assertUser(modified_user, self.testing_changed_username, self.testing_changed_password)
