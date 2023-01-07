@@ -24,12 +24,12 @@ class Station(Base):
             pushingDataIntervalInSeconds: int = 5):
         self.stationName = stationName
         self.stationPosition = stationPosition
-        self.stationKey = self.__generate_the_station_key()
+        self.stationKey = self.generate_the_station_key()
         self.pushingDataIntervalInSeconds = pushingDataIntervalInSeconds
 
         users = relationship("User", secondary="stations_users")
 
-    def __generate_the_station_key(self, secret_key_length: int = 100) -> str:
+    def generate_the_station_key(self, secret_key_length: int = 100) -> str:
         return secrets.token_urlsafe(secret_key_length)
 
     def __repr__(self):

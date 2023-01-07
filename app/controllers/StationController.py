@@ -52,3 +52,11 @@ class StationController:
             status[DETAIL_KEY] = STATION_DOES_NOT_EXIST_DETAIL
 
         return status, station
+
+    def reset_station_key(self, stationName: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], Union[Station, None]]: 
+        status = {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}
+        station = self.session.query(Station).filter(Station.stationName == stationName).first()
+
+        station.stationKey = station.generate_the_station_key()
+        self.session.commit()
+        return status, station
