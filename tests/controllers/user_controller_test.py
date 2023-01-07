@@ -8,8 +8,8 @@ from tests import get_testing_session
 from app.exceptions import (
     STATUS_CODE_KEY,
     DETAIL_KEY,
-    USERID_DOES_NOT_EXISTED_DETAIL,
-    USERID_DOES_NOT_EXISTED_STATUS_CODE,
+    USERNAME_DOES_NOT_EXISTED_DETAIL,
+    USERNAME_DOES_NOT_EXISTED_STATUS_CODE,
 )
 
 
@@ -37,8 +37,8 @@ class UserControllerTest(unittest.TestCase):
     def test_given_no_user_is_created_when_controller_get_a_user_by_name_then_receives_None(self):
         status, user = self.user_controller.get_user_by_name(username=self.first_testing_username)
 
-        assert status[STATUS_CODE_KEY] == USERID_DOES_NOT_EXISTED_STATUS_CODE
-        assert status[DETAIL_KEY] == USERID_DOES_NOT_EXISTED_DETAIL
+        assert status[STATUS_CODE_KEY] == USERNAME_DOES_NOT_EXISTED_STATUS_CODE
+        assert status[DETAIL_KEY] == USERNAME_DOES_NOT_EXISTED_DETAIL
         assert user is None
 
     def test_given_no_user_is_created_when_create_a_new_user_then_that_user_is_created(self):
@@ -47,6 +47,15 @@ class UserControllerTest(unittest.TestCase):
         assert status[STATUS_CODE_KEY] == 200
         assert status[DETAIL_KEY] is None
         self.assertUser(user, self.first_testing_username, self.testing_password)
+        
+    def test_given_a_user_is_created_when_querying_user_by_username_then_that_returns_200_and_that_user(self):
+        self.user_controller.create_new_user(username=self.first_testing_username, password=self.testing_password)
+
+        status, user = self.user_controller.get_user_by_name(username=self.first_testing_username)
+
+        assert status[STATUS_CODE_KEY] == 200
+        assert status[DETAIL_KEY] is None
+        self.assertUser(user, username=self.first_testing_username, password=self.testing_password)
 
     @unittest.skip("")
     def test_given_a_user_is_created_when_asking_the_wrong_user_then_returns_None(self):

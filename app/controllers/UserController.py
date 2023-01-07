@@ -10,8 +10,8 @@ from database.models import User
 from app.exceptions import (
     STATUS_CODE_KEY,
     DETAIL_KEY,
-    USERID_DOES_NOT_EXISTED_DETAIL,
-    USERID_DOES_NOT_EXISTED_STATUS_CODE
+    USERNAME_DOES_NOT_EXISTED_DETAIL,
+    USERNAME_DOES_NOT_EXISTED_STATUS_CODE
 )
 
 
@@ -23,8 +23,8 @@ class UserController:
         status = {}
         user = self.session.query(User).filter(User.username == username).first()
 
-        status[STATUS_CODE_KEY] = USERID_DOES_NOT_EXISTED_STATUS_CODE 
-        status[DETAIL_KEY] = USERID_DOES_NOT_EXISTED_DETAIL
+        status[STATUS_CODE_KEY] = USERNAME_DOES_NOT_EXISTED_STATUS_CODE 
+        status[DETAIL_KEY] = USERNAME_DOES_NOT_EXISTED_DETAIL
 
         return status, user
 
