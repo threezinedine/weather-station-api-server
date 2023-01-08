@@ -3,7 +3,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from main import app
-from database.connection import get_db
+from database.connection import get_session
 from app.controllers import UserController
 
 

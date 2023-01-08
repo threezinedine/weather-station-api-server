@@ -1,11 +1,10 @@
 import unittest
 
-from tests.controllers import (
+from tests import (
     get_testing_session,
     clean_database,
     assertStatus,
     assertRecord,
-    OK_STATUS,
     createAStationBy,
     FIRST_RECORD_TESTING,
     FIRST_STATION_WRONG_STATION_KEY,
@@ -25,6 +24,7 @@ from app.exceptions import (
     WRONG_STATION_KEY_STATUS,
     STATION_DOES_NOT_EXIST_STATUS,
     NO_RECORD_EXIST_STATUS,
+    OK_STATUS,
 )
 
 

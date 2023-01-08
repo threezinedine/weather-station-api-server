@@ -13,9 +13,6 @@ from app.controllers import (
     StationController,
     UserController,
 )
-from tests import (
-    get_testing_session,
-)
 from app.exceptions import (
     OK_STATUS,
     STATION_DOES_NOT_EXIST_STATUS,
@@ -23,7 +20,8 @@ from app.exceptions import (
     USER_DOES_NOT_EXIST_STATUS,
     NO_RELATIONSHIP_EXIST_STATUS,
 )
-from tests.controllers import (
+from tests import (
+    get_testing_session,
     assertStatus,
     assertStation,
     FIRST_TEST_STATION_STATION_NAME,

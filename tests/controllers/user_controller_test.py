@@ -7,9 +7,8 @@ from typing import (
 )
 
 from app.controllers import UserController
-from database.connection import get_db
+from database.connection import get_session
 from database.models import User
-from tests import get_testing_session
 from app.exceptions import (
     STATUS_CODE_KEY,
     DETAIL_KEY,
@@ -21,7 +20,8 @@ from app.exceptions import (
 from tests import (
     clean_database,
 )
-from tests.controllers import (
+from tests import (
+    get_testing_session,
     assertStatus,
     assertUser,
     FIRST_TEST_USER_USERNAME,
