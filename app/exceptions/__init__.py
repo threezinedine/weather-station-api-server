@@ -3,9 +3,13 @@ DETAIL_KEY = "detail"
 
 HTTP_200_OK = 200
 
-from .UserNameNotExistException import *
-from .UsernameExistedException import *
-from .UserIdNotExistedException import *
+OK_STATUS = {
+    STATUS_CODE_KEY: HTTP_200_OK,
+    DETAIL_KEY: None
+}
+
+from .UserDoesNotExistException import *
+from .UserExistException import *
 from .WrongPasswordException import *
 from .StationDoesNotExistException import *
 from .StationExistException import *

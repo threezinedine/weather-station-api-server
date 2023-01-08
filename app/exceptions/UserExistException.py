@@ -1,0 +1,14 @@
+from app.exceptions import (
+    STATUS_CODE_KEY,
+    DETAIL_KEY,
+)
+
+
+USER_EXIST_STATUS_CODE = 409
+USER_EXIST_DETAIL = "The username existed."
+
+
+USER_EXIST_STATUS = {
+    STATUS_CODE_KEY: USER_EXIST_STATUS_CODE,
+    DETAIL_KEY: USER_EXIST_DETAIL
+}
