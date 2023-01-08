@@ -74,3 +74,13 @@ class RecordController:
 
     def _get_station_by_station_name(self, stationName: str) -> Union[Station, None]:
         return self.session.query(Station).filter(Station.stationName == stationName).first()
+
+    def delete_all_records_by_station_name(self, stationName: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], None]:
+        status = OK_STATUS
+
+        station = self._get_station_by_station_name(stationName)
+
+        self.session.query(Record).filter(Record.stationId == station.stationId).delete()
+        self.session.commit()
+        
+        return status, None
