@@ -230,3 +230,5 @@ class StationControllerTest(unittest.TestCase):
 
         _, stations = self.station_controller.get_station_by_username(username=FIRST_TEST_USER_USERNAME)
         self.assertListEqual(stations, [])
+        _, stations = self.station_controller.get_all_stations()
+        assert len(stations) == 1
