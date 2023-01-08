@@ -20,7 +20,7 @@ class User(Base):
     password = Column(String(length=100))
     lastLoginTime = Column(DateTime, default=datetime.utcnow())
 
-    stations = relationship("Station", secondary="stations_users")
+    stations = relationship("Station", secondary="stations_users", back_populates="users")
 
     def __init__(self, username: str, password: str):
         self.username = username

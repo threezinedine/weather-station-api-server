@@ -18,6 +18,8 @@ class Station(Base):
     stationPosition = Column(String(length=100))
     stationKey = Column(String(length=100))
     pushingDataIntervalInSeconds = Column(Integer)
+    users = relationship("User", secondary="stations_users", back_populates="stations")
+    records = relationship("Record")
 
     def __init__(self, stationName: str, 
             stationPosition: str, 
@@ -26,8 +28,6 @@ class Station(Base):
         self.stationPosition = stationPosition
         self.stationKey = self.generate_the_station_key()
         self.pushingDataIntervalInSeconds = pushingDataIntervalInSeconds
-
-        users = relationship("User", secondary="stations_users")
 
     def generate_the_station_key(self, secret_key_length: int = 100) -> str:
         return secrets.token_urlsafe(secret_key_length)

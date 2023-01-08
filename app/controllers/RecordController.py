@@ -36,3 +36,10 @@ class RecordController:
         else:
             status = WRONG_STATION_KEY_STATUS
         return status, record
+
+    def get_all_records_from_station(self, stationName: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], List[Record]]:
+        status = OK_STATUS
+
+        station = self.session.query(Station).filter(Station.stationName == stationName).first()
+
+        return status, station.records
