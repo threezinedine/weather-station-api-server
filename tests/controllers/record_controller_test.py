@@ -12,6 +12,9 @@ from app.controllers import (
     RecordController,
     StationController,
 )
+from app.exceptions import (
+    WRONG_STATION_KEY_STATUS,
+)
 
 
 FIRST_RECORD_TESTING = dict(stationId=1,
@@ -25,6 +28,7 @@ FIRST_RECORD_TESTING = dict(stationId=1,
                                 barPressure=-123.00,
                                 createdTime="2023-01-08 18:54:12"
                                 )
+FIRST_STATION_WRONG_STATION_KEY = "asfagfaodhfahi29183alsdkjfafq0h"
 
 
 class RecordControllerTest(unittest.TestCase):
@@ -59,3 +63,13 @@ class RecordControllerTest(unittest.TestCase):
         assertStatus(status, OK_STATUS)
         assert len(records) == 1
         assertRecord(records[0], FIRST_RECORD_TESTING)
+
+    def test_given_a_station_is_created_when_creating_a_new_record_with_invalid_station_key_then_returns_wrong_station_key_and_none(self):
+        createAStationBy(self.station_controller)
+
+        status, record = self.record_controller.create_new_record(stationKey=FIRST_STATION_WRONG_STATION_KEY, **FIRST_RECORD_TESTING)
+        
+        assertStatus(status, WRONG_STATION_KEY_STATUS)
+        assert record is None
+        _, records = self.record_controller.get_all_records()
+        self.assertListEqual(records, [])
