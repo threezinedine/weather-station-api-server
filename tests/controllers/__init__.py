@@ -3,6 +3,7 @@ from typing import (
     Union,
     List,
 )
+from sqlalchemy.orm import Session
 
 from app.exceptions import (
     STATUS_CODE_KEY,
@@ -11,6 +12,8 @@ from app.exceptions import (
 from database.models import (
     User,
     Station,
+    StationUser,
+    Record,
 )
 from app.controllers import (
     UserController,
@@ -34,6 +37,14 @@ SECOND_TEST_STATION_STATION_POSITION = "Gia Binh, Bac Ninh"
 TEST_STATION_DEFAULT_PUSHING_DATA_INTERVAL_IN_SECONDS = 5
 TEST_STATION_PUSHING_DATA_INTERVAL_IN_SECONDS = 10
 
+
+def clean_database(session: Session):
+    session.query(User).delete()
+    session.query(Station).delete()
+    session.query(StationUser).delete()
+    session.query(Record).delete()
+    session.commit()
+    session.close()
 
 def assertStatus(status: Dict[str, Union[int, Union[str, None]]], reference_status: Dict[str, Union[int, Union[str, None]]]):
     assert status[STATUS_CODE_KEY] == reference_status[STATUS_CODE_KEY]

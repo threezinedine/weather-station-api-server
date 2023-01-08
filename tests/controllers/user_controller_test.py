@@ -31,6 +31,7 @@ from tests.controllers import (
     FIRST_TEST_USER_NEW_PASSWORD,
     createAnUserBy,
     createTwoUsersBy,
+    clean_database,
 )
 
 
@@ -40,9 +41,7 @@ class UserControllerTest(unittest.TestCase):
         self.user_controller = UserController(self.session)
 
     def tearDown(self):
-        self.session.query(User).delete()
-        self.session.commit()
-        self.session.close()
+        clean_database(self.session)
 
     def test_given_no_user_is_created_when_controller_get_a_user_by_name_then_receives_username_does_not_exist_and_None(self):
         status, user = self.user_controller.get_user_by_name(username=FIRST_TEST_USER_USERNAME)

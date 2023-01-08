@@ -40,6 +40,7 @@ from tests.controllers import (
     createTwoStationsBy,
     creataAStationAndAnUserBy,
     createAStationAndAnUserAndAddRelationshipBy,
+    clean_database,
 )
 
 
@@ -50,11 +51,7 @@ class StationControllerTest(unittest.TestCase):
         self.user_controller = UserController(self.session)
 
     def tearDown(self):
-        self.session.query(User).delete()
-        self.session.query(Station).delete()
-        self.session.query(StationUser).delete()
-        self.session.commit()
-        self.session.close()
+        clean_database(self.session)
 
     def assertStation(self, station: Station, stationName: str, 
             stationPosition: str, pushingDataIntervalInSeconds: int = TEST_STATION_DEFAULT_PUSHING_DATA_INTERVAL_IN_SECONDS):
