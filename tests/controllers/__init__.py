@@ -39,7 +39,7 @@ TEST_STATION_DEFAULT_PUSHING_DATA_INTERVAL_IN_SECONDS = 5
 TEST_STATION_PUSHING_DATA_INTERVAL_IN_SECONDS = 10
 
 
-RECORD_DATA = dict(windDirection=1,
+FIRST_RECORD_DATA = dict(windDirection=1,
                     averageWindSpeedInOneMinute=2.3,
                     maxWindSpeedInFiveMinutes=3.4,
                     rainFallInOneHour=23.1,
@@ -49,8 +49,20 @@ RECORD_DATA = dict(windDirection=1,
                     barPressure=-123.00,
                     createdTime="2023-01-08 18:54:12"
                     )
-FIRST_RECORD_TESTING = dict(stationId=1, **RECORD_DATA)
-FIRST_WRONG_STATIONID_RECORD_TESTING = dict(stationId=2, **RECORD_DATA)
+SECOND_RECORD_DATA = dict(windDirection=3,
+                    averageWindSpeedInOneMinute=4.3,
+                    maxWindSpeedInFiveMinutes=13.4,
+                    rainFallInOneHour=223.1,
+                    rainFallInOneDay=213.2,
+                    temperature=24.23,
+                    humidity=21,
+                    barPressure=123.00,
+                    createdTime="2023-01-09 18:54:12"
+                    )
+FIRST_RECORD_TESTING = dict(stationId=1, **FIRST_RECORD_DATA)
+FIRST_WRONG_STATIONID_RECORD_TESTING = dict(stationId=2, **FIRST_RECORD_DATA)
+SECOND_RECORD_TESTING = dict(stationId=1, **SECOND_RECORD_DATA)
+
 FIRST_STATION_WRONG_STATION_KEY = "asfagfaodhfahi29183alsdkjfafq0h"
 
 
@@ -108,6 +120,11 @@ def createAStationAndAnUserAndAddRelationshipBy(user_controller: UserController,
 def createAStationWithExampleRecordBy(station_controller: StationController, record_controller: RecordController):
     _, station = createAStationBy(station_controller)
     return record_controller.create_new_record(stationKey=station.stationKey, **FIRST_RECORD_TESTING)
+
+def createAStationWithTwoExampleRecordsBy(station_controller: StationController, record_controller: RecordController):
+    _, station = createAStationBy(station_controller)
+    record_controller.create_new_record(stationKey=station.stationKey, **FIRST_RECORD_TESTING)
+    record_controller.create_new_record(stationKey=station.stationKey, **SECOND_RECORD_TESTING)
 
 from .user_controller_test import *
 from .station_controller_test import *

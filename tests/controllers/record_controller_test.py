@@ -12,7 +12,9 @@ from tests.controllers import (
     FIRST_TEST_STATION_WRONG_STATION_NAME,
     FIRST_TEST_STATION_STATION_NAME,
     FIRST_WRONG_STATIONID_RECORD_TESTING,
+    SECOND_RECORD_TESTING,
     createAStationWithExampleRecordBy,
+    createAStationWithTwoExampleRecordsBy,
 )
 from app.controllers import (
     RecordController,
@@ -87,3 +89,11 @@ class RecordControllerTest(unittest.TestCase):
 
         assertStatus(status, STATION_DOES_NOT_EXIST_STATUS)
         assert records is None
+
+    def test_given_a_station_and_two_record_are_created_when_querying_the_lastest_record_of_existed_station_then_returns_ok_and_record(self):
+        createAStationWithTwoExampleRecordsBy(self.station_controller, self.record_controller)
+
+        status, record = self.record_controller.get_latest_record_from_station(stationName=FIRST_TEST_STATION_STATION_NAME)
+
+        assertStatus(status, OK_STATUS)
+        assertRecord(record, SECOND_RECORD_TESTING) 
