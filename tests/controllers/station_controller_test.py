@@ -207,3 +207,15 @@ class StationControllerTest(unittest.TestCase):
         _, stations = self.station_controller.get_all_stations()
         assert len(stations) == 1
         assertStation(stations[0], SECOND_TEST_STATION_STATION_NAME, SECOND_TEST_STATION_STATION_POSITION)
+
+    def test_given_a_station_is_created_when_deleting_a_non_existed_station_then_returns_station_does_not_exist_and_none(self):
+        createAStationBy(self.station_controller)
+
+        status, station = self.station_controller.delete_by_station_name(FIRST_TEST_STATION_WRONG_STATION_NAME)
+
+        assertStatus(status, STATION_DOES_NOT_EXIST_STATUS)
+        assert station is None
+        
+        _, stations = self.station_controller.get_all_stations()
+        assert len(stations) == 1
+        assertStation(stations[0], FIRST_TEST_STATION_STATION_NAME, FIRST_TEST_STATION_STATION_POSITION)
