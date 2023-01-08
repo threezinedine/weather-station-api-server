@@ -30,10 +30,11 @@ from app.exceptions import (
 from tests.controllers import (
     assertStatus,
     assertStation,
-    TEST_STATION_NAME,
-    TEST_STATION_POSITION,
+    TEST_STATION_STATION_NAME,
+    TEST_STATION_STATION_POSITION,
     TEST_STATION_WRONG_STATION_NAME,
     TEST_STATION_DEFAULT_PUSHING_DATA_INTERVAL_IN_SECONDS,
+    TEST_STATION_PUSHING_DATA_INTERVAL_IN_SECONDS,
     FIRST_TEST_USER_USERNAME,
     FIRST_TEST_USER_PASSWORD,
     FIRST_TEST_USER_WRONG_USERNAME,
@@ -69,10 +70,10 @@ class StationControllerTest(unittest.TestCase):
         self.assertListEqual(stations, [])
 
     def test_given_no_station_is_created_when_creating_new_station_then_returns_ok_and_that_station(self):
-        status, station = self.station_controller.create_new_station(stationName=TEST_STATION_NAME, stationPosition=TEST_STATION_POSITION)
+        status, station = self.station_controller.create_new_station(stationName=TEST_STATION_STATION_NAME, stationPosition=TEST_STATION_STATION_POSITION)
 
         assertStatus(status, HTTP_200_OK)
-        assertStation(station, TEST_STATION_NAME, TEST_STATION_POSITION)
+        assertStation(station, TEST_STATION_STATION_NAME, TEST_STATION_STATION_POSITION)
 
     def test_given_a_station_is_created_when_querying_all_stations_then_returns_ok_and_station_list(self):
         createAStationBy(self.station_controller)
@@ -81,15 +82,15 @@ class StationControllerTest(unittest.TestCase):
 
         assertStatus(status, HTTP_200_OK)
         assert len(stations) == 1
-        assertStation(stations[0], TEST_STATION_NAME, TEST_STATION_POSITION)
+        assertStation(stations[0], TEST_STATION_STATION_NAME, TEST_STATION_STATION_POSITION)
 
     def test_given_a_station_is_created_when_querying_station_by_valid_station_name_then_returns_ok_and_station(self):
         createAStationBy(self.station_controller)
 
-        status, station = self.station_controller.get_station_by_station_name(stationName=TEST_STATION_NAME)
+        status, station = self.station_controller.get_station_by_station_name(stationName=TEST_STATION_STATION_NAME)
 
         assertStatus(status, HTTP_200_OK)
-        assertStation(station, TEST_STATION_NAME, TEST_STATION_POSITION)
+        assertStation(station, TEST_STATION_STATION_NAME, TEST_STATION_STATION_POSITION)
 
     def test_given_a_station_is_created_when_querying_station_by_non_existed_station_name_then_returns_station_does_not_exist_and_none(self):
         createAStationBy(self.station_controller)
@@ -102,7 +103,7 @@ class StationControllerTest(unittest.TestCase):
     def test_given_a_station_is_created_when_creating_a_new_station_with_the_existed_station_name_then_returns_station_exist_and_none(self):
         createAStationBy(self.station_controller)
 
-        status, station = self.station_controller.create_new_station(TEST_STATION_NAME, TEST_STATION_POSITION)
+        status, station = self.station_controller.create_new_station(TEST_STATION_STATION_NAME, TEST_STATION_STATION_POSITION)
 
         assertStatus(status, STATION_EXIST_STATUS_CODE, STATION_EXIST_DETAIL)
         assert station is None
@@ -114,10 +115,10 @@ class StationControllerTest(unittest.TestCase):
         _, station = createAStationBy(self.station_controller)
         oldStationKey = station.stationKey
 
-        status, new_station = self.station_controller.reset_station_key(TEST_STATION_NAME)
+        status, new_station = self.station_controller.reset_station_key(TEST_STATION_STATION_NAME)
 
         assertStatus(status, HTTP_200_OK)
-        assertStation(station, TEST_STATION_NAME, TEST_STATION_POSITION) 
+        assertStation(station, TEST_STATION_STATION_NAME, TEST_STATION_STATION_POSITION) 
 
         assert oldStationKey != new_station.stationKey
 
@@ -140,10 +141,10 @@ class StationControllerTest(unittest.TestCase):
     def test_given_a_station_is_created_and_a_user_is_created_when_the_relationship_is_created_then_returns_ok_and_station(self):
         creataAStationAndAnUserBy(self.user_controller, self.station_controller)
 
-        status, station = self.station_controller.add_username(username=FIRST_TEST_USER_USERNAME, stationName=TEST_STATION_NAME)
+        status, station = self.station_controller.add_username(username=FIRST_TEST_USER_USERNAME, stationName=TEST_STATION_STATION_NAME)
 
         assertStatus(status, HTTP_200_OK)
-        assertStation(station, TEST_STATION_NAME, TEST_STATION_POSITION)
+        assertStation(station, TEST_STATION_STATION_NAME, TEST_STATION_STATION_POSITION)
 
     def test_given_a_station_is_created_and_a_user_is_created_and_the_relationship_is_created_when_querying_all_stations_by_username_then_returns_ok_and_tthe_array_of_that_station(self):
         createAStationAndAnUserAndAddRelationshipBy(self.user_controller, self.station_controller)
@@ -152,7 +153,7 @@ class StationControllerTest(unittest.TestCase):
 
         assertStatus(status, HTTP_200_OK)
         assert len(stations) == 1
-        assertStation(stations[0], TEST_STATION_NAME, TEST_STATION_POSITION)
+        assertStation(stations[0], TEST_STATION_STATION_NAME, TEST_STATION_STATION_POSITION)
 
     def test_given_a_station_user_and_relationship_are_created_when_querying_all_stations_by_username_with_non_existed_username_then_returns_user_does_not_exist_and_none(self):
         createAStationAndAnUserAndAddRelationshipBy(self.user_controller, self.station_controller)
@@ -165,7 +166,7 @@ class StationControllerTest(unittest.TestCase):
     def test_given_a_station_user_are_created_when_create_the_relationship_with_non_existed_username_then_returns_user_does_not_exist_and_none(self):
         creataAStationAndAnUserBy(self.user_controller, self.station_controller)
 
-        status, station = self.station_controller.add_username(username=FIRST_TEST_USER_WRONG_USERNAME, stationName=TEST_STATION_NAME)
+        status, station = self.station_controller.add_username(username=FIRST_TEST_USER_WRONG_USERNAME, stationName=TEST_STATION_STATION_NAME)
 
         assertStatus(status, USERNAME_DOES_NOT_EXISTED_STATUS_CODE, USERNAME_DOES_NOT_EXISTED_DETAIL)
         assert station is None
@@ -181,11 +182,19 @@ class StationControllerTest(unittest.TestCase):
     def test_given_a_station_is_created_when_changing_the_pushing_interval_with_existed_station_then_returns_ok_and_that_station(self):
         createAStationBy(self.station_controller)
 
-        status, station = self.station_controller.change_pushing_time_interval(stationName=TEST_STATION_NAME, new_pushingDataIntervalInSeconds=10)
+        status, station = self.station_controller.change_pushing_time_interval_in_seconds(stationName=TEST_STATION_STATION_NAME, new_pushingDataIntervalInSeconds=TEST_STATION_PUSHING_DATA_INTERVAL_IN_SECONDS)
         
         assertStatus(status, HTTP_200_OK)
-        assertStaion(station, TEST_STATION_NAME, TEST_STATION_POSITION, 10)
+        assertStation(station, TEST_STATION_STATION_NAME, TEST_STATION_STATION_POSITION, TEST_STATION_PUSHING_DATA_INTERVAL_IN_SECONDS)
 
-        _, station = self.station_controller.get_station_by_station_name(TEST_STATION_NAME)
-        assertStation(station, TEST_STATION_NAME, TEST_STATION_POSITION, 10)
+        _, station = self.station_controller.get_station_by_station_name(TEST_STATION_STATION_NAME)
+        assertStation(station, TEST_STATION_STATION_NAME, TEST_STATION_STATION_POSITION, TEST_STATION_PUSHING_DATA_INTERVAL_IN_SECONDS)
+
+    def test_given_a_station_is_created_when_changing_the_pushing_interval_with_non_existed_station_return_retuns_station_does_not_exist_and_none(self):
+        createAStationBy(self.station_controller)
+
+        status, station = self.station_controller.change_pushing_time_interval_in_seconds(TEST_STATION_WRONG_STATION_NAME, TEST_STATION_PUSHING_DATA_INTERVAL_IN_SECONDS)
+
+        assertStatus(status, STATION_DOES_NOT_EXIST_STATUS_CODE, STATION_DOES_NOT_EXIST_DETAIL)
+        assert station is None
 
