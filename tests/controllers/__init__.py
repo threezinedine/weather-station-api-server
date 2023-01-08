@@ -18,6 +18,7 @@ from database.models import (
 from app.controllers import (
     UserController,
     StationController,
+    RecordController,
 )
 
 FIRST_TEST_USER_USERNAME = "threezinedine"
@@ -36,6 +37,20 @@ SECOND_TEST_STATION_STATION_NAME = "Bac Ninh"
 SECOND_TEST_STATION_STATION_POSITION = "Gia Binh, Bac Ninh"
 TEST_STATION_DEFAULT_PUSHING_DATA_INTERVAL_IN_SECONDS = 5
 TEST_STATION_PUSHING_DATA_INTERVAL_IN_SECONDS = 10
+
+
+FIRST_RECORD_TESTING = dict(stationId=1,
+                                windDirection=1,
+                                averageWindSpeedInOneMinute=2.3,
+                                maxWindSpeedInFiveMinutes=3.4,
+                                rainFallInOneHour=23.1,
+                                rainFallInOneDay=13.2,
+                                temperature=34.23,
+                                humidity=23,
+                                barPressure=-123.00,
+                                createdTime="2023-01-08 18:54:12"
+                                )
+FIRST_STATION_WRONG_STATION_KEY = "asfagfaodhfahi29183alsdkjfafq0h"
 
 
 def clean_database(session: Session):
@@ -88,6 +103,10 @@ def createAStationAndAnUserAndAddRelationshipBy(user_controller: UserController,
     createAnUserBy(user_controller)
     createAStationBy(station_controller)
     station_controller.add_username(username=FIRST_TEST_USER_USERNAME, stationName=FIRST_TEST_STATION_STATION_NAME)
+
+def createAStationWithExampleRecordBy(station_controller: StationController, record_controller: RecordController):
+    _, station = createAStationBy(station_controller)
+    return record_controller.create_new_record(stationKey=station.stationKey, **FIRST_RECORD_TESTING)
 
 from .user_controller_test import *
 from .station_controller_test import *
