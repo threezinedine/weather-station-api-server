@@ -59,9 +59,12 @@ def assertStation(station: Station, stationName: str, stationPosition: str, push
     assert station.stationPosition == stationPosition
     assert station.pushingDataIntervalInSeconds == pushingDataIntervalInSeconds
 
-def assertRecord(record: Record, **kwargs):
+def assertRecord(record: Record, kwargs):
     for key, value in kwargs.items():
-        assert getattr(record, key) == value
+        if key != "createdTime":
+            assert getattr(record, key) == value
+        else:
+            assert str(getattr(record, key)) == value
 
 def createAnUserBy(controller: UserController):
     controller.create_new_user(username=FIRST_TEST_USER_USERNAME, password=FIRST_TEST_USER_PASSWORD)

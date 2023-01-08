@@ -1,3 +1,4 @@
+from datetime import datetime
 from sqlalchemy import (
     Column,
     Integer,
@@ -23,6 +24,11 @@ class Record(Base):
     humidity = Column(Integer)
     barPressure = Column(Float)
     createdTime = Column(DateTime)
+
+    def __init__(self, **kwargs):
+        kwargs["createdTime"] = datetime.strptime(kwargs["createdTime"], "%Y-%m-%d %H:%M:%S")
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
     def __repr__(self) -> str:
         return f"<Record recordId={self.recordId} createdTime={self.createdTime}>"
