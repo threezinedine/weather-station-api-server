@@ -1,4 +1,7 @@
-from sqlalchemy.orm import Session
+from sqlalchemy import desc
+from sqlalchemy.orm import (
+    Session,
+)
 from typing import (
     List, 
     Dict,
@@ -52,3 +55,10 @@ class RecordController:
             records = station.records
 
         return status, records
+
+    def get_latest_record_from_station(self, stationName: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], Record]:
+        status = OK_STATUS
+        station = self.session.query(Station).filter(Station.stationName == stationName).first()
+        latest_record = self.session.query(Record).filter(Record.stationId == station.stationId).order_by(desc(Record.createdTime)).first()
+
+        return status, latest_record
