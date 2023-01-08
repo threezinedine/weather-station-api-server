@@ -29,13 +29,16 @@ class RecordController:
         status = OK_STATUS
         record = None
         station = self.session.query(Station).filter(Station.stationId == kwargs["stationId"]).first()
-        
-        if station.stationKey == stationKey:
-            record = Record(**kwargs) 
-            self.session.add(record)
-            self.session.commit()
+
+        if station is not None:
+            if station.stationKey == stationKey:
+                record = Record(**kwargs) 
+                self.session.add(record)
+                self.session.commit()
+            else:
+                status = WRONG_STATION_KEY_STATUS
         else:
-            status = WRONG_STATION_KEY_STATUS
+            status = STATION_DOES_NOT_EXIST_STATUS
         return status, record
 
     def get_all_records_from_station(self, stationName: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], List[Record]]:
