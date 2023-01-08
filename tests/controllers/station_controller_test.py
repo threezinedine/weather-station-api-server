@@ -24,6 +24,8 @@ from app.exceptions import (
     STATION_DOES_NOT_EXIST_STATUS_CODE,
     STATION_EXIST_STATUS_CODE,
     STATION_EXIST_DETAIL,
+    USERNAME_DOES_NOT_EXISTED_STATUS_CODE,
+    USERNAME_DOES_NOT_EXISTED_DETAIL,
 )
 from tests.controllers import (
     assertStatus,
@@ -36,6 +38,7 @@ from tests.controllers import (
     FIRST_TEST_USER_PASSWORD,
     createAStationBy,
     creataAStationAndAnUserBy,
+    createAStationAndAnUserAndAddRelationshipBy,
 )
 
 
@@ -142,11 +145,18 @@ class StationControllerTest(unittest.TestCase):
         assertStation(station, TEST_STATION_NAME, TEST_STATION_POSITION)
 
     def test_given_a_station_is_created_and_a_user_is_created_and_the_relationship_is_created_when_querying_all_stations_by_username_then_returns_ok_and_tthe_array_of_that_station(self):
-        creataAStationAndAnUserBy(self.user_controller, self.station_controller)
-
-        self.station_controller.add_username(username=FIRST_TEST_USER_USERNAME, stationName=TEST_STATION_NAME)
+        createAStationAndAnUserAndAddRelationshipBy(self.user_controller, self.station_controller)
+        
         status, stations = self.station_controller.get_station_by_username(username=FIRST_TEST_USER_USERNAME)
 
         assertStatus(status, HTTP_200_OK)
         assert len(stations) == 1
         assertStation(stations[0], TEST_STATION_NAME, TEST_STATION_POSITION)
+
+    def test_give_a_station_user_and_relationship_are_created_when_querying_all_stations_by_username_with_non_existed_username_then_returns_user_does_not_exist_and_none(self):
+        createAStationAndAnUserAndAddRelationshipBy(self.user_controller, self.station_controller)
+
+        status, stations = self.station_controller.get_station_by_username(username=FIRST_TEST_USER_USERNAME)
+
+        assertStatus(status, USERNAME_DOES_NOT_EXISTED_STATUS_CODE, USERNAME_DOES_NOT_EXISTED_DETAIL)
+        assert stations is None

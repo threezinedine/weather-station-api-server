@@ -59,5 +59,10 @@ def creataAStationAndAnUserBy(user_controller: UserController, station_controlle
     createAnUserBy(user_controller)
     return createAStationBy(station_controller)
 
+def createAStationAndAnUserAndAddRelationshipBy(user_controller: UserController, station_controller: StationController):
+    createAnUserBy(user_controller)
+    createAStationBy(station_controller)
+    station_controller.add_username(username=FIRST_TEST_USER_USERNAME, stationName=TEST_STATION_NAME)
+
 from .user_controller_test import *
 from .station_controller_test import *
