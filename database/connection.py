@@ -12,7 +12,7 @@ engine = create_engine(database_uri)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
-def get_db():
+def get_session():
     try: 
         Base.metadata.create_all(engine)
         db = SessionLocal()

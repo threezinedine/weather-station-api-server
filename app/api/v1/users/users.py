@@ -4,6 +4,8 @@ from app.schemas import (
     RegisterOrLoginUserInfo,
     RegisterResponseUserInfo,
 )
+from app.controllers import UserController
+from database.connection import get_session
 
 
 @router.post("/register", status_code=200)

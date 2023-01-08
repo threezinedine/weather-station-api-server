@@ -66,14 +66,6 @@ SECOND_RECORD_TESTING = dict(stationId=1, **SECOND_RECORD_DATA)
 FIRST_STATION_WRONG_STATION_KEY = "asfagfaodhfahi29183alsdkjfafq0h"
 
 
-def clean_database(session: Session):
-    session.query(User).delete()
-    session.query(Station).delete()
-    session.query(StationUser).delete()
-    session.query(Record).delete()
-    session.commit()
-    session.close()
-
 def assertStatus(status: Dict[str, Union[int, Union[str, None]]], reference_status: Dict[str, Union[int, Union[str, None]]]):
     assert status[STATUS_CODE_KEY] == reference_status[STATUS_CODE_KEY]
     assert status[DETAIL_KEY] == reference_status[DETAIL_KEY]

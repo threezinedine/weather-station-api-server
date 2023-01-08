@@ -18,6 +18,9 @@ from app.exceptions import (
     USER_EXIST_STATUS,
     WRONG_PASSWORD_STATUS,
 )
+from tests import (
+    clean_database,
+)
 from tests.controllers import (
     assertStatus,
     assertUser,
@@ -31,7 +34,6 @@ from tests.controllers import (
     FIRST_TEST_USER_NEW_PASSWORD,
     createAnUserBy,
     createTwoUsersBy,
-    clean_database,
 )
 
 
