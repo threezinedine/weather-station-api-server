@@ -42,10 +42,20 @@ class RecordControllerTest(unittest.TestCase):
         assertStatus(status, OK_STATUS)
         self.assertListEqual(records, [])
 
-    def test_given_a_station_is_created_then_creating_a_new_record_then_returns_ok_and_that_record(self):
-        createAStationBy(self.station_controller)
+    def test_given_a_station_is_created_when_creating_a_new_record_then_returns_ok_and_that_record(self):
+        _, station = createAStationBy(self.station_controller)
 
-        status, record = self.record_controller.create_new_record(**FIRST_RECORD_TESTING)
+        status, record = self.record_controller.create_new_record(stationKey=station.stationKey, **FIRST_RECORD_TESTING)
 
         assertStatus(status, OK_STATUS)
         assertRecord(record, FIRST_RECORD_TESTING)
+
+    def test_given_a_station_and_a_record_are_created_when_querying_all_records_then_returns_ok_and_the_list_that_contains_that_record(self):
+        _, station = createAStationBy(self.station_controller)
+        self.record_controller.create_new_record(stationKey=station.stationKey, **FIRST_RECORD_TESTING)
+
+        status, records = self.record_controller.get_all_records()
+
+        assertStatus(status, OK_STATUS)
+        assert len(records) == 1
+        assertRecord(records[0], FIRST_RECORD_TESTING)
