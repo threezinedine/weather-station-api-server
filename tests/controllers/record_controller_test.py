@@ -11,6 +11,7 @@ from tests.controllers import (
     FIRST_STATION_WRONG_STATION_KEY,
     FIRST_TEST_STATION_WRONG_STATION_NAME,
     FIRST_TEST_STATION_STATION_NAME,
+    FIRST_WRONG_STATIONID_RECORD_TESTING,
     createAStationWithExampleRecordBy,
 )
 from app.controllers import (
@@ -64,6 +65,11 @@ class RecordControllerTest(unittest.TestCase):
         assert record is None
         _, records = self.record_controller.get_all_records()
         self.assertListEqual(records, [])
+
+    def test_given_a_station_is_created_when_creating_a_new_record_with_non_existed_station_then_returns_station_does_not_exist_and_none(self):
+        createAStationBy(self.station_controller)
+
+        status, record = self.record_controller.create_new_record(stationKey=FIRST_STATION_WRONG_STATION_KEY, **FIRST_WRONG_STATIONID_RECORD_TESTING)
 
     def test_given_a_station_and_a_record_are_created_when_querying_all_records_from_the_existed_station_then_returns_ok_and_list_of_records(self):
         createAStationWithExampleRecordBy(self.station_controller, self.record_controller)

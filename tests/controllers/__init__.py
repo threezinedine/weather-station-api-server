@@ -39,17 +39,18 @@ TEST_STATION_DEFAULT_PUSHING_DATA_INTERVAL_IN_SECONDS = 5
 TEST_STATION_PUSHING_DATA_INTERVAL_IN_SECONDS = 10
 
 
-FIRST_RECORD_TESTING = dict(stationId=1,
-                                windDirection=1,
-                                averageWindSpeedInOneMinute=2.3,
-                                maxWindSpeedInFiveMinutes=3.4,
-                                rainFallInOneHour=23.1,
-                                rainFallInOneDay=13.2,
-                                temperature=34.23,
-                                humidity=23,
-                                barPressure=-123.00,
-                                createdTime="2023-01-08 18:54:12"
-                                )
+RECORD_DATA = dict(windDirection=1,
+                    averageWindSpeedInOneMinute=2.3,
+                    maxWindSpeedInFiveMinutes=3.4,
+                    rainFallInOneHour=23.1,
+                    rainFallInOneDay=13.2,
+                    temperature=34.23,
+                    humidity=23,
+                    barPressure=-123.00,
+                    createdTime="2023-01-08 18:54:12"
+                    )
+FIRST_RECORD_TESTING = dict(stationId=1, **RECORD_DATA)
+FIRST_WRONG_STATIONID_RECORD_TESTING = dict(stationId=2, **RECORD_DATA)
 FIRST_STATION_WRONG_STATION_KEY = "asfagfaodhfahi29183alsdkjfafq0h"
 
 
