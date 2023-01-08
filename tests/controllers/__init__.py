@@ -26,9 +26,11 @@ NEW_TEST_USER_PASSWORD = "threezinedineadfab"
 FIRST_TEST_USER_NEW_USERNAME = "testing_changed_username"
 FIRST_TEST_USER_NEW_PASSWORD = "testing_changed_password"
 
-TEST_STATION_STATION_NAME = "Ha Noi"
-TEST_STATION_STATION_POSITION = "Dong Da, Ha Noi"
-TEST_STATION_WRONG_STATION_NAME = "HA Noi"
+FIRST_TEST_STATION_STATION_NAME = "Ha Noi"
+FIRST_TEST_STATION_STATION_POSITION = "Dong Da, Ha Noi"
+FIRST_TEST_STATION_WRONG_STATION_NAME = "HA Noi"
+SECOND_TEST_STATION_STATION_NAME = "Bac Ninh"
+SECOND_TEST_STATION_STATION_POSITION = "Gia Binh, Bac Ninh"
 TEST_STATION_DEFAULT_PUSHING_DATA_INTERVAL_IN_SECONDS = 5
 TEST_STATION_PUSHING_DATA_INTERVAL_IN_SECONDS = 10
 
@@ -54,11 +56,11 @@ def createTwoUsersBy(controller: UserController):
     controller.create_new_user(username=SECOND_TEST_USER_USERNAME, password=SECOND_TEST_USER_PASSWORD)
 
 def createAStationBy(controller: StationController):
-    return controller.create_new_station(TEST_STATION_STATION_NAME, TEST_STATION_STATION_POSITION)
+    return controller.create_new_station(FIRST_TEST_STATION_STATION_NAME, FIRST_TEST_STATION_STATION_POSITION)
 
 def createTwoStationsBy(controller: StationController):
     createAStationBy(controller)
-    controller.create_new_station("Bac Ninh", "Gia Binh, Bac Ninh")
+    controller.create_new_station(SECOND_TEST_STATION_STATION_NAME, SECOND_TEST_STATION_STATION_POSITION)
 
 def creataAStationAndAnUserBy(user_controller: UserController, station_controller: StationController):
     createAnUserBy(user_controller)
@@ -67,7 +69,7 @@ def creataAStationAndAnUserBy(user_controller: UserController, station_controlle
 def createAStationAndAnUserAndAddRelationshipBy(user_controller: UserController, station_controller: StationController):
     createAnUserBy(user_controller)
     createAStationBy(station_controller)
-    station_controller.add_username(username=FIRST_TEST_USER_USERNAME, stationName=TEST_STATION_STATION_NAME)
+    station_controller.add_username(username=FIRST_TEST_USER_USERNAME, stationName=FIRST_TEST_STATION_STATION_NAME)
 
 from .user_controller_test import *
 from .station_controller_test import *
