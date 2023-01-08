@@ -93,9 +93,14 @@ class StationController:
         user = self._get_user_by_username(username)
 
         if user is not None:
-            association = StationUser(stationId=station.stationId, userId=user.userId)
-            self.session.add(association)
-            self.session.commit()
+            if station is not None:
+                association = StationUser(stationId=station.stationId, userId=user.userId)
+                self.session.add(association)
+                self.session.commit()
+            else:
+                status[STATUS_CODE_KEY] = STATION_DOES_NOT_EXIST_STATUS_CODE
+                status[DETAIL_KEY] = STATION_DOES_NOT_EXIST_DETAIL
+                station = None
         else:
             status[STATUS_CODE_KEY] = USERNAME_DOES_NOT_EXISTED_STATUS_CODE
             status[DETAIL_KEY] = USERNAME_DOES_NOT_EXISTED_DETAIL
