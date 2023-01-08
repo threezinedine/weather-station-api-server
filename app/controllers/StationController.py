@@ -121,3 +121,14 @@ class StationController:
             status = STATION_DOES_NOT_EXIST_STATUS
 
         return status, None
+
+    def delete_relationship(self, stationName: str, username: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], None]:
+        status = OK_STATUS
+
+        _, station = self.get_station_by_station_name(stationName)
+        user = self._get_user_by_username(username)
+
+        user.stations.remove(station)
+        self.session.commit()
+
+        return status, None
