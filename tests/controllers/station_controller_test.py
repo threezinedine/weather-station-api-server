@@ -219,3 +219,14 @@ class StationControllerTest(unittest.TestCase):
         _, stations = self.station_controller.get_all_stations()
         assert len(stations) == 1
         assertStation(stations[0], FIRST_TEST_STATION_STATION_NAME, FIRST_TEST_STATION_STATION_POSITION)
+
+    def test_given_a_station_user_relationship_are_created_when_deleting_a_relationship_by_valid_username_then_return_ok_and_none(self):
+        createAStationAndAnUserAndAddRelationshipBy(self.user_controller, self.station_controller)
+
+        status, station = self.station_controller.delete_relationship(username=FIRST_TEST_USER_USERNAME, stationName=FIRST_TEST_STATION_STATION_NAME)
+
+        assertStatus(status, OK_STATUS)
+        assert station is None
+
+        _, stations = self.station_controller.get_station_by_username(username=FIRST_TEST_USER_USERNAME)
+        self.assertListEqual(stations, [])
