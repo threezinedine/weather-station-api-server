@@ -22,18 +22,24 @@ from app.exceptions import (
     HTTP_200_OK,
     STATION_DOES_NOT_EXIST_DETAIL,
     STATION_DOES_NOT_EXIST_STATUS_CODE,
+    STATION_EXIST_STATUS_CODE,
+    STATION_EXIST_DETAIL,
 )
 from tests.controllers import (
     assertStatus,
     assertStation,
+    TEST_STATION_NAME,
+    TEST_STATION_POSITION,
+    TEST_STATION_WRONG_STATION_NAME,
+    TEST_STATION_DEFAULT_PUSHING_DATA_INTERVAL_IN_SECONDS,
+    FIRST_TEST_USER_USERNAME,
+    FIRST_TEST_USER_PASSWORD,
+    createAStationBy,
+    creataAStationAndAnUserBy,
 )
 
 
 class StationControllerTest(unittest.TestCase):
-    test_station_name = "Ha Noi"
-    test_station_position = "Dong Da, Ha Noi"
-    wrong_testing_station_name = "HA Noi"
-
     def setUp(self):
         self.session = next(get_testing_session())
         self.station_controller = StationController(self.session)
@@ -46,7 +52,8 @@ class StationControllerTest(unittest.TestCase):
         self.session.commit()
         self.session.close()
 
-    def assertStation(self, station: Station, stationName: str, stationPosition: str, pushingDataIntervalInSeconds: int = 5):
+    def assertStation(self, station: Station, stationName: str, 
+            stationPosition: str, pushingDataIntervalInSeconds: int = TEST_STATION_DEFAULT_PUSHING_DATA_INTERVAL_IN_SECONDS):
         assert station.stationName == stationName
         assert station.stationPosition == stationPosition
         assert station.pushingDataIntervalInSeconds == pushingDataIntervalInSeconds
@@ -58,91 +65,88 @@ class StationControllerTest(unittest.TestCase):
         self.assertListEqual(stations, [])
 
     def test_given_no_station_is_created_when_creating_new_station_then_returns_ok_and_that_station(self):
-        status, station = self.station_controller.create_new_station(stationName=self.test_station_name, stationPosition=self.test_station_position)
+        status, station = self.station_controller.create_new_station(stationName=TEST_STATION_NAME, stationPosition=TEST_STATION_POSITION)
 
         assertStatus(status, HTTP_200_OK)
-        assertStation(station, self.test_station_name, self.test_station_position)
+        assertStation(station, TEST_STATION_NAME, TEST_STATION_POSITION)
 
     def test_given_a_station_is_created_when_querying_all_stations_then_returns_ok_and_station_list(self):
-        self.station_controller.create_new_station(self.test_station_name, self.test_station_position)
+        createAStationBy(self.station_controller)
 
         status, stations = self.station_controller.get_all_stations()
 
         assertStatus(status, HTTP_200_OK)
         assert len(stations) == 1
-        assertStation(stations[0], self.test_station_name, self.test_station_position)
+        assertStation(stations[0], TEST_STATION_NAME, TEST_STATION_POSITION)
 
     def test_given_a_station_is_created_when_querying_station_by_valid_station_name_then_returns_ok_and_station(self):
-        self.station_controller.create_new_station(self.test_station_name, self.test_station_position)
+        createAStationBy(self.station_controller)
 
-        status, station = self.station_controller.get_station_by_station_name(stationName=self.test_station_name)
+        status, station = self.station_controller.get_station_by_station_name(stationName=TEST_STATION_NAME)
 
         assertStatus(status, HTTP_200_OK)
-        assertStation(station, self.test_station_name, self.test_station_position)
+        assertStation(station, TEST_STATION_NAME, TEST_STATION_POSITION)
 
     def test_given_a_station_is_created_when_querying_station_by_non_existed_station_name_then_returns_station_does_not_exist_and_none(self):
-        self.station_controller.create_new_station(self.test_station_name, self.test_station_position)
+        createAStationBy(self.station_controller)
 
-        status, station = self.station_controller.get_station_by_station_name(stationName=self.wrong_testing_station_name)
+        status, station = self.station_controller.get_station_by_station_name(stationName=TEST_STATION_WRONG_STATION_NAME)
 
         assertStatus(status, STATION_DOES_NOT_EXIST_STATUS_CODE, STATION_DOES_NOT_EXIST_DETAIL)
         assert station is None
 
     def test_given_a_station_is_created_when_creating_a_new_station_with_the_existed_station_name_then_returns_station_exist_and_none(self):
-        self.station_controller.create_new_station(self.test_station_name, self.test_station_position)
+        createAStationBy(self.station_controller)
 
-        status, station = self.station_controller.create_new_station(self.test_station_name, self.test_station_position)
+        status, station = self.station_controller.create_new_station(TEST_STATION_NAME, TEST_STATION_POSITION)
 
-        assertStatus(status, 409, "The station exists.")
+        assertStatus(status, STATION_EXIST_STATUS_CODE, STATION_EXIST_DETAIL)
         assert station is None
 
         _, stations = self.station_controller.get_all_stations()
         assert len(stations) == 1
 
     def test_given_a_station_is_created_when_querying_refresh_the_station_key_then_returns_ok_and_station(self):
-        _, station = self.station_controller.create_new_station(self.test_station_name, self.test_station_position)
+        _, station = createAStationBy(self.station_controller)
         oldStationKey = station.stationKey
 
-        status, new_station = self.station_controller.reset_station_key(self.test_station_name)
+        status, new_station = self.station_controller.reset_station_key(TEST_STATION_NAME)
 
         assertStatus(status, HTTP_200_OK)
-        assertStation(station, self.test_station_name, self.test_station_position) 
+        assertStation(station, TEST_STATION_NAME, TEST_STATION_POSITION) 
 
         assert oldStationKey != new_station.stationKey
 
     def test_given_a_station_is_created_when_querying_refresh_the_station_key_of_non_existed_station_then_returns_statin_does_not_exist_and_none(self):
-        self.station_controller.create_new_station(self.test_station_name, self.test_station_position)
+        createAStationBy(self.station_controller)
 
-        status, station = self.station_controller.reset_station_key(self.wrong_testing_station_name)
+        status, station = self.station_controller.reset_station_key(TEST_STATION_WRONG_STATION_NAME)
 
         assertStatus(status, STATION_DOES_NOT_EXIST_STATUS_CODE, STATION_DOES_NOT_EXIST_DETAIL)
         assert station is None
 
     def test_given_a_station_is_created_and_a_user_is_created_without_any_relationship_when_querying_all_stations_by_username_then_returns_ok_and_stations_array(self):
-        self.station_controller.create_new_station(self.test_station_name, self.test_station_position)
-        self.user_controller.create_new_user(username="threezinedine", password="threezinedine")
+        creataAStationAndAnUserBy(self.user_controller, self.station_controller)
 
-        status, stations = self.station_controller.get_station_by_username(username="threezinedine")
+        status, stations = self.station_controller.get_station_by_username(username=FIRST_TEST_USER_USERNAME)
 
         assertStatus(status, HTTP_200_OK)
         self.assertListEqual(stations, [])
 
     def test_given_a_station_is_created_and_a_user_is_created_when_the_relationship_is_created_then_returns_ok_and_station(self):
-        self.station_controller.create_new_station(self.test_station_name, self.test_station_position)
-        self.user_controller.create_new_user(username="threezinedine", password="threezinedine")
+        creataAStationAndAnUserBy(self.user_controller, self.station_controller)
 
-        status, station = self.station_controller.add_username(username="threezinedine", stationName=self.test_station_name)
+        status, station = self.station_controller.add_username(username=FIRST_TEST_USER_USERNAME, stationName=TEST_STATION_NAME)
 
         assertStatus(status, HTTP_200_OK)
-        assertStation(station, self.test_station_name, self.test_station_position)
+        assertStation(station, TEST_STATION_NAME, TEST_STATION_POSITION)
 
     def test_given_a_station_is_created_and_a_user_is_created_and_the_relationship_is_created_when_querying_all_stations_by_username_then_returns_ok_and_tthe_array_of_that_station(self):
-        self.station_controller.create_new_station(self.test_station_name, self.test_station_position)
-        self.user_controller.create_new_user(username="threezinedine", password="threezinedine")
+        creataAStationAndAnUserBy(self.user_controller, self.station_controller)
 
-        self.station_controller.add_username(username="threezinedine", stationName=self.test_station_name)
-        status, stations = self.station_controller.get_station_by_username(username="threezinedine")
+        self.station_controller.add_username(username=FIRST_TEST_USER_USERNAME, stationName=TEST_STATION_NAME)
+        status, stations = self.station_controller.get_station_by_username(username=FIRST_TEST_USER_USERNAME)
 
         assertStatus(status, HTTP_200_OK)
         assert len(stations) == 1
-        assertStation(stations[0], self.test_station_name, self.test_station_position)
+        assertStation(stations[0], TEST_STATION_NAME, TEST_STATION_POSITION)
