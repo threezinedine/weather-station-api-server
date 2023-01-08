@@ -34,6 +34,7 @@ from tests.controllers import (
     FIRST_TEST_USER_PASSWORD,
     FIRST_TEST_USER_WRONG_USERNAME,
     createAStationBy,
+    createTwoStationsBy,
     creataAStationAndAnUserBy,
     createAStationAndAnUserAndAddRelationshipBy,
 )
@@ -193,3 +194,14 @@ class StationControllerTest(unittest.TestCase):
         assertStatus(status, STATION_DOES_NOT_EXIST_STATUS)
         assert station is None
 
+    def test_given_two_stations_are_created_when_deleting_a_station_then_return_ok_and_none(self):
+        createTwoStationsBy(self.station_controller)
+
+        status, station = self.station_controller.delete_by_station_name(stationName=TEST_STATION_STATION_NAME)
+
+        assertStatus(status, OK_STATUS)
+        assert station is None
+
+        _, stations = self.station_controller.get_all_stations()
+        assert len(stations) == 1
+        assertStation(stations[0], TEST_STATION_STATION_NAME, TEST_STATION_STATION_POSITION)

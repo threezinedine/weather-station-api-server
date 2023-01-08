@@ -56,6 +56,10 @@ def createTwoUsersBy(controller: UserController):
 def createAStationBy(controller: StationController):
     return controller.create_new_station(TEST_STATION_STATION_NAME, TEST_STATION_STATION_POSITION)
 
+def createTwoStationsBy(controller: StationController):
+    createAStationBy(controller)
+    controller.create_new_station("Bac Ninh", "Gia Binh, Bac Ninh")
+
 def creataAStationAndAnUserBy(user_controller: UserController, station_controller: StationController):
     createAnUserBy(user_controller)
     return createAStationBy(station_controller)
