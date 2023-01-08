@@ -131,7 +131,10 @@ class StationController:
         if user is None:
             status = USER_DOES_NOT_EXIST_STATUS
         else:
-            user.stations.remove(station)
-            self.session.commit()
+            if station is not None:
+                user.stations.remove(station)
+                self.session.commit()
+            else:
+                status = STATION_DOES_NOT_EXIST_STATUS
 
         return status, None

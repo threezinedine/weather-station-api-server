@@ -248,7 +248,7 @@ class StationControllerTest(unittest.TestCase):
     def test_given_a_station_user_relationship_are_created_when_deleting_a_relationship_of_non_existed_station_then_return_station_does_not_exist_and_none(self):
         createAStationAndAnUserAndAddRelationshipBy(self.user_controller, self.station_controller)
 
-        status, station = self.station_controller.delete_relationship(username=FIRST_TEST_STATION_STATION_NAME, stationName=FIRST_TEST_STATION_WRONG_STATION_NAME)
+        status, station = self.station_controller.delete_relationship(username=FIRST_TEST_USER_USERNAME, stationName=FIRST_TEST_STATION_WRONG_STATION_NAME)
 
         assertStatus(status, STATION_DOES_NOT_EXIST_STATUS)
         assert station is None
