@@ -33,9 +33,9 @@ TEST_STATION_DEFAULT_PUSHING_DATA_INTERVAL_IN_SECONDS = 5
 TEST_STATION_PUSHING_DATA_INTERVAL_IN_SECONDS = 10
 
 
-def assertStatus(status: Dict[str, Union[int, Union[str, None]]], status_code: int, status_detail: str = None):
-    assert status[STATUS_CODE_KEY] == status_code
-    assert status[DETAIL_KEY] == status_detail
+def assertStatus(status: Dict[str, Union[int, Union[str, None]]], reference_status: Dict[str, Union[int, Union[str, None]]]):
+    assert status[STATUS_CODE_KEY] == reference_status[STATUS_CODE_KEY]
+    assert status[DETAIL_KEY] == reference_status[DETAIL_KEY]
 
 def assertUser(user: User, username: str, password: str):
     assert user.username == username

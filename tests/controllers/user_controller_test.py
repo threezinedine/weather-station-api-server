@@ -13,13 +13,10 @@ from tests import get_testing_session
 from app.exceptions import (
     STATUS_CODE_KEY,
     DETAIL_KEY,
-    USER_DOES_NOT_EXIST_DETAIL,
-    USER_DOES_NOT_EXIST_STATUS_CODE,
-    USER_EXIST_DETAIL,
-    USER_EXIST_STATUS_CODE,
-    WRONG_PASSWORD_DETAIL,
-    WRONG_PASSWORD_STATUS_CODE,
-    HTTP_200_OK,
+    OK_STATUS,
+    USER_DOES_NOT_EXIST_STATUS,
+    USER_EXIST_STATUS,
+    WRONG_PASSWORD_STATUS,
 )
 from tests.controllers import (
     assertStatus,
@@ -50,13 +47,13 @@ class UserControllerTest(unittest.TestCase):
     def test_given_no_user_is_created_when_controller_get_a_user_by_name_then_receives_username_does_not_exist_and_None(self):
         status, user = self.user_controller.get_user_by_name(username=FIRST_TEST_USER_USERNAME)
 
-        assertStatus(status, USER_DOES_NOT_EXIST_STATUS_CODE, USER_DOES_NOT_EXIST_DETAIL)
+        assertStatus(status, USER_DOES_NOT_EXIST_STATUS)
         assert user is None
 
     def test_given_no_user_is_created_when_create_a_new_user_then_return_ok_and_None(self):
         status, user = self.user_controller.create_new_user(username=FIRST_TEST_USER_USERNAME, password=FIRST_TEST_USER_PASSWORD)
 
-        assertStatus(status, HTTP_200_OK)
+        assertStatus(status, OK_STATUS)
         assertUser(user, FIRST_TEST_USER_USERNAME, FIRST_TEST_USER_PASSWORD)
         
     def test_given_a_user_is_created_when_querying_user_by_username_then_that_returns_ok_and_that_user(self):
@@ -64,7 +61,7 @@ class UserControllerTest(unittest.TestCase):
 
         status, user = self.user_controller.get_user_by_name(username=FIRST_TEST_USER_USERNAME)
 
-        assertStatus(status, HTTP_200_OK)
+        assertStatus(status, OK_STATUS)
         assertUser(user, username=FIRST_TEST_USER_USERNAME, password=FIRST_TEST_USER_PASSWORD)
 
     def test_given_a_user_is_created_when_asking_the_wrong_user_then_returns_username_does_not_exist_and_none(self):
@@ -72,13 +69,13 @@ class UserControllerTest(unittest.TestCase):
 
         status, user = self.user_controller.get_user_by_name(username=FIRST_TEST_USER_WRONG_USERNAME)
 
-        assertStatus(status, USER_DOES_NOT_EXIST_STATUS_CODE, USER_DOES_NOT_EXIST_DETAIL)
+        assertStatus(status, USER_DOES_NOT_EXIST_STATUS)
         assert user is None
         
     def test_given_no_user_is_created_when_asking_all_users_then_returns_an_empty_string(self):
         status, users = self.user_controller.get_all_users()
 
-        assertStatus(status, HTTP_200_OK)
+        assertStatus(status, OK_STATUS)
         self.assertListEqual(users, [])
 
     def test_given_a_user_is_created_when_asking_all_users_then_returns_the_list_contains_that_user(self):
@@ -86,7 +83,7 @@ class UserControllerTest(unittest.TestCase):
 
         status, users = self.user_controller.get_all_users()
 
-        assertStatus(status, HTTP_200_OK)
+        assertStatus(status, OK_STATUS)
         assert len(users) == 1
         assertUser(users[0], FIRST_TEST_USER_USERNAME, FIRST_TEST_USER_PASSWORD)
 
@@ -95,7 +92,7 @@ class UserControllerTest(unittest.TestCase):
 
         status, user = self.user_controller.create_new_user(username=FIRST_TEST_USER_USERNAME, password=NEW_TEST_USER_PASSWORD)
 
-        assertStatus(status, USER_EXIST_STATUS_CODE, USER_EXIST_DETAIL)
+        assertStatus(status, USER_EXIST_STATUS)
         assert user is None
         _, users = self.user_controller.get_all_users()
         assert len(users) == 1
@@ -106,8 +103,8 @@ class UserControllerTest(unittest.TestCase):
         first_status, first_user = self.user_controller.get_user_by_id(1)
         second_status, second_user = self.user_controller.get_user_by_id(2)
 
-        assertStatus(first_status, HTTP_200_OK)
-        assertStatus(second_status, HTTP_200_OK)
+        assertStatus(first_status, OK_STATUS)
+        assertStatus(second_status, OK_STATUS)
 
         assertUser(first_user, FIRST_TEST_USER_USERNAME, FIRST_TEST_USER_PASSWORD)
         assertUser(second_user, SECOND_TEST_USER_USERNAME, SECOND_TEST_USER_PASSWORD)
@@ -117,7 +114,7 @@ class UserControllerTest(unittest.TestCase):
 
         status, user = self.user_controller.get_user_by_id(3)
 
-        assertStatus(status, USER_DOES_NOT_EXIST_STATUS_CODE, USER_DOES_NOT_EXIST_DETAIL)
+        assertStatus(status, USER_DOES_NOT_EXIST_STATUS)
         assert user is None
 
     def test_given_a_user_is_created_when_querying_user_by_valid_username_and_password_then_return_ok_and_user(self):
@@ -125,7 +122,7 @@ class UserControllerTest(unittest.TestCase):
 
         status, user = self.user_controller.get_user_by_username_and_password(FIRST_TEST_USER_USERNAME, FIRST_TEST_USER_PASSWORD)
 
-        assertStatus(status, HTTP_200_OK)
+        assertStatus(status, OK_STATUS)
         assertUser(user, FIRST_TEST_USER_USERNAME, FIRST_TEST_USER_PASSWORD)
 
     def test_given_no_user_created_when_querying_user_by_invalid_username_then_return_user_does_not_exist_and_none(self):
@@ -133,7 +130,7 @@ class UserControllerTest(unittest.TestCase):
 
         status, user = self.user_controller.get_user_by_username_and_password(FIRST_TEST_USER_WRONG_USERNAME, FIRST_TEST_USER_PASSWORD)
 
-        assertStatus(status, USER_DOES_NOT_EXIST_STATUS_CODE, USER_DOES_NOT_EXIST_DETAIL)
+        assertStatus(status, USER_DOES_NOT_EXIST_STATUS)
         assert user is None
 
     def test_given_a_user_is_created_when_querying_user_by_valid_username_and_invalid_password_then_returns_password_is_wrong_and_none(self):
@@ -141,7 +138,7 @@ class UserControllerTest(unittest.TestCase):
 
         status, user = self.user_controller.get_user_by_username_and_password(FIRST_TEST_USER_USERNAME, FIRST_TEST_USER_WRONG_USERNAME)
 
-        assertStatus(status, WRONG_PASSWORD_STATUS_CODE, WRONG_PASSWORD_DETAIL)
+        assertStatus(status, WRONG_PASSWORD_STATUS)
         assert user is None
 
     def test_given_no_user_is_created_when_change_the_name_of_non_existed_username_then_returns_user_does_not_existed_exception_and_none(self):
@@ -149,7 +146,7 @@ class UserControllerTest(unittest.TestCase):
 
         status, user = self.user_controller.change_user(username=FIRST_TEST_USER_WRONG_USERNAME, new_username=FIRST_TEST_USER_NEW_USERNAME)
 
-        assertStatus(status, USER_DOES_NOT_EXIST_STATUS_CODE, USER_DOES_NOT_EXIST_DETAIL)
+        assertStatus(status, USER_DOES_NOT_EXIST_STATUS)
         assert user is None
 
     def test_given_a_user_is_created_when_change_the_name_of_existed_username_then_returns_ok_and_that_user(self):
@@ -157,7 +154,7 @@ class UserControllerTest(unittest.TestCase):
 
         status, user = self.user_controller.change_user(username=FIRST_TEST_USER_USERNAME, new_username=FIRST_TEST_USER_NEW_USERNAME)
         
-        assertStatus(status, HTTP_200_OK)
+        assertStatus(status, OK_STATUS)
         assertUser(user, FIRST_TEST_USER_NEW_USERNAME, FIRST_TEST_USER_PASSWORD)
         _, modified_user = self.user_controller.get_user_by_name(FIRST_TEST_USER_NEW_USERNAME)
         assertUser(modified_user, FIRST_TEST_USER_NEW_USERNAME, FIRST_TEST_USER_PASSWORD)
@@ -167,7 +164,7 @@ class UserControllerTest(unittest.TestCase):
 
         status, user = self.user_controller.change_user(username=FIRST_TEST_USER_USERNAME, new_username=SECOND_TEST_USER_USERNAME)
 
-        assertStatus(status, USER_EXIST_STATUS_CODE, USER_EXIST_DETAIL)
+        assertStatus(status, USER_EXIST_STATUS)
         assert user is None
 
     def test_given_a_user_is_created_when_change_the_password_then_returns_ok_and_that_user(self):
@@ -175,7 +172,7 @@ class UserControllerTest(unittest.TestCase):
 
         status, user = self.user_controller.change_user(username=FIRST_TEST_USER_USERNAME, new_password=FIRST_TEST_USER_NEW_PASSWORD)
 
-        assertStatus(status, HTTP_200_OK)
+        assertStatus(status, OK_STATUS)
         assertUser(user, FIRST_TEST_USER_USERNAME, FIRST_TEST_USER_NEW_PASSWORD)
         _, modified_user = self.user_controller.get_user_by_name(FIRST_TEST_USER_USERNAME)
         assertUser(modified_user, FIRST_TEST_USER_USERNAME, FIRST_TEST_USER_NEW_PASSWORD)
@@ -186,7 +183,7 @@ class UserControllerTest(unittest.TestCase):
         status, user = self.user_controller.change_user(username=FIRST_TEST_USER_USERNAME, 
                         new_username=FIRST_TEST_USER_NEW_USERNAME, new_password=FIRST_TEST_USER_NEW_PASSWORD)
 
-        assertStatus(status, HTTP_200_OK)
+        assertStatus(status, OK_STATUS)
         assertUser(user, FIRST_TEST_USER_NEW_USERNAME, FIRST_TEST_USER_NEW_PASSWORD)
         _, modified_user = self.user_controller.get_user_by_name(FIRST_TEST_USER_NEW_USERNAME)
         assertUser(modified_user, FIRST_TEST_USER_NEW_USERNAME, FIRST_TEST_USER_NEW_PASSWORD)
@@ -196,7 +193,7 @@ class UserControllerTest(unittest.TestCase):
 
         status, user = self.user_controller.delete_all_users()
 
-        assertStatus(status, HTTP_200_OK)
+        assertStatus(status, OK_STATUS)
         assert user is None
 
         _, users = self.user_controller.get_all_users()
@@ -207,7 +204,7 @@ class UserControllerTest(unittest.TestCase):
 
         status, user = self.user_controller.delete_user_by_username(FIRST_TEST_USER_USERNAME)
 
-        assertStatus(status, HTTP_200_OK)
+        assertStatus(status, OK_STATUS)
         assert user is None
 
         _, remain_users = self.user_controller.get_all_users()
@@ -219,7 +216,7 @@ class UserControllerTest(unittest.TestCase):
 
         status, user = self.user_controller.delete_user_by_username(FIRST_TEST_USER_WRONG_USERNAME)
 
-        assertStatus(status, USER_DOES_NOT_EXIST_STATUS_CODE, USER_DOES_NOT_EXIST_DETAIL)
+        assertStatus(status, USER_DOES_NOT_EXIST_STATUS)
         assert user is None
 
         _, remain_users = self.user_controller.get_all_users()
