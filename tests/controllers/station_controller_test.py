@@ -204,4 +204,4 @@ class StationControllerTest(unittest.TestCase):
 
         _, stations = self.station_controller.get_all_stations()
         assert len(stations) == 1
-        assertStation(stations[0], TEST_STATION_STATION_NAME, TEST_STATION_STATION_POSITION)
+        assertStation(stations[0], "Bac Ninh", "Gia Binh, Bac Ninh")

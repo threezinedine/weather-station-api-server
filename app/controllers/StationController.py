@@ -108,3 +108,11 @@ class StationController:
             status = STATION_DOES_NOT_EXIST_STATUS
 
         return status, station
+
+    def delete_by_station_name(self, stationName: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], None]:
+        status = OK_STATUS
+
+        self.session.query(Station).filter(Station.stationName == stationName).delete()
+        self.session.commit()
+
+        return status, None
