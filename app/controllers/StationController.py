@@ -128,7 +128,10 @@ class StationController:
         _, station = self.get_station_by_station_name(stationName)
         user = self._get_user_by_username(username)
 
-        user.stations.remove(station)
-        self.session.commit()
+        if user is None:
+            status = USER_DOES_NOT_EXIST_STATUS
+        else:
+            user.stations.remove(station)
+            self.session.commit()
 
         return status, None

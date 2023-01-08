@@ -238,7 +238,7 @@ class StationControllerTest(unittest.TestCase):
 
         status, station = self.station_controller.delete_relationship(username=FIRST_TEST_USER_WRONG_USERNAME, stationName=FIRST_TEST_STATION_STATION_NAME)
 
-        assertStatus(status, OK_STATUS)
+        assertStatus(status, USER_DOES_NOT_EXIST_STATUS)
         assert station is None
         
         _, stations = self.station_controller.get_station_by_username(username=FIRST_TEST_USER_USERNAME)
