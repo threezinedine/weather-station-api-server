@@ -80,7 +80,10 @@ class RecordController:
 
         station = self._get_station_by_station_name(stationName)
 
-        self.session.query(Record).filter(Record.stationId == station.stationId).delete()
-        self.session.commit()
+        if station is not None:
+            self.session.query(Record).filter(Record.stationId == station.stationId).delete()
+            self.session.commit()
+        else:
+            status = STATION_DOES_NOT_EXIST_STATUS
         
         return status, None
