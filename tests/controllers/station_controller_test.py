@@ -154,10 +154,18 @@ class StationControllerTest(unittest.TestCase):
         assert len(stations) == 1
         assertStation(stations[0], TEST_STATION_NAME, TEST_STATION_POSITION)
 
-    def test_give_a_station_user_and_relationship_are_created_when_querying_all_stations_by_username_with_non_existed_username_then_returns_user_does_not_exist_and_none(self):
+    def test_given_a_station_user_and_relationship_are_created_when_querying_all_stations_by_username_with_non_existed_username_then_returns_user_does_not_exist_and_none(self):
         createAStationAndAnUserAndAddRelationshipBy(self.user_controller, self.station_controller)
 
         status, stations = self.station_controller.get_station_by_username(username=FIRST_TEST_USER_WRONG_USERNAME)
+
+        assertStatus(status, USERNAME_DOES_NOT_EXISTED_STATUS_CODE, USERNAME_DOES_NOT_EXISTED_DETAIL)
+        assert stations is None
+
+    def test_given_a_station_user_and_relationship_are_created_when_create_the_relationship_with_non_existed_username_then_returns_user_does_not_exist_and_none(self):
+        creataAStationAndAnUserBy(self.user_controller, self.station_controller)
+
+        status, stations = self.station_controller.add_username(username=FIRST_TEST_USER_WRONG_USERNAME, stationName=TEST_STATION_NAME)
 
         assertStatus(status, USERNAME_DOES_NOT_EXISTED_STATUS_CODE, USERNAME_DOES_NOT_EXISTED_DETAIL)
         assert stations is None
