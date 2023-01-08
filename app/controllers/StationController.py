@@ -21,6 +21,8 @@ from app.exceptions import (
     STATION_DOES_NOT_EXIST_DETAIL,
     STATION_EXIST_DETAIL,
     STATION_EXIST_STATUS_CODE,
+    USERNAME_DOES_NOT_EXISTED_STATUS_CODE,
+    USERNAME_DOES_NOT_EXISTED_DETAIL,
 )
 
 
@@ -74,8 +76,15 @@ class StationController:
         status = {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}
 
         user = self.session.query(User).filter(User.username == username).first()
+        stations = None
+
+        if user is None:
+            status[STATUS_CODE_KEY] = USERNAME_DOES_NOT_EXISTED_STATUS_CODE
+            status[DETAIL_KEY] = USERNAME_DOES_NOT_EXISTED_DETAIL
+        else:
+            stations = user.stations
         
-        return status, user.stations
+        return status, stations
 
     def add_username(self, username: str, stationName: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], Station]:
         status = {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}

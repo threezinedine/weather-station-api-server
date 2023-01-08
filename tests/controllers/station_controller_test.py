@@ -36,6 +36,7 @@ from tests.controllers import (
     TEST_STATION_DEFAULT_PUSHING_DATA_INTERVAL_IN_SECONDS,
     FIRST_TEST_USER_USERNAME,
     FIRST_TEST_USER_PASSWORD,
+    FIRST_TEST_USER_WRONG_USERNAME,
     createAStationBy,
     creataAStationAndAnUserBy,
     createAStationAndAnUserAndAddRelationshipBy,
@@ -156,7 +157,7 @@ class StationControllerTest(unittest.TestCase):
     def test_give_a_station_user_and_relationship_are_created_when_querying_all_stations_by_username_with_non_existed_username_then_returns_user_does_not_exist_and_none(self):
         createAStationAndAnUserAndAddRelationshipBy(self.user_controller, self.station_controller)
 
-        status, stations = self.station_controller.get_station_by_username(username=FIRST_TEST_USER_USERNAME)
+        status, stations = self.station_controller.get_station_by_username(username=FIRST_TEST_USER_WRONG_USERNAME)
 
         assertStatus(status, USERNAME_DOES_NOT_EXISTED_STATUS_CODE, USERNAME_DOES_NOT_EXISTED_DETAIL)
         assert stations is None
