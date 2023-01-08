@@ -97,3 +97,11 @@ class RecordControllerTest(unittest.TestCase):
 
         assertStatus(status, OK_STATUS)
         assertRecord(record, SECOND_RECORD_TESTING) 
+
+    def test_given_a_station_and_a_record_are_created_when_querying_the_latest_record_of_non_existed_station_then_returns_station_does_not_exist_and_none(self):
+        createAStationWithExampleRecordBy(self.station_controller, self.record_controller)
+
+        status, record = self.record_controller.get_latest_record_from_station(stationName=FIRST_TEST_STATION_WRONG_STATION_NAME)
+
+        assertStatus(status, STATION_DOES_NOT_EXIST_STATUS)
+        assert record is None
