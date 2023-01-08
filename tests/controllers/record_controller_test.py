@@ -115,3 +115,14 @@ class RecordControllerTest(unittest.TestCase):
 
         assertStatus(status, NO_RECORD_EXIST_STATUS)
         assert record is None
+
+    def test_given_a_station_and_two_records_are_created_when_deleting_all_the_records_from_that_station_then_return_ok_and_none(self):
+        createAStationWithTwoExampleRecordsBy(self.station_controller, self.record_controller)
+
+        status, record = self.record_controller.delete_all_records_by_station_name(stationName=FIRST_TEST_STATION_STATION_NAME)
+
+        assertStatus(status, OK_STATUS)
+        assert record is None
+
+        _, records = self.record_controller.get_all_records_from_station(stationName=FIRST_TEST_STATION_STATION_NAME)
+        self.assertListEqual(records, [])
