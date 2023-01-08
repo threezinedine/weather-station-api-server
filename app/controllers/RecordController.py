@@ -14,6 +14,7 @@ from database.models import (
 from app.exceptions import (
     OK_STATUS,
     WRONG_STATION_KEY_STATUS,
+    STATION_DOES_NOT_EXIST_STATUS,
 )
 
 
@@ -39,7 +40,12 @@ class RecordController:
 
     def get_all_records_from_station(self, stationName: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], List[Record]]:
         status = OK_STATUS
+        records = None
 
         station = self.session.query(Station).filter(Station.stationName == stationName).first()
+        if station is None:
+            status = STATION_DOES_NOT_EXIST_STATUS
+        else:
+            records = station.records
 
-        return status, station.records
+        return status, records
