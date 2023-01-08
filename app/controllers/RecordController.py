@@ -58,8 +58,14 @@ class RecordController:
 
     def get_latest_record_from_station(self, stationName: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], Record]:
         status = OK_STATUS
+        latest_record = None
+
         station = self._get_station_by_station_name(stationName)
-        latest_record = self.session.query(Record).filter(Record.stationId == station.stationId).order_by(desc(Record.createdTime)).first()
+
+        if station is not None:
+            latest_record = self.session.query(Record).filter(Record.stationId == station.stationId).order_by(desc(Record.createdTime)).first()
+        else:
+            status = STATION_DOES_NOT_EXIST_STATUS
 
         return status, latest_record
 
