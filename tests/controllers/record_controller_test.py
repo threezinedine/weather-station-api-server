@@ -9,6 +9,7 @@ from tests.controllers import (
     createAStationBy,
     FIRST_RECORD_TESTING,
     FIRST_STATION_WRONG_STATION_KEY,
+    FIRST_TEST_STATION_STATION_NAME,
     createAStationWithExampleRecordBy,
 )
 from app.controllers import (
@@ -61,3 +62,12 @@ class RecordControllerTest(unittest.TestCase):
         assert record is None
         _, records = self.record_controller.get_all_records()
         self.assertListEqual(records, [])
+
+    def test_given_a_station_and_a_record_are_created_when_querying_all_records_from_the_existed_station_then_returns_ok_and_list_of_records(self):
+        createAStationWithExampleRecordBy(self.station_controller, self.record_controller)
+
+        status, records = self.record_controller.get_all_records_from_station(stationName=FIRST_TEST_STATION_STATION_NAME)
+
+        assertStatus(status, OK_STATUS)
+        assert len(records) == 1
+        assertRecord(records[0], FIRST_RECORD_TESTING)
