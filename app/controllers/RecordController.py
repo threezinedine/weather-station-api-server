@@ -18,6 +18,7 @@ from app.exceptions import (
     OK_STATUS,
     WRONG_STATION_KEY_STATUS,
     STATION_DOES_NOT_EXIST_STATUS,
+    NO_RECORD_EXIST_STATUS,
 )
 
 
@@ -64,6 +65,8 @@ class RecordController:
 
         if station is not None:
             latest_record = self.session.query(Record).filter(Record.stationId == station.stationId).order_by(desc(Record.createdTime)).first()
+            if latest_record is None:
+                status = NO_RECORD_EXIST_STATUS
         else:
             status = STATION_DOES_NOT_EXIST_STATUS
 
