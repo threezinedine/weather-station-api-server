@@ -2,4 +2,5 @@ from sqlalchemy.orm import Session
 
 
 class RecordController:
-    pass
+    def __init__(self, session: Session):
+        self.session = session
