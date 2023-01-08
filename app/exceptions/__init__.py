@@ -13,3 +13,4 @@ from .UserExistException import *
 from .WrongPasswordException import *
 from .StationDoesNotExistException import *
 from .StationExistException import *
+from .NoRelationshipExistException import *

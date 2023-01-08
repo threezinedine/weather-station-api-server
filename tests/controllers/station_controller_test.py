@@ -21,6 +21,7 @@ from app.exceptions import (
     STATION_DOES_NOT_EXIST_STATUS,
     STATION_EXIST_STATUS,
     USER_DOES_NOT_EXIST_STATUS,
+    NO_RELATIONSHIP_EXIST_STATUS,
 )
 from tests.controllers import (
     assertStatus,
@@ -251,4 +252,12 @@ class StationControllerTest(unittest.TestCase):
         status, station = self.station_controller.delete_relationship(username=FIRST_TEST_USER_USERNAME, stationName=FIRST_TEST_STATION_WRONG_STATION_NAME)
 
         assertStatus(status, STATION_DOES_NOT_EXIST_STATUS)
+        assert station is None
+
+    def test_given_a_station_user_are_created_when_deleting_the_relationship_between_them_then_returns_no_relationship_exists_and_none(self):
+        creataAStationAndAnUserBy(self.user_controller, self.station_controller)
+
+        status, station = self.station_controller.delete_relationship(username=FIRST_TEST_USER_USERNAME, stationName=FIRST_TEST_STATION_STATION_NAME)
+
+        assertStatus(status, NO_RELATIONSHIP_EXIST_STATUS)
         assert station is None
