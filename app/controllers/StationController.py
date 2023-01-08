@@ -111,7 +111,12 @@ class StationController:
     def change_pushing_time_interval_in_seconds(self, stationName: str, new_pushingDataIntervalInSeconds: int) -> Tuple[Dict[str, Union[int, Union[str, None]]], Station]:
         status = {STATUS_CODE_KEY: HTTP_200_OK, DETAIL_KEY: None}
         _, station = self.get_station_by_station_name(stationName)
-        station.pushingDataIntervalInSeconds = new_pushingDataIntervalInSeconds
-        self.session.commit()
+
+        if station is not None:
+            station.pushingDataIntervalInSeconds = new_pushingDataIntervalInSeconds
+            self.session.commit()
+        else:
+            status[STATUS_CODE_KEY] = STATION_DOES_NOT_EXIST_STATUS_CODE
+            status[DETAIL_KEY] = STATION_DOES_NOT_EXIST_DETAIL
 
         return status, station
