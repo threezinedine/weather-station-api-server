@@ -18,6 +18,7 @@ from app.exceptions import (
     STATION_DOES_NOT_EXIST_STATUS,
     USER_DOES_NOT_EXIST_STATUS,
     STATION_EXIST_STATUS,
+    NO_RELATIONSHIP_EXIST_STATUS,
 )
 
 
@@ -132,8 +133,11 @@ class StationController:
             status = USER_DOES_NOT_EXIST_STATUS
         else:
             if station is not None:
-                user.stations.remove(station)
-                self.session.commit()
+                if station in user.stations:
+                    user.stations.remove(station)
+                    self.session.commit()
+                else:
+                    status = NO_RELATIONSHIP_EXIST_STATUS
             else:
                 status = STATION_DOES_NOT_EXIST_STATUS
 
