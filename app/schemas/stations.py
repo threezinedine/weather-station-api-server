@@ -18,3 +18,9 @@ class AddStationRequest(BaseModel):
 
     class Config:
         orm_mode = True
+
+class ResetStationKeyRequest(BaseModel):
+    stationName: str
+
+    class Config: 
+        orm_mode = True

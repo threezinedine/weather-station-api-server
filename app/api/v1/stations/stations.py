@@ -9,6 +9,7 @@ from app import (
     ALL_STATIONS_ROUTE,
     CREATE_A_STATION_ROUTE,
     ADD_NEW_STATION_ROUTE,
+    RESET_STATION_KEY_ROUTE,
 )
 from database.connection import get_session
 from app.constants import (
@@ -20,6 +21,7 @@ from app.schemas import (
     CreateStationRequest,
     ResponseStation,
     AddStationRequest,
+    ResetStationKeyRequest,
 )
 from app.controllers import StationController
 from app.auth import verify_token
@@ -44,11 +46,22 @@ def get_all_stations(new_station_info: CreateStationRequest, session: Session = 
     return station
 
 @router.put(ADD_NEW_STATION_ROUTE,
-        status_code=HTTP_200_OK)
+        status_code=HTTP_200_OK,
+        response_model=ResponseStation)
 def get_all_stations(stationInfo: AddStationRequest, session: Session = Depends(get_session), username: str = Depends(verify_token)):
     station_controller = StationController(session)
     status, station = station_controller.add_username_with_station_key(username=username, stationKey=stationInfo.stationKey)
 
     handleStatus(status)
 
+    return station
+
+@router.put(RESET_STATION_KEY_ROUTE,
+        status_code=HTTP_200_OK,
+        response_model=ResponseStation)
+def get_all_stations(stationInfo: ResetStationKeyRequest, session: Session = Depends(get_session), username: str = Depends(verify_token)):
+    station_controller = StationController(session)
+    status, station = station_controller.reset_station_key(stationInfo.stationName)
+
+    handleStatus(status)
     return station
