@@ -20,6 +20,7 @@ from tests import (
     FIRST_TEST_USER_PASSWORD,
     FIRST_TEST_STATION_STATION_NAME,
     FIRST_TEST_STATION_STATION_POSITION,
+    FIRST_TEST_STATION_WRONG_STATION_NAME,
     WRONG_TOKEN,
     WRONG_STATION_KEY,
     clean_database,
@@ -176,6 +177,25 @@ class StationTest(unittest.TestCase):
                 )
 
         token = login_response.json()[TOKEN_KEY]
+
+        response = self.test_client.put(
+                    RESET_STATION_KEY_FULL_ROUTE,
+                    json={
+                        STATION_NAME_KEY: FIRST_TEST_STATION_STATION_NAME
+                    }
+                )
+
+        response = self.test_client.put(
+                    RESET_STATION_KEY_FULL_ROUTE,
+                    headers={
+                        AUTHORIZATION_KEY: get_sent_token(token)
+                    },
+                    json={
+                        STATION_NAME_KEY: FIRST_TEST_STATION_WRONG_STATION_NAME
+                    }
+                )
+
+        assert response.status_code == HTTP_404_NOT_FOUND
 
         response = self.test_client.put(
                     RESET_STATION_KEY_FULL_ROUTE,
