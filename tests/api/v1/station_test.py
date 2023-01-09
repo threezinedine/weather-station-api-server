@@ -224,7 +224,6 @@ class StationTest(unittest.TestCase):
         createTwoStationsBy(self.station_controller)
 
         self.station_controller.add_username(username=FIRST_TEST_USER_USERNAME, stationName=FIRST_TEST_STATION_STATION_NAME)
-        self.station_controller.add_username(username=FIRST_TEST_USER_USERNAME, stationName=SECOND_TEST_STATION_STATION_NAME)
 
         login_response = self.test_client.post(
                     LOGIN_FULL_ROUTE,
@@ -244,8 +243,31 @@ class StationTest(unittest.TestCase):
             )
 
         assert response.status_code == HTTP_200_OK
+        assert len(response.json()) == 1
+        stations = response.json()
+
+        assertStationDict(stations[0], FIRST_TEST_STATION_STATION_NAME, FIRST_TEST_STATION_STATION_POSITION)
+
+
+        self.station_controller.add_username(username=FIRST_TEST_USER_USERNAME, stationName=SECOND_TEST_STATION_STATION_NAME)
+
+        response = self.test_client.get(
+                ALL_STATIONS_FULL_ROUTE, 
+                headers={
+                    AUTHORIZATION_KEY: get_sent_token(token)
+                }
+            )
+
+        assert response.status_code == HTTP_200_OK
         assert len(response.json()) == 2
         stations = response.json()
 
         assertStationDict(stations[0], FIRST_TEST_STATION_STATION_NAME, FIRST_TEST_STATION_STATION_POSITION)
         assertStationDict(stations[1], SECOND_TEST_STATION_STATION_NAME, SECOND_TEST_STATION_STATION_POSITION)
+
+
+        response = self.test_client.get(
+                ALL_STATIONS_FULL_ROUTE, 
+            )
+
+        assert response.status_code == HTTP_401_UNAUTHORIZED
