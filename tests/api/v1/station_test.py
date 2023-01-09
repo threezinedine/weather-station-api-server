@@ -11,6 +11,7 @@ from app.controllers import (
 )
 from app import (
     LOGIN_FULL_ROUTE,
+    ALL_STATIONS_FULL_ROUTE,
     CREATE_A_STATION_FULL_ROUTE,
     ADD_NEW_STATION_FULL_ROUTE,
     RESET_STATION_KEY_FULL_ROUTE,
@@ -21,12 +22,15 @@ from tests import (
     FIRST_TEST_STATION_STATION_NAME,
     FIRST_TEST_STATION_STATION_POSITION,
     FIRST_TEST_STATION_WRONG_STATION_NAME,
+    SECOND_TEST_STATION_STATION_NAME,
+    SECOND_TEST_STATION_STATION_POSITION,
     WRONG_TOKEN,
     WRONG_STATION_KEY,
     clean_database,
     get_testing_session,
     createAnUserBy,
     createAStationBy,
+    createTwoStationsBy,
     createAStationAndAnUserAndAddRelationshipBy,
     assertStation,
     get_sent_token,
@@ -213,3 +217,33 @@ class StationTest(unittest.TestCase):
         _, stations = self.station_controller.get_station_by_username(FIRST_TEST_USER_USERNAME)
         assert stations[0]
 
+
+    def test_get_all_stations_feature(self):
+        createAnUserBy(self.user_controller)
+        createTwoStationsBy(self.station_controller)
+
+        self.station_controller.add_username(username=FIRST_TEST_USER_USERNAME, stationName=FIRST_TEST_STATION_STATION_NAME)
+        self.station_controller.add_username(username=FIRST_TEST_USER_USERNAME, stationName=SECOND_TEST_STATION_STATION_NAME)
+
+        login_response = self.test_client.post(
+                    LOGIN_FULL_ROUTE,
+                    json={
+                        USERNAME_KEY: FIRST_TEST_USER_USERNAME,
+                        PASSWORD_KEY: FIRST_TEST_USER_PASSWORD, 
+                    }
+                )
+
+        token = login_response.json()[TOKEN_KEY]
+
+        response = self.test_client.get(
+                ALL_STATIONS_FULL_ROUTE, 
+                headers={
+                    AUTHORIZATION_KEY: get_sent_token(token)
+                }
+            )
+
+        assert response.status_code == HTTP_200_OK
+        assert len(response.json()) == 2
+
+        assertStation(stations[0], FIRST_TEST_STATION_STATION_NAME, FIRST_TEST_STATION_STATION_POSITION)
+        assertStation(stations[1], SECOND_TEST_STATION_STATION_NAME, SECOND_TEST_STATION_STATION_POSISTION)
