@@ -101,16 +101,19 @@ class StationController:
     def add_username_with_station_key(self, username: str, stationKey: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], Station]:
         status = OK_STATUS
 
+        user = self._get_user_by_username(username)
         station = self.session.query(Station).filter(Station.stationKey == stationKey).first()
         
-        if station is not None:
-            user = self._get_user_by_username(username)
-
-            association = StationUser(stationId=station.stationId, userId=user.userId)
-            self.session.add(association)
-            self.session.commit()
+        if user is not None:
+            if station is not None:
+                association = StationUser(stationId=station.stationId, userId=user.userId)
+                self.session.add(association)
+                self.session.commit()
+            else:
+                status = STATION_DOES_NOT_EXIST_STATUS
         else:
-            status = STATION_DOES_NOT_EXIST_STATUS
+            status = USER_DOES_NOT_EXIST_STATUS
+            station = None
 
         return status, station
 
