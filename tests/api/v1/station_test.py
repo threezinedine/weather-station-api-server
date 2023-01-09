@@ -68,6 +68,18 @@ class StationTest(unittest.TestCase):
         assert len(stations) == 1
         assertStation(stations[0], FIRST_TEST_STATION_STATION_NAME, FIRST_TEST_STATION_STATION_POSITION)
 
+        response = self.test_client.post(
+                    CREATE_A_STATION_FULL_ROUTE,
+                    json={
+                        "stationName": FIRST_TEST_STATION_STATION_NAME,
+                        "stationPosition": FIRST_TEST_STATION_STATION_POSITION,
+                    },
+                )
+
+        assert response.status_code == 401
+        _, stations = self.station_controller.get_station_by_username(FIRST_TEST_USER_USERNAME)
+        assert len(stations) == 1
+
 
     @unittest.skip("")
     def test_given_when_no_user_is_created_when_a_new_user_is_registered_then_that_user_should_be_created(self):

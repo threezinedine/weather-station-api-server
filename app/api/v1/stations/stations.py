@@ -21,6 +21,7 @@ from app.schemas import (
 )
 from app.controllers import StationController
 from app.auth import verify_token
+from app.api.utils import handleStatus
 
 
 @router.post(CREATE_A_STATION_ROUTE,
@@ -32,14 +33,10 @@ def get_all_stations(new_station_info: CreateStationRequest, session: Session = 
     status, station = station_controller.create_new_station(stationName=new_station_info.stationName,
             stationPosition=new_station_info.stationPosition)
 
-    if status[STATUS_CODE_KEY] != HTTP_200_OK:
-        raise HTTPException(status_code=status[STATUS_CODE_KEY],
-                detail=status[DETAIL_KEY])
+    handleStatus(status)
 
     status, station = station_controller.add_username(stationName=station.stationName, username=username)
 
-    if status[STATUS_CODE_KEY] != HTTP_200_OK:
-        raise HTTPException(status_code=status[STATUS_CODE_KEY],
-                detail=status[DETAIL_KEY])
+    handleStatus(status)
 
     return station
