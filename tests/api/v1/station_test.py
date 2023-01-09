@@ -16,6 +16,7 @@ from app import (
     ADD_NEW_STATION_FULL_ROUTE,
     RESET_STATION_KEY_FULL_ROUTE,
     GET_A_STATION_ROUTE,
+    STATION_BASE_ROUTE,
 )
 from tests import (
     FIRST_TEST_USER_USERNAME,
@@ -289,12 +290,14 @@ class StationTest(unittest.TestCase):
 
         token = login_response.json()[TOKEN_KEY]
 
+        print(f"{STATION_BASE_ROUTE}/{FIRST_TEST_STATION_STATION_NAME}")
+                    
         response = self.test_client.get(
-                    f"/{FIRST_TEST_STATION_STATION_NAME}",
+                    f"{STATION_BASE_ROUTE}/{FIRST_TEST_STATION_STATION_NAME}",
                     headers={
                         AUTHORIZATION_KEY: get_sent_token(token)
                         }
                 )
 
         assert response.status_code == HTTP_200_OK
-        assertStation(response.json(), FIRST_TEST_STATION_STATION_NAME, FIRST_TEST_STATION_STATION_POSITION)
+        assertStationDict(response.json(), FIRST_TEST_STATION_STATION_NAME, FIRST_TEST_STATION_STATION_POSITION)

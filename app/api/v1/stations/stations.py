@@ -88,4 +88,8 @@ def get_all_stations(session: Session = Depends(get_session), username: str = De
 def get_a_station(stationName: str, session: Session = Depends(get_session), username: str = Depends(verify_token)):
     station_controller = StationController(session)
 
+    status, station = station_controller.get_station_by_username_and_station_name(username=username, stationName=stationName)
+
     handleStatus(status)
+
+    return station
