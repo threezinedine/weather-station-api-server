@@ -5,6 +5,10 @@ from fastapi.testclient import TestClient
 from main import app
 from database.connection import get_session
 from app.controllers import UserController
+from tests import (
+    USERNAME_KEY,
+    PASSWORD_KEY,
+)
 
 
 class StationTest(unittest.TestCase):
@@ -18,10 +22,10 @@ class StationTest(unittest.TestCase):
     @unittest.skip("")
     def test_given_when_no_user_is_created_when_a_new_user_is_registered_then_returns_the_200_response_with_user_info(self):
         response = self.test_client.post(
-                    "/users/register",
+                    REGISTER_ROUTE,
                     json={
-                        "username": "threezinedine",
-                        "password": "threezinedine"
+                        USERNAME_KEY: "threezinedine",
+                        PASSWORD_KEY: "threezinedine"
                     }
                 )
 
@@ -30,16 +34,16 @@ class StationTest(unittest.TestCase):
         response_user_info = response.json()
         self.assertDictEqual(response_user_info, {
                 "userId": 1,
-                "username": "threezinedine"
+                USERNAME_KEY: "threezinedine"
             })
 
     @unittest.skip("")
     def test_given_when_no_user_is_created_when_a_new_user_is_registered_then_that_user_should_be_created(self):
         self.test_client.post(
-                    "/users/register",
+                    REGISTER_ROUTE,
                     json={
-                        "username": "threezinedine",
-                        "password": "threezinedine"
+                        USERNAME_KEY: "threezinedine",
+                        PASSWORD_KEY: "threezinedine"
                     }
                 )
 

@@ -9,11 +9,24 @@ from tests import (
     FIRST_TEST_USER_PASSWORD,
     FIRST_TEST_USER_WRONG_USERNAME,
     FIRST_TEST_USER_NEW_PASSWORD,
+    USERNAME_KEY,
+    PASSWORD_KEY,
+    USER_KEY,
+    TOKEN_KEY,
+    USERID_KEY,
+)
+from app import (
+    LOGIN_FULL_ROUTE,
+    REGISTER_FULL_ROUTE,
 )
 from main import app
 from app.controllers import UserController
+from app.exceptions import (
+    HTTP_200_OK,
+    USER_DOES_NOT_EXIST_STATUS_CODE,
+    USER_EXIST_STATUS_CODE,
+)
 from database.connection import get_session
-
 
 
 class UserTest(unittest.TestCase):
@@ -28,47 +41,47 @@ class UserTest(unittest.TestCase):
 
     def test_register_feature(self):
         response = self.test_client.post(
-                    "/users/register",
-                    json={"username": FIRST_TEST_USER_USERNAME, "password": FIRST_TEST_USER_PASSWORD}
+                    REGISTER_FULL_ROUTE,
+                    json={USERNAME_KEY: FIRST_TEST_USER_USERNAME, PASSWORD_KEY: FIRST_TEST_USER_PASSWORD}
                 ) 
 
-        assert response.status_code == 200
-        
+        assert response.status_code == HTTP_200_OK
         data = response.json()
-        assert data["userId"] == 1
-        assert data["username"] == FIRST_TEST_USER_USERNAME 
+        assert data[USERID_KEY] == 1
+        assert data[USERNAME_KEY] == FIRST_TEST_USER_USERNAME 
 
         _, users = self.user_controller.get_all_users()
         assert len(users) == 1
 
         response = self.test_client.post(
-                    "/users/register",
-                    json={"username": FIRST_TEST_USER_USERNAME, "password": FIRST_TEST_USER_PASSWORD}
+                    REGISTER_FULL_ROUTE,
+                    json={USERNAME_KEY: FIRST_TEST_USER_USERNAME, PASSWORD_KEY: FIRST_TEST_USER_PASSWORD}
                 )
 
-        assert response.status_code == 409
+        assert response.status_code == USER_EXIST_STATUS_CODE
 
     def test_loggin_feature(self):
         createAnUserBy(self.user_controller)
 
         response = self.test_client.post(
-                    "/users/login",
-                    json={"username": FIRST_TEST_USER_USERNAME, "password": FIRST_TEST_USER_PASSWORD}
+                    LOGIN_FULL_ROUTE,
+                    json={USERNAME_KEY: FIRST_TEST_USER_USERNAME, PASSWORD_KEY: FIRST_TEST_USER_PASSWORD}
                 )
 
-        assert response.status_code == 200
-        assert response.json()["username"] == FIRST_TEST_USER_USERNAME
+        assert response.status_code == HTTP_200_OK
+        assert response.json()[USER_KEY][USERNAME_KEY] == FIRST_TEST_USER_USERNAME
+        assert response.json()[TOKEN_KEY] is not None
 
         response = self.test_client.post(
-                    "/users/login",
-                    json={"username": FIRST_TEST_USER_WRONG_USERNAME, "password": FIRST_TEST_USER_PASSWORD}
+                    LOGIN_FULL_ROUTE,
+                    json={USERNAME_KEY: FIRST_TEST_USER_WRONG_USERNAME, PASSWORD_KEY: FIRST_TEST_USER_PASSWORD}
                 )
 
-        assert response.status_code == 404
+        assert response.status_code == USER_DOES_NOT_EXIST_STATUS_CODE
 
         response = self.test_client.post(
-                    "/users/login",
-                    json={"username": FIRST_TEST_USER_USERNAME, "password": FIRST_TEST_USER_NEW_PASSWORD}
+                    LOGIN_FULL_ROUTE,
+                    json={USERNAME_KEY: FIRST_TEST_USER_USERNAME, PASSWORD_KEY: FIRST_TEST_USER_NEW_PASSWORD}
                 )
 
-        assert response.status_code == 404
+        assert response.status_code == USER_DOES_NOT_EXIST_STATUS_CODE

@@ -16,3 +16,9 @@ class RegisterResponseUserInfo(BaseModel):
     class Config:
         orm_mode = True
     
+class LoginResponseUserInfo(BaseModel):
+    user: RegisterResponseUserInfo
+    token: str
+
+    class Config:
+        orm_mode = True

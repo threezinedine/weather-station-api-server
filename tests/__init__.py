@@ -28,6 +28,12 @@ from app.controllers import (
     RecordController,
 )
 
+USERNAME_KEY = "username"
+PASSWORD_KEY = "password"
+USER_KEY = "user"
+TOKEN_KEY = "token"
+USERID_KEY = "userId"
+
 FIRST_TEST_USER_USERNAME = "threezinedine"
 FIRST_TEST_USER_PASSWORD = "threezinedine1"
 SECOND_TEST_USER_USERNAME = "threezinedineadasdf"
