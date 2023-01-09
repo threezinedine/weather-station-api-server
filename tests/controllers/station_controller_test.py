@@ -277,5 +277,5 @@ class StationControllerTest(unittest.TestCase):
         assertStatus(status, STATION_DOES_NOT_EXIST_STATUS)
         assert station is None
 
-        _, stations = self.station_controller.controller.get_station_by_username(FIRST_TEST_USER_USERNAME)
+        _, stations = self.station_controller.get_station_by_username(FIRST_TEST_USER_USERNAME)
         assert len(stations) == 0

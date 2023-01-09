@@ -102,11 +102,15 @@ class StationController:
         status = OK_STATUS
 
         station = self.session.query(Station).filter(Station.stationKey == stationKey).first()
-        user = self._get_user_by_username(username)
+        
+        if station is not None:
+            user = self._get_user_by_username(username)
 
-        association = StationUser(stationId=station.stationId, userId=user.userId)
-        self.session.add(association)
-        self.session.commit()
+            association = StationUser(stationId=station.stationId, userId=user.userId)
+            self.session.add(association)
+            self.session.commit()
+        else:
+            status = STATION_DOES_NOT_EXIST_STATUS
 
         return status, station
 
