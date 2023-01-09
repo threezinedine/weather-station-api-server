@@ -10,7 +10,7 @@ from app import (
     CREATE_A_STATION_ROUTE,
 )
 from database.connection import get_session
-from app.exceptions import (
+from app.constants import (
     STATUS_CODE_KEY,
     DETAIL_KEY,
     HTTP_200_OK,

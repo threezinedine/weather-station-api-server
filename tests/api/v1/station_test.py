@@ -22,6 +22,7 @@ from tests import (
     get_testing_session,
     createAnUserBy,
     assertStation,
+    get_sent_token,
 )
 from app.constants import (
     USERNAME_KEY,
@@ -33,9 +34,11 @@ from app.constants import (
     STATION_POSITION_KEY,
     PUSHING_DATA_INTERVAL_IN_SECONDS_KEY,
 )
+from app.constants import (
+    HTTP_200_OK,
+)
 from app.exceptions import (
     UNAUTHORIZATION_STATUS_CODE,
-    HTTP_200_OK,
 )
 
 
@@ -66,7 +69,7 @@ class StationTest(unittest.TestCase):
         response = self.test_client.post(
                     CREATE_A_STATION_FULL_ROUTE,
                     headers={
-                        AUTHORIZATION_KEY: f"Bearer {token}"
+                        AUTHORIZATION_KEY: get_sent_token(token) 
                     },
                     json={
                         STATION_NAME_KEY: FIRST_TEST_STATION_STATION_NAME,
@@ -94,7 +97,7 @@ class StationTest(unittest.TestCase):
         response = self.test_client.post(
                 CREATE_A_STATION_FULL_ROUTE,
                 headers={
-                    AUTHORIZATION_KEY: f"Bearer {WRONG_TOKEN}"
+                    AUTHORIZATION_KEY: get_sent_token(WRONG_TOKEN)
                 },
                 json={
                     STATION_NAME_KEY: FIRST_TEST_STATION_STATION_NAME,
