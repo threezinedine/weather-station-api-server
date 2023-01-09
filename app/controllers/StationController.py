@@ -98,6 +98,19 @@ class StationController:
 
         return status, station
 
+    def add_username_with_station_key(self, username: str, stationKey: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], Station]:
+        status = OK_STATUS
+
+        station = self.session.query(Station).filter(Station.stationKey == stationKey).first()
+        user = self._get_user_by_username(username)
+
+        association = StationUser(stationId=station.stationId, userId=user.userId)
+        self.session.add(association)
+        self.session.commit()
+
+        return status, station
+
+
     def change_pushing_time_interval_in_seconds(self, stationName: str, new_pushingDataIntervalInSeconds: int) -> Tuple[Dict[str, Union[int, Union[str, None]]], Station]:
         status = OK_STATUS
         _, station = self.get_station_by_station_name(stationName)

@@ -264,3 +264,6 @@ class StationControllerTest(unittest.TestCase):
 
         assertStatus(status, OK_STATUS)
         assertStation(station, FIRST_TEST_STATION_STATION_NAME, FIRST_TEST_STATION_STATION_POSITION)
+
+        _, stations = self.station_controller.get_station_by_username(username=FIRST_TEST_USER_USERNAME)
+        assert len(stations) == 1
