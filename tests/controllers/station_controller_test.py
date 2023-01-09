@@ -279,3 +279,11 @@ class StationControllerTest(unittest.TestCase):
 
         _, stations = self.station_controller.get_station_by_username(FIRST_TEST_USER_USERNAME)
         assert len(stations) == 0
+
+    def test_given_a_station_user_are_created_when_adding_the_non_existed_username_then_returns_user_does_not_exist_and_none(self):
+        _, station = creataAStationAndAnUserBy(self.user_controller, self.station_controller)
+
+        status, station = self.station_controller.add_username_with_station_key(username=FIRST_TEST_USER_WRONG_USERNAME, stationKey=station.stationKey)
+
+        assertStatus(status, USER_DOES_NOT_EXIST_STATUS)
+        assert station is None
