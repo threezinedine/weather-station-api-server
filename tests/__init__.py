@@ -28,12 +28,6 @@ from app.controllers import (
     RecordController,
 )
 
-USERNAME_KEY = "username"
-PASSWORD_KEY = "password"
-USER_KEY = "user"
-TOKEN_KEY = "token"
-USERID_KEY = "userId"
-
 FIRST_TEST_USER_USERNAME = "threezinedine"
 FIRST_TEST_USER_PASSWORD = "threezinedine1"
 SECOND_TEST_USER_USERNAME = "threezinedineadasdf"
@@ -42,6 +36,7 @@ FIRST_TEST_USER_WRONG_USERNAME = "threezinedine2"
 NEW_TEST_USER_PASSWORD = "threezinedineadfab"
 FIRST_TEST_USER_NEW_USERNAME = "testing_changed_username"
 FIRST_TEST_USER_NEW_PASSWORD = "testing_changed_password"
+WRONG_TOKEN = "adfaspoiahgaosldkfjaghaolfj"
 
 FIRST_TEST_STATION_STATION_NAME = "Ha Noi"
 FIRST_TEST_STATION_STATION_POSITION = "Dong Da, Ha Noi"

@@ -13,18 +13,29 @@ from app import (
     CREATE_A_STATION_FULL_ROUTE,
 )
 from tests import (
-    USERNAME_KEY,
-    PASSWORD_KEY,
-    USERID_KEY,
-    TOKEN_KEY,
     FIRST_TEST_USER_USERNAME,
     FIRST_TEST_USER_PASSWORD,
     FIRST_TEST_STATION_STATION_NAME,
     FIRST_TEST_STATION_STATION_POSITION,
+    WRONG_TOKEN,
     clean_database,
     get_testing_session,
     createAnUserBy,
     assertStation,
+)
+from app.constants import (
+    USERNAME_KEY,
+    PASSWORD_KEY,
+    USERID_KEY,
+    TOKEN_KEY,
+    AUTHORIZATION_KEY,
+    STATION_NAME_KEY,
+    STATION_POSITION_KEY,
+    PUSHING_DATA_INTERVAL_IN_SECONDS_KEY,
+)
+from app.exceptions import (
+    UNAUTHORIZATION_STATUS_CODE,
+    HTTP_200_OK,
 )
 
 
@@ -55,15 +66,15 @@ class StationTest(unittest.TestCase):
         response = self.test_client.post(
                     CREATE_A_STATION_FULL_ROUTE,
                     headers={
-                        "Authorization": f"Bearer {token}"
+                        AUTHORIZATION_KEY: f"Bearer {token}"
                     },
                     json={
-                        "stationName": FIRST_TEST_STATION_STATION_NAME,
-                        "stationPosition": FIRST_TEST_STATION_STATION_POSITION,
+                        STATION_NAME_KEY: FIRST_TEST_STATION_STATION_NAME,
+                        STATION_POSITION_KEY: FIRST_TEST_STATION_STATION_POSITION,
                     },
                 )
 
-        assert response.status_code == 200
+        assert response.status_code == HTTP_200_OK
         _, stations = self.station_controller.get_station_by_username(FIRST_TEST_USER_USERNAME)
         assert len(stations) == 1
         assertStation(stations[0], FIRST_TEST_STATION_STATION_NAME, FIRST_TEST_STATION_STATION_POSITION)
@@ -71,14 +82,25 @@ class StationTest(unittest.TestCase):
         response = self.test_client.post(
                     CREATE_A_STATION_FULL_ROUTE,
                     json={
-                        "stationName": FIRST_TEST_STATION_STATION_NAME,
-                        "stationPosition": FIRST_TEST_STATION_STATION_POSITION,
+                        STATION_NAME_KEY: FIRST_TEST_STATION_STATION_NAME,
+                        STATION_POSITION_KEY: FIRST_TEST_STATION_STATION_POSITION,
                     },
                 )
 
-        assert response.status_code == 401
+        assert response.status_code == UNAUTHORIZATION_STATUS_CODE
         _, stations = self.station_controller.get_station_by_username(FIRST_TEST_USER_USERNAME)
         assert len(stations) == 1
+
+        response = self.test_client.post(
+                CREATE_A_STATION_FULL_ROUTE,
+                headers={
+                    AUTHORIZATION_KEY: f"Bearer {WRONG_TOKEN}"
+                },
+                json={
+                    STATION_NAME_KEY: FIRST_TEST_STATION_STATION_NAME,
+                    STATION_POSITION_KEY: FIRST_TEST_STATION_STATION_POSITION,
+                },
+        )
 
 
     @unittest.skip("")

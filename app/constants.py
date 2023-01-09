@@ -1,0 +1,10 @@
+STATION_NAME_KEY = "stationName"
+STATION_POSITION_KEY = "stationPosition"
+PUSHING_DATA_INTERVAL_IN_SECONDS_KEY = "pushingDataIntervalInSeconds"
+USERNAME_KEY = "username"
+PASSWORD_KEY = "password"
+USER_KEY = "user"
+TOKEN_KEY = "token"
+USERID_KEY = "userId"
+AUTHORIZATION_KEY = "Authorization"
+

@@ -13,7 +13,7 @@ from app.schemas import (
 from app.auth import (
     generate_token,
 )
-from tests import (
+from app.constants import (
     USERNAME_KEY,
     PASSWORD_KEY,
 )

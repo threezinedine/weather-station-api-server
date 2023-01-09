@@ -9,6 +9,8 @@ from tests import (
     FIRST_TEST_USER_PASSWORD,
     FIRST_TEST_USER_WRONG_USERNAME,
     FIRST_TEST_USER_NEW_PASSWORD,
+)
+from app.constants import (
     USERNAME_KEY,
     PASSWORD_KEY,
     USER_KEY,

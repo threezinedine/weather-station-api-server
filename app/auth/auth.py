@@ -11,7 +11,7 @@ from typing import (
 )
 from datetime import datetime, timedelta
 
-from tests import (
+from app.constants import (
     USERNAME_KEY,
 )
 
