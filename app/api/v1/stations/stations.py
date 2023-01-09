@@ -47,5 +47,8 @@ def get_all_stations(new_station_info: CreateStationRequest, session: Session = 
         status_code=HTTP_200_OK)
 def get_all_stations(stationInfo: AddStationRequest, session: Session = Depends(get_session), username: str = Depends(verify_token)):
     station_controller = StationController(session)
+    status, station = station_controller.add_username_with_station_key(username=username, stationKey=stationInfo.stationKey)
 
-    return ""
+    handleStatus(status)
+
+    return station
