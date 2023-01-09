@@ -11,3 +11,10 @@ class CreateStationRequest(BaseModel):
 
 class ResponseStation(CreateStationRequest):
     stationId: int
+    stationKey: str
+
+class AddStationRequest(BaseModel):
+    stationKey: str
+
+    class Config:
+        orm_mode = True

@@ -256,3 +256,11 @@ class StationControllerTest(unittest.TestCase):
 
         assertStatus(status, NO_RELATIONSHIP_EXIST_STATUS)
         assert station is None
+
+    def test_given_a_user_and_station_are_created_when_add_the_username_by_valid_station_key_then_returns_ok_and_station(self):
+        _, station = creataAStationAndAnUserBy(self.user_controller, self.station_controller)
+
+        status, station = self.station_controller.add_username_with_station_key(username=FIRST_TEST_USER_USERNAME, stationKey=station.stationKey)
+
+        assertStatus(status, OK_STATUS)
+        assertStation(station, FIRST_TEST_STATION_STATION_NAME, FIRST_TEST_STATION_STATION_POSITION)

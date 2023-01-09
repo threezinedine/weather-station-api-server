@@ -133,7 +133,7 @@ class StationTest(unittest.TestCase):
                 )
 
         assert response.status_code == HTTP_200_OK
-        _, stations = self.station_controller.get_station_by_username(FIRST_TEST_USER_USERNAME)
 
+        _, stations = self.station_controller.get_station_by_username(FIRST_TEST_USER_USERNAME)
         assert len(stations) == 1
         assertStation(stations[0], FIRST_TEST_STATION_STATION_NAME, FIRST_TEST_STATION_STATION_POSITION)
