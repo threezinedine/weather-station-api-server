@@ -2,11 +2,15 @@ from fastapi import FastAPI
 from dotenv import load_dotenv
 import os
 
-from app.api.v1 import users
+from app.api.v1 import (
+    users,
+    stations,
+)
 
 app = FastAPI()
 
 app.include_router(users.router)
+app.include_router(stations.router)
 
 
 if __name__ == "__main__":
