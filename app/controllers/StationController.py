@@ -69,6 +69,9 @@ class StationController:
         status = OK_STATUS
 
         _, station = self.get_station_by_station_name(stationName)
+
+        if station is None:
+            status = STATION_DOES_NOT_EXIST_STATUS
         
         return status, station
 
