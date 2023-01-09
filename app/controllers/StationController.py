@@ -65,6 +65,13 @@ class StationController:
 
         return status, station
 
+    def get_station_by_username_and_station_name(self, stationName: str, username: str):
+        status = OK_STATUS
+
+        _, station = self.get_station_by_station_name(stationName)
+        
+        return status, station
+
     def get_station_by_username(self, username: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], List[Station]]:
         status = OK_STATUS
 
