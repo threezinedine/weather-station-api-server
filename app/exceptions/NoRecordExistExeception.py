@@ -1,10 +1,11 @@
-from app.exceptions import (
+from app.constants import (
     DETAIL_KEY,
     STATUS_CODE_KEY,
+    HTTP_404_NOT_FOUND,
 )
 
 
-NO_RECORD_EXIST_STATUS_CODE = 404
+NO_RECORD_EXIST_STATUS_CODE = HTTP_404_NOT_FOUND
 NO_RECORD_EXIST_DETAIL = "No record exists."
 
 

@@ -1,10 +1,11 @@
-from app.exceptions import (
+from app.constants import (
     STATUS_CODE_KEY,
     DETAIL_KEY,
+    HTTP_400_BAD_REQUEST,
 )
 
 
-WRONG_STATION_KEY_STATUS_CODE = 400
+WRONG_STATION_KEY_STATUS_CODE = HTTP_400_BAD_REQUEST
 WRONG_STATION_KEY_DETAIL = "The stationKey is incorrect."
 
 WRONG_STATION_KEY_STATUS = {

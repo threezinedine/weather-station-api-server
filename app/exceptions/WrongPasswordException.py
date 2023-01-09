@@ -1,10 +1,11 @@
-from app.exceptions import (
+from app.constants import (
     STATUS_CODE_KEY,
     DETAIL_KEY,
+    HTTP_404_NOT_FOUND,
 )
 
 
-WRONG_PASSWORD_STATUS_CODE = 404
+WRONG_PASSWORD_STATUS_CODE = HTTP_404_NOT_FOUND
 WRONG_PASSWORD_DETAIL = "The password is wrong."
 
 

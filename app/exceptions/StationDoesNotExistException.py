@@ -1,10 +1,11 @@
-from app.exceptions import (
+from app.constants import (
     STATUS_CODE_KEY,
     DETAIL_KEY,
+    HTTP_404_NOT_FOUND,
 )
 
 
-STATION_DOES_NOT_EXIST_STATUS_CODE = 404
+STATION_DOES_NOT_EXIST_STATUS_CODE = HTTP_404_NOT_FOUND
 STATION_DOES_NOT_EXIST_DETAIL = "The station does not exist."
 
 STATION_DOES_NOT_EXIST_STATUS = {

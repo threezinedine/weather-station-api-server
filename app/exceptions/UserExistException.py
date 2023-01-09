@@ -1,10 +1,11 @@
-from app.exceptions import (
+from app.constants import (
     STATUS_CODE_KEY,
     DETAIL_KEY,
+    HTTP_409_CONFLICT,
 )
 
 
-USER_EXIST_STATUS_CODE = 409
+USER_EXIST_STATUS_CODE = HTTP_409_CONFLICT
 USER_EXIST_DETAIL = "The username existed."
 
 
