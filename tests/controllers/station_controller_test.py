@@ -33,6 +33,7 @@ from tests import (
     SECOND_TEST_STATION_STATION_POSITION,
     FIRST_TEST_USER_USERNAME,
     FIRST_TEST_USER_PASSWORD,
+    WRONG_STATION_KEY,
     FIRST_TEST_USER_WRONG_USERNAME,
     createAStationBy,
     createTwoStationsBy,
@@ -257,7 +258,7 @@ class StationControllerTest(unittest.TestCase):
         assertStatus(status, NO_RELATIONSHIP_EXIST_STATUS)
         assert station is None
 
-    def test_given_a_user_and_station_are_created_when_add_the_username_by_valid_station_key_then_returns_ok_and_station(self):
+    def test_given_a_user_and_station_are_created_when_adding_the_username_by_valid_station_key_then_returns_ok_and_station(self):
         _, station = creataAStationAndAnUserBy(self.user_controller, self.station_controller)
 
         status, station = self.station_controller.add_username_with_station_key(username=FIRST_TEST_USER_USERNAME, stationKey=station.stationKey)
@@ -267,3 +268,14 @@ class StationControllerTest(unittest.TestCase):
 
         _, stations = self.station_controller.get_station_by_username(username=FIRST_TEST_USER_USERNAME)
         assert len(stations) == 1
+
+    def test_given_a_station_user_are_created_when_adding_the_username_by_non_valid_staiton_key_then_returns_station_does_not_exist_and_none(self):
+        _, station = creataAStationAndAnUserBy(self.user_controller, self.station_controller)
+
+        status, station = self.station_controller.add_username_with_station_key(username=FIRST_TEST_USER_USERNAME, stationKey=WRONG_STATION_KEY)
+
+        assertStatus(status, STATION_DOES_NOT_EXIST_STATUS)
+        assert station is None
+
+        _, stations = self.station_controller.controller.get_station_by_username(FIRST_TEST_USER_USERNAME)
+        assert len(stations) == 0

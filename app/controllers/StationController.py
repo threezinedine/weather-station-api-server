@@ -110,7 +110,6 @@ class StationController:
 
         return status, station
 
-
     def change_pushing_time_interval_in_seconds(self, stationName: str, new_pushingDataIntervalInSeconds: int) -> Tuple[Dict[str, Union[int, Union[str, None]]], Station]:
         status = OK_STATUS
         _, station = self.get_station_by_station_name(stationName)
