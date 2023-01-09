@@ -117,8 +117,9 @@ def creataAStationAndAnUserBy(user_controller: UserController, station_controlle
 
 def createAStationAndAnUserAndAddRelationshipBy(user_controller: UserController, station_controller: StationController):
     createAnUserBy(user_controller)
-    createAStationBy(station_controller)
+    status, station = createAStationBy(station_controller)
     station_controller.add_username(username=FIRST_TEST_USER_USERNAME, stationName=FIRST_TEST_STATION_STATION_NAME)
+    return status, station
 
 def createAStationWithExampleRecordBy(station_controller: StationController, record_controller: RecordController):
     _, station = createAStationBy(station_controller)

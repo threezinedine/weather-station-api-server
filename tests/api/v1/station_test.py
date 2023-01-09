@@ -1,6 +1,7 @@
 import unittest
 import pytest
 from fastapi.testclient import TestClient
+from copy import copy
 
 from main import app
 from database.connection import get_session
@@ -12,6 +13,7 @@ from app import (
     LOGIN_FULL_ROUTE,
     CREATE_A_STATION_FULL_ROUTE,
     ADD_NEW_STATION_FULL_ROUTE,
+    RESET_STATION_KEY_FULL_ROUTE,
 )
 from tests import (
     FIRST_TEST_USER_USERNAME,
@@ -24,6 +26,7 @@ from tests import (
     get_testing_session,
     createAnUserBy,
     createAStationBy,
+    createAStationAndAnUserAndAddRelationshipBy,
     assertStation,
     get_sent_token,
 )
@@ -159,3 +162,34 @@ class StationTest(unittest.TestCase):
         _, stations = self.station_controller.get_station_by_username(FIRST_TEST_USER_USERNAME)
         assert len(stations) == 1
         assertStation(stations[0], FIRST_TEST_STATION_STATION_NAME, FIRST_TEST_STATION_STATION_POSITION)
+
+    def test_reset_station_key_feature(self):
+        _, station = createAStationAndAnUserAndAddRelationshipBy(self.user_controller, self.station_controller)
+        stationKey = copy(station.stationKey)
+
+        login_response = self.test_client.post(
+                    LOGIN_FULL_ROUTE,
+                    json={
+                        USERNAME_KEY: FIRST_TEST_USER_USERNAME,
+                        PASSWORD_KEY: FIRST_TEST_USER_PASSWORD, 
+                    }
+                )
+
+        token = login_response.json()[TOKEN_KEY]
+
+        response = self.test_client.put(
+                    RESET_STATION_KEY_FULL_ROUTE,
+                    headers={
+                        AUTHORIZATION_KEY: get_sent_token(token)
+                    },
+                    json={
+                        STATION_NAME_KEY: FIRST_TEST_STATION_STATION_NAME,
+                    }
+                )
+
+        assert response.status_code == HTTP_200_OK
+        assert response.json()[STATION_STATION_KEY_KEY] != stationKey
+
+        _, stations = self.station_controller.get_station_by_username(FIRST_TEST_USER_USERNAME)
+        assert stations[0]
+
