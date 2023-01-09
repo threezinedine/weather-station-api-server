@@ -13,6 +13,7 @@ from app import (
     CREATE_A_STATION_ROUTE,
     ADD_NEW_STATION_ROUTE,
     RESET_STATION_KEY_ROUTE,
+    GET_A_STATION_ROUTE,
 )
 from database.connection import get_session
 from app.constants import (
@@ -80,3 +81,11 @@ def get_all_stations(session: Session = Depends(get_session), username: str = De
     handleStatus(status)
 
     return stations
+
+@router.get(GET_A_STATION_ROUTE,
+        status_code=HTTP_200_OK,
+        response_model=ResponseStation)
+def get_a_station(stationName: str, session: Session = Depends(get_session), username: str = Depends(verify_token)):
+    station_controller = StationController(session)
+
+    handleStatus(status)
