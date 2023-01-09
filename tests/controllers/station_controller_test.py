@@ -307,7 +307,7 @@ class StationControllerTest(unittest.TestCase):
     def test_given_a_station_and_user_are_created_and_their_relationship_is_created_when_querying_the_station_by_non_existed_username_and_station_name_then_returns_user_does_not_exist_and_none(self):
         createAStationAndAnUserAndAddRelationshipBy(self.user_controller, self.station_controller)
 
-        status, station = self.station_controller.get_a_station_by_username_and_station_name(username=FIRST_TEST_USER_WRONG_USERNAME, stationName=FIRST_TEST_STATION_WRONG_STATION_NAME)
+        status, station = self.station_controller.get_station_by_username_and_station_name(username=FIRST_TEST_USER_WRONG_USERNAME, stationName=FIRST_TEST_STATION_WRONG_STATION_NAME)
 
         assertStatus(status, USER_DOES_NOT_EXIST_STATUS)
         assert station is None
