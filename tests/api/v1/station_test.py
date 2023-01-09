@@ -37,6 +37,8 @@ from tests import (
     assertStation,
     assertStationDict,
     get_sent_token,
+    test_client,
+    get_loggin_token,
 )
 from app.constants import (
     USERNAME_KEY,
@@ -60,7 +62,7 @@ from app.exceptions import (
 class StationTest(unittest.TestCase):
     def setUp(self):
         app.dependency_overrides[get_session] = get_testing_session
-        self.test_client = TestClient(app)
+        self.test_client = test_client
         self.session = next(get_testing_session())
         self.user_controller = UserController(self.session)
         self.station_controller = StationController(self.session)
@@ -70,16 +72,7 @@ class StationTest(unittest.TestCase):
 
     def test_create_station_feature(self):
         createAnUserBy(self.user_controller)
-
-        login_response = self.test_client.post(
-                    LOGIN_FULL_ROUTE,
-                    data={
-                        USERNAME_KEY: FIRST_TEST_USER_USERNAME,
-                        PASSWORD_KEY: FIRST_TEST_USER_PASSWORD, 
-                    }
-                )
-
-        token = login_response.json()[TOKEN_KEY]
+        token = get_loggin_token()
 
         response = self.test_client.post(
                     CREATE_A_STATION_FULL_ROUTE,
@@ -123,16 +116,7 @@ class StationTest(unittest.TestCase):
     def test_add_station_via_station_key(self):
         createAnUserBy(self.user_controller)
         _, station = createAStationBy(self.station_controller)
-
-        login_response = self.test_client.post(
-                    LOGIN_FULL_ROUTE,
-                    data={
-                        USERNAME_KEY: FIRST_TEST_USER_USERNAME,
-                        PASSWORD_KEY: FIRST_TEST_USER_PASSWORD, 
-                    }
-                )
-
-        token = login_response.json()[TOKEN_KEY]
+        token = get_loggin_token()
 
         response = self.test_client.put(
                     ADD_NEW_STATION_FULL_ROUTE,
@@ -174,16 +158,7 @@ class StationTest(unittest.TestCase):
     def test_reset_station_key_feature(self):
         _, station = createAStationAndAnUserAndAddRelationshipBy(self.user_controller, self.station_controller)
         stationKey = copy(station.stationKey)
-
-        login_response = self.test_client.post(
-                    LOGIN_FULL_ROUTE,
-                    data={
-                        USERNAME_KEY: FIRST_TEST_USER_USERNAME,
-                        PASSWORD_KEY: FIRST_TEST_USER_PASSWORD, 
-                    }
-                )
-
-        token = login_response.json()[TOKEN_KEY]
+        token = get_loggin_token()
 
         response = self.test_client.put(
                     RESET_STATION_KEY_FULL_ROUTE,
@@ -226,16 +201,7 @@ class StationTest(unittest.TestCase):
         createTwoStationsBy(self.station_controller)
 
         self.station_controller.add_username(username=FIRST_TEST_USER_USERNAME, stationName=FIRST_TEST_STATION_STATION_NAME)
-
-        login_response = self.test_client.post(
-                    LOGIN_FULL_ROUTE,
-                    data={
-                        USERNAME_KEY: FIRST_TEST_USER_USERNAME,
-                        PASSWORD_KEY: FIRST_TEST_USER_PASSWORD, 
-                    }
-                )
-
-        token = login_response.json()[TOKEN_KEY]
+        token = get_loggin_token()
 
         response = self.test_client.get(
                 ALL_STATIONS_FULL_ROUTE, 
@@ -279,19 +245,8 @@ class StationTest(unittest.TestCase):
         createTwoStationsBy(self.station_controller)
 
         self.station_controller.add_username(username=FIRST_TEST_USER_USERNAME, stationName=FIRST_TEST_STATION_STATION_NAME)
+        token = get_loggin_token()
 
-        login_response = self.test_client.post(
-                    LOGIN_FULL_ROUTE,
-                    data={
-                        USERNAME_KEY: FIRST_TEST_USER_USERNAME,
-                        PASSWORD_KEY: FIRST_TEST_USER_PASSWORD, 
-                    }
-                )
-
-        token = login_response.json()[TOKEN_KEY]
-
-        print(f"{STATION_BASE_ROUTE}/{FIRST_TEST_STATION_STATION_NAME}")
-                    
         response = self.test_client.get(
                     f"{STATION_BASE_ROUTE}/{FIRST_TEST_STATION_STATION_NAME}",
                     headers={

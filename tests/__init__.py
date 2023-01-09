@@ -2,6 +2,7 @@ from sqlalchemy.orm import (
     sessionmaker,
     Session,
 )
+from fastapi.testclient import TestClient
 from sqlalchemy.engine import create_engine
 from typing import (
     Dict, 
@@ -30,6 +31,8 @@ from app.controllers import (
     StationController,
     RecordController,
 )
+from main import app
+
 
 FIRST_TEST_USER_USERNAME = "threezinedine"
 FIRST_TEST_USER_PASSWORD = "threezinedine1"
@@ -76,6 +79,17 @@ FIRST_WRONG_STATIONID_RECORD_TESTING = dict(stationId=2, **FIRST_RECORD_DATA)
 SECOND_RECORD_TESTING = dict(stationId=1, **SECOND_RECORD_DATA)
 
 FIRST_STATION_WRONG_STATION_KEY = "asfagfaodhfahi29183alsdkjfafq0h"
+test_client = TestClient(app)
+
+def get_loggin_token():
+    response = test_client.post(
+            LOGIN_FULL_ROUTE,
+            data={
+                USERNAME_KEY: FIRST_TEST_USER_USERNAME,
+                PASSWORD_KEY: FIRST_TEST_USER_PASSWORD
+            } 
+        )
+    return response.json()[TOKEN_KEY]
 
 def get_sent_token(token: str) -> str:
     return f"Bearer {token}"
