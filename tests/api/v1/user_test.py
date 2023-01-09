@@ -83,7 +83,7 @@ class UserTest(unittest.TestCase):
 
         response = self.test_client.post(
                     LOGIN_FULL_ROUTE,
-                    json={USERNAME_KEY: FIRST_TEST_USER_USERNAME, PASSWORD_KEY: FIRST_TEST_USER_NEW_PASSWORD}
+                    data={USERNAME_KEY: FIRST_TEST_USER_USERNAME, PASSWORD_KEY: FIRST_TEST_USER_NEW_PASSWORD}
                 )
 
         assert response.status_code == USER_DOES_NOT_EXIST_STATUS_CODE

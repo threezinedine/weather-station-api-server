@@ -73,7 +73,7 @@ class StationTest(unittest.TestCase):
 
         login_response = self.test_client.post(
                     LOGIN_FULL_ROUTE,
-                    json={
+                    data={
                         USERNAME_KEY: FIRST_TEST_USER_USERNAME,
                         PASSWORD_KEY: FIRST_TEST_USER_PASSWORD, 
                     }
@@ -126,7 +126,7 @@ class StationTest(unittest.TestCase):
 
         login_response = self.test_client.post(
                     LOGIN_FULL_ROUTE,
-                    json={
+                    data={
                         USERNAME_KEY: FIRST_TEST_USER_USERNAME,
                         PASSWORD_KEY: FIRST_TEST_USER_PASSWORD, 
                     }
@@ -177,7 +177,7 @@ class StationTest(unittest.TestCase):
 
         login_response = self.test_client.post(
                     LOGIN_FULL_ROUTE,
-                    json={
+                    data={
                         USERNAME_KEY: FIRST_TEST_USER_USERNAME,
                         PASSWORD_KEY: FIRST_TEST_USER_PASSWORD, 
                     }
@@ -229,7 +229,7 @@ class StationTest(unittest.TestCase):
 
         login_response = self.test_client.post(
                     LOGIN_FULL_ROUTE,
-                    json={
+                    data={
                         USERNAME_KEY: FIRST_TEST_USER_USERNAME,
                         PASSWORD_KEY: FIRST_TEST_USER_PASSWORD, 
                     }
@@ -282,7 +282,7 @@ class StationTest(unittest.TestCase):
 
         login_response = self.test_client.post(
                     LOGIN_FULL_ROUTE,
-                    json={
+                    data={
                         USERNAME_KEY: FIRST_TEST_USER_USERNAME,
                         PASSWORD_KEY: FIRST_TEST_USER_PASSWORD, 
                     }

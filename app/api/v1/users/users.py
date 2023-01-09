@@ -1,8 +1,13 @@
 from fastapi import (
     Depends,
     HTTPException,
+    Request,
+    Form,
 )
 from sqlalchemy.orm import Session
+from typing import (
+    Dict
+)
 
 from app.api.v1.users import router
 from app.schemas import (
@@ -28,6 +33,10 @@ from app import (
     LOGIN_ROUTE,
     REGISTER_ROUTE,
 )
+from app.constants import (
+    USERNAME_KEY,
+    PASSWORD_KEY,
+)
 
 
 @router.post(REGISTER_ROUTE, 
@@ -45,9 +54,9 @@ def register_a_new_user(info: RegisterOrLoginUserInfo, session: Session = Depend
 @router.post(LOGIN_ROUTE,
         status_code=HTTP_200_OK,
         response_model=LoginResponseUserInfo)
-def login_a_new_user(info: RegisterOrLoginUserInfo, session: Session = Depends(get_session)):
+def login_a_new_user(username: str = Form(), password: str = Form(), session: Session = Depends(get_session)):
     user_controller = UserController(session)
-    status, user = user_controller.get_user_by_username_and_password(info.username, info.password)
+    status, user = user_controller.get_user_by_username_and_password(username, password)
 
     if status[STATUS_CODE_KEY] != HTTP_200_OK:
         raise HTTPException(status_code=status[STATUS_CODE_KEY], detail=status[DETAIL_KEY])
