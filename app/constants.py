@@ -1,4 +1,5 @@
 STATION_NAME_KEY = "stationName"
+STATION_STATION_KEY_KEY = "stationKey"
 STATION_POSITION_KEY = "stationPosition"
 PUSHING_DATA_INTERVAL_IN_SECONDS_KEY = "pushingDataIntervalInSeconds"
 USERNAME_KEY = "username"

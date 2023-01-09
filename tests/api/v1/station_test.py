@@ -11,6 +11,7 @@ from app.controllers import (
 from app import (
     LOGIN_FULL_ROUTE,
     CREATE_A_STATION_FULL_ROUTE,
+    ADD_NEW_STATION_FULL_ROUTE,
 )
 from tests import (
     FIRST_TEST_USER_USERNAME,
@@ -21,6 +22,7 @@ from tests import (
     clean_database,
     get_testing_session,
     createAnUserBy,
+    createAStationBy,
     assertStation,
     get_sent_token,
 )
@@ -32,6 +34,7 @@ from app.constants import (
     AUTHORIZATION_KEY,
     STATION_NAME_KEY,
     STATION_POSITION_KEY,
+    STATION_STATION_KEY_KEY,
     PUSHING_DATA_INTERVAL_IN_SECONDS_KEY,
 )
 from app.constants import (
@@ -105,17 +108,32 @@ class StationTest(unittest.TestCase):
                 },
         )
 
+    def test_add_station_via_station_key(self):
+        createAnUserBy(self.user_controller)
+        _, station = createAStationBy(self.station_controller)
 
-    @unittest.skip("")
-    def test_given_when_no_user_is_created_when_a_new_user_is_registered_then_that_user_should_be_created(self):
-        self.test_client.post(
-                    REGISTER_ROUTE,
+        login_response = self.test_client.post(
+                    LOGIN_FULL_ROUTE,
                     json={
-                        USERNAME_KEY: "threezinedine",
-                        PASSWORD_KEY: "threezinedine"
+                        USERNAME_KEY: FIRST_TEST_USER_USERNAME,
+                        PASSWORD_KEY: FIRST_TEST_USER_PASSWORD, 
                     }
                 )
 
-        user = self.user_controller.get_user_by_name(username="threezinedine")
-        assert user.username == "threezinedine"
-        assert user.userId == 1
+        token = login_response.json()[TOKEN_KEY]
+
+        response = self.test_client.put(
+                    ADD_NEW_STATION_FULL_ROUTE,
+                    headers={
+                        AUTHORIZATION_KEY: get_sent_token(token)
+                    },
+                    json={
+                        STATION_STATION_KEY_KEY: station.stationKey,
+                    }
+                )
+
+        assert response.status_code == HTTP_200_OK
+        _, stations = self.station_controller.get_station_by_username(FIRST_TEST_USER_USERNAME)
+
+        assert len(stations) == 1
+        assertStation(stations[0], FIRST_TEST_STATION_STATION_NAME, FIRST_TEST_STATION_STATION_POSITION)
