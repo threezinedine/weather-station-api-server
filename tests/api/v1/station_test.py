@@ -10,7 +10,7 @@ from app.controllers import (
 )
 from app import (
     LOGIN_FULL_ROUTE,
-    ALL_STATIONS_FULL_ROUTE,
+    CREATE_A_STATION_FULL_ROUTE,
 )
 from tests import (
     USERNAME_KEY,
@@ -53,15 +53,16 @@ class StationTest(unittest.TestCase):
         token = login_response.json()[TOKEN_KEY]
 
         response = self.test_client.post(
-                    ALL_STATIONS_FULL_ROUTE,
-                    json={
-                        "stationName": FIRST_TEST_STATION_STATION_NAME
-                    },
+                    CREATE_A_STATION_FULL_ROUTE,
                     headers={
-                        "Authorization": f"Bear {token}"
-                    }
+                        "Authorization": f"Bearer {token}"
+                    },
+                    json={
+                        "stationName": FIRST_TEST_STATION_STATION_NAME,
+                        "stationPosition": FIRST_TEST_STATION_STATION_POSITION,
+                    },
                 )
-        
+
         assert response.status_code == 200
         _, stations = self.station_controller.get_station_by_username(FIRST_TEST_USER_USERNAME)
         assert len(stations) == 1
