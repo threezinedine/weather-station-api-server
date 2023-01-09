@@ -19,6 +19,7 @@ from tests import (
     FIRST_TEST_STATION_STATION_NAME,
     FIRST_TEST_STATION_STATION_POSITION,
     WRONG_TOKEN,
+    WRONG_STATION_KEY,
     clean_database,
     get_testing_session,
     createAnUserBy,
@@ -36,9 +37,9 @@ from app.constants import (
     STATION_POSITION_KEY,
     STATION_STATION_KEY_KEY,
     PUSHING_DATA_INTERVAL_IN_SECONDS_KEY,
-)
-from app.constants import (
     HTTP_200_OK,
+    HTTP_401_UNAUTHORIZED,
+    HTTP_404_NOT_FOUND,
 )
 from app.exceptions import (
     UNAUTHORIZATION_STATUS_CODE,
@@ -121,6 +122,27 @@ class StationTest(unittest.TestCase):
                 )
 
         token = login_response.json()[TOKEN_KEY]
+
+        response = self.test_client.put(
+                    ADD_NEW_STATION_FULL_ROUTE,
+                    json={
+                        STATION_STATION_KEY_KEY: WRONG_STATION_KEY,
+                    }
+                )
+
+        assert response.status_code == HTTP_401_UNAUTHORIZED
+
+        response = self.test_client.put(
+                    ADD_NEW_STATION_FULL_ROUTE,
+                    headers={
+                        AUTHORIZATION_KEY: get_sent_token(token)
+                    },
+                    json={
+                        STATION_STATION_KEY_KEY: WRONG_STATION_KEY,
+                    }
+                )
+
+        assert response.status_code == HTTP_404_NOT_FOUND
 
         response = self.test_client.put(
                     ADD_NEW_STATION_FULL_ROUTE,
