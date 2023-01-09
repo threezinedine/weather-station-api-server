@@ -251,8 +251,24 @@ class StationTest(unittest.TestCase):
                     f"{STATION_BASE_ROUTE}/{FIRST_TEST_STATION_STATION_NAME}",
                     headers={
                         AUTHORIZATION_KEY: get_sent_token(token)
-                        }
+                    }
                 )
 
         assert response.status_code == HTTP_200_OK
         assertStationDict(response.json(), FIRST_TEST_STATION_STATION_NAME, FIRST_TEST_STATION_STATION_POSITION)
+
+        response = self.test_client.get(
+                    f"{STATION_BASE_ROUTE}/{FIRST_TEST_STATION_STATION_NAME}",
+                )
+
+        assert response.status_code == HTTP_401_UNAUTHORIZED
+
+
+        response = self.test_client.get(
+                    f"{STATION_BASE_ROUTE}/{FIRST_TEST_STATION_WRONG_STATION_NAME}",
+                    headers={
+                        AUTHORIZATION_KEY: get_sent_token(token)
+                    }
+                )
+
+        assert response.status_code == HTTP_404_NOT_FOUND
