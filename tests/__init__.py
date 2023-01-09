@@ -12,6 +12,7 @@ from typing import (
 from sqlalchemy.orm import Session
 
 from database.base import Base
+from database.connection import get_session
 
 from app.constants import (
     STATUS_CODE_KEY,
@@ -31,8 +32,8 @@ from app.controllers import (
     StationController,
     RecordController,
 )
-from main import app
 
+from main import app
 
 FIRST_TEST_USER_USERNAME = "threezinedine"
 FIRST_TEST_USER_PASSWORD = "threezinedine1"
@@ -79,17 +80,7 @@ FIRST_WRONG_STATIONID_RECORD_TESTING = dict(stationId=2, **FIRST_RECORD_DATA)
 SECOND_RECORD_TESTING = dict(stationId=1, **SECOND_RECORD_DATA)
 
 FIRST_STATION_WRONG_STATION_KEY = "asfagfaodhfahi29183alsdkjfafq0h"
-test_client = TestClient(app)
 
-def get_loggin_token():
-    response = test_client.post(
-            LOGIN_FULL_ROUTE,
-            data={
-                USERNAME_KEY: FIRST_TEST_USER_USERNAME,
-                PASSWORD_KEY: FIRST_TEST_USER_PASSWORD
-            } 
-        )
-    return response.json()[TOKEN_KEY]
 
 def get_sent_token(token: str) -> str:
     return f"Bearer {token}"
@@ -174,6 +165,19 @@ def clean_database(session: Session):
     session.query(Record).delete()
     session.commit()
     session.close()
+
+app.dependency_overrides[get_session] = get_testing_session
+test_client = TestClient(app)
+
+def get_loggin_token():
+    response = test_client.post(
+            LOGIN_FULL_ROUTE,
+            data={
+                USERNAME_KEY: FIRST_TEST_USER_USERNAME,
+                PASSWORD_KEY: FIRST_TEST_USER_PASSWORD
+            } 
+        )
+    return response.json()[TOKEN_KEY]
 
 
 

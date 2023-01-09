@@ -7,6 +7,7 @@ PASSWORD_KEY = "password"
 USER_KEY = "user"
 TOKEN_KEY = "token"
 USERID_KEY = "userId"
+WEATHER_DATA_KEY = "record"
 AUTHORIZATION_KEY = "Authorization"
 
 
