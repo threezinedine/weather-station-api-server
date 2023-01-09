@@ -12,9 +12,12 @@ from sqlalchemy.orm import Session
 
 from database.base import Base
 
-from app.exceptions import (
+from app.constants import (
     STATUS_CODE_KEY,
     DETAIL_KEY,
+    STATION_NAME_KEY,
+    STATION_POSITION_KEY,
+    PUSHING_DATA_INTERVAL_IN_SECONDS_KEY,
 )
 from database.models import (
     User,
@@ -89,6 +92,11 @@ def assertStation(station: Station, stationName: str, stationPosition: str, push
     assert station.stationName == stationName
     assert station.stationPosition == stationPosition
     assert station.pushingDataIntervalInSeconds == pushingDataIntervalInSeconds
+
+def assertStationDict(station: Dict[str, str], stationName: str, stationPosition: str, pushingDataIntervalInSeconds: int = 5):
+    assert station[STATION_NAME_KEY] == stationName
+    assert station[STATION_POSITION_KEY] == stationPosition
+    assert station[PUSHING_DATA_INTERVAL_IN_SECONDS_KEY] == pushingDataIntervalInSeconds
 
 def assertRecord(record: Record, kwargs):
     for key, value in kwargs.items():

@@ -3,6 +3,9 @@ from fastapi import (
     HTTPException,
 )
 from sqlalchemy.orm import Session
+from typing import (
+    List,
+)
 
 from app.api.v1.stations import router
 from app import (
@@ -32,7 +35,7 @@ from app.api.utils import handleStatus
             status_code=HTTP_200_OK,
             response_model=ResponseStation
             )
-def get_all_stations(new_station_info: CreateStationRequest, session: Session = Depends(get_session), username: str = Depends(verify_token)):
+def create_a_new_station(new_station_info: CreateStationRequest, session: Session = Depends(get_session), username: str = Depends(verify_token)):
     station_controller = StationController(session)
     status, station = station_controller.create_new_station(stationName=new_station_info.stationName,
             stationPosition=new_station_info.stationPosition)
@@ -48,7 +51,7 @@ def get_all_stations(new_station_info: CreateStationRequest, session: Session = 
 @router.put(ADD_NEW_STATION_ROUTE,
         status_code=HTTP_200_OK,
         response_model=ResponseStation)
-def get_all_stations(stationInfo: AddStationRequest, session: Session = Depends(get_session), username: str = Depends(verify_token)):
+def add_user_for_station(stationInfo: AddStationRequest, session: Session = Depends(get_session), username: str = Depends(verify_token)):
     station_controller = StationController(session)
     status, station = station_controller.add_username_with_station_key(username=username, stationKey=stationInfo.stationKey)
 
@@ -59,9 +62,21 @@ def get_all_stations(stationInfo: AddStationRequest, session: Session = Depends(
 @router.put(RESET_STATION_KEY_ROUTE,
         status_code=HTTP_200_OK,
         response_model=ResponseStation)
-def get_all_stations(stationInfo: ResetStationKeyRequest, session: Session = Depends(get_session), username: str = Depends(verify_token)):
+def reset_station_key(stationInfo: ResetStationKeyRequest, session: Session = Depends(get_session), username: str = Depends(verify_token)):
     station_controller = StationController(session)
     status, station = station_controller.reset_station_key(stationInfo.stationName)
 
     handleStatus(status)
     return station
+
+@router.get(ALL_STATIONS_ROUTE,
+        status_code=HTTP_200_OK, 
+        response_model=List[ResponseStation])
+def get_all_stations(session: Session = Depends(get_session), username: str = Depends(verify_token)):
+    station_controller = StationController(session)
+
+    status, stations = station_controller.get_station_by_username(username=username)
+
+    handleStatus(status)
+
+    return stations

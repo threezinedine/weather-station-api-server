@@ -33,6 +33,7 @@ from tests import (
     createTwoStationsBy,
     createAStationAndAnUserAndAddRelationshipBy,
     assertStation,
+    assertStationDict,
     get_sent_token,
 )
 from app.constants import (
@@ -244,6 +245,7 @@ class StationTest(unittest.TestCase):
 
         assert response.status_code == HTTP_200_OK
         assert len(response.json()) == 2
+        stations = response.json()
 
-        assertStation(stations[0], FIRST_TEST_STATION_STATION_NAME, FIRST_TEST_STATION_STATION_POSITION)
-        assertStation(stations[1], SECOND_TEST_STATION_STATION_NAME, SECOND_TEST_STATION_STATION_POSISTION)
+        assertStationDict(stations[0], FIRST_TEST_STATION_STATION_NAME, FIRST_TEST_STATION_STATION_POSITION)
+        assertStationDict(stations[1], SECOND_TEST_STATION_STATION_NAME, SECOND_TEST_STATION_STATION_POSITION)
