@@ -182,4 +182,5 @@ class RecordControllerTest(unittest.TestCase):
         status, records = self.record_controller.get_all_stations_by_username_and_station_name(username=FIRST_TEST_USER_USERNAME, stationName=FIRST_TEST_STATION_STATION_NAME)
 
         assertStatus(status, OK_STATUS)
-        assertRecord(record, FIRST_RECORD_TESTING)
+        assert len(records) == 1
+        assertRecord(records[0], FIRST_RECORD_TESTING)

@@ -109,3 +109,8 @@ class RecordController:
 
     def _get_user_by_username(self, username: str) -> Union[User, None]:
         return self.session.query(User).filter(User.username == username).first()
+
+    def get_all_stations_by_username_and_station_name(self, username: str, stationName: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], List[Record]]:
+        status, records = self.get_all_records_from_station(stationName)
+
+        return status, records
