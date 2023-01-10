@@ -87,3 +87,8 @@ class RecordController:
             status = STATION_DOES_NOT_EXIST_STATUS
         
         return status, None
+
+    def get_the_latest_record_by_username_and_station_name(self, username: str, stationName: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], Record]:
+        status, latest_record = self.get_latest_record_from_station(stationName)
+
+        return status, latest_record

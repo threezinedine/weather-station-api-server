@@ -12,6 +12,7 @@ from tests import (
     FIRST_TEST_STATION_STATION_NAME,
     FIRST_WRONG_STATIONID_RECORD_TESTING,
     SECOND_RECORD_TESTING,
+    FIRST_TEST_USER_USERNAME,
     createAStationBy,
     createAStationWithExampleRecordBy,
     createAStationWithTwoExampleRecordsBy,
