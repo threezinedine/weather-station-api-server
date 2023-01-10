@@ -209,3 +209,11 @@ class RecordControllerTest(unittest.TestCase):
 
         assertStatus(status, USER_DOES_NOT_EXIST_STATUS)
         assert records is None
+
+    def test_given_a_record_station_users_are_created_with_relationship_of_the_first_user_when_querying_all_records_with_have_no_permission_user_then_return_have_no_permission_and_none(self):
+        createARecordAStationAndTwoUserBy(self.user_controller, self.station_controller, self.record_controller)
+
+        status, records = self.record_controller.get_all_stations_by_username_and_station_name(username=FIRST_TEST_USER_WRONG_USERNAME, stationName=SECOND_TEST_USER_USERNAME)
+
+        assertStatus(status, HAVE_NO_PERMISSION_STATUS)
+        assert records is None
