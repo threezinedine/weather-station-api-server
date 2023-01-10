@@ -1,3 +1,4 @@
+import os
 from sqlalchemy.orm import (
     sessionmaker,
     Session,
@@ -21,6 +22,8 @@ from app.constants import (
     STATION_POSITION_KEY,
     PUSHING_DATA_INTERVAL_IN_SECONDS_KEY,
     CREATED_TIME_KEY,
+    TESTING_DATABASE_KEY, 
+    DEFAULT_TESTING_DATABASE,
 )
 from database.models import (
     User,
@@ -147,8 +150,8 @@ def createAStationWithTwoExampleRecordsBy(station_controller: StationController,
     record_controller.create_new_record(stationKey=station.stationKey, **SECOND_RECORD_TESTING)
 
 
-
-engine = create_engine("sqlite:///testing_database.db")
+testing_database = os.getenv(TESTING_DATABASE_KEY, DEFAULT_TESTING_DATABASE)
+engine = create_engine(testing_database)
 TestingLocalSession = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 
 

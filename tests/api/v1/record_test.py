@@ -11,6 +11,7 @@ from tests import (
     get_testing_session,
     createAStationAndAnUserAndAddRelationshipBy,
     assertRecord,
+    get_loggin_token,
     FIRST_RECORD_TESTING,
     FIRST_WRONG_STATIONID_RECORD_TESTING,
     WRONG_STATION_KEY,
@@ -24,6 +25,7 @@ from app.constants import (
 )
 from app import (
     CREATE_RECORD_FULL_ROUTE,
+    GET_THE_LATEST_RECORD_FULL_ROUTE,
 )
 
 
@@ -74,3 +76,16 @@ class RecordTest(unittest.TestCase):
         )
 
         assert response.status_code == HTTP_400_BAD_REQUEST
+
+    def test_get_the_latest_record(self):
+        _, station = createAStationAndAnUserAndAddRelationshipBy(self.user_controller, self.station_controller)
+        self.record_controller.create_new_record(station.stationKey, **FIRST_RECORD_TESTING)
+
+        token = get_loggin_token()
+
+        response = test_client.get(
+            f"stations/{station.stationId}/{GET_THE_LATEST_RECORD_FULL_ROUTE}"
+        )
+
+        assert response == HTTP_200_OK
+        assertRecord(response.json(), FIRST_RECORD_TESTING)

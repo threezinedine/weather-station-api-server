@@ -14,6 +14,9 @@ CREATED_TIME_KEY = "createdTime"
 
 DATE_TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
+TESTING_DATABASE_KEY = "TESTING_DATABASE"
+DEFAULT_TESTING_DATABASE = "sqlite:///testing.db"
+
 
 STATUS_CODE_KEY = "status_code"
 DETAIL_KEY = "detail"
