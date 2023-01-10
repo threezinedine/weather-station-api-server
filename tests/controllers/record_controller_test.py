@@ -15,10 +15,12 @@ from tests import (
     createAStationBy,
     createAStationWithExampleRecordBy,
     createAStationWithTwoExampleRecordsBy,
+    createAStationAndAnUserAndAddRelationshipBy,
 )
 from app.controllers import (
     RecordController,
     StationController,
+    UserController,
 )
 from app.exceptions import (
     WRONG_STATION_KEY_STATUS,
@@ -33,6 +35,7 @@ class RecordControllerTest(unittest.TestCase):
         self.session = next(get_testing_session()) 
         self.record_controller = RecordController(self.session)
         self.station_controller = StationController(self.session)
+        self.user_controller = UserController(self.session)
 
     def tearDown(self):
         clean_database(self.session)
@@ -134,3 +137,12 @@ class RecordControllerTest(unittest.TestCase):
 
         assertStatus(status, STATION_DOES_NOT_EXIST_STATUS)
         assert record is None
+
+    def test_given_a_record_station_user_are_created_with_relationship_when_querying_the_latest_one_then_returns_ok_and_that_record(self):
+        _, station = createAStationAndAnUserAndAddRelationshipBy(self.user_controller, self.station_controller)
+        self.record_controller.create_new_record(station.stationKey, **FIRST_RECORD_TESTING)
+
+        status, record = self.record_controller.get_the_latest_record_by_username_and_station_name(username=FIRST_TEST_USER_USERNAME, stationName=FIRST_TEST_STATION_STATION_NAME)
+
+        assertStatus(status, OK_STATUS)
+        assertRecord(record, FIRST_RECORD_TESTING)

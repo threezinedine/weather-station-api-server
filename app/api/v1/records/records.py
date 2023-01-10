@@ -9,6 +9,7 @@ from app.auth import verify_token
 from app.controllers import RecordController
 from app import (
     CREATE_RECORD_ROUTE,
+    GET_THE_LATEST_RECORD_ROUTE,
 )
 from app.constants import (
     HTTP_200_OK,
@@ -21,7 +22,8 @@ from app.schemas import (
 
 
 @router.post(CREATE_RECORD_ROUTE,
-        status_code=HTTP_200_OK)
+        status_code=HTTP_200_OK,
+        response_model=WeatherData)
 def create_a_station(data: RecordRequest, session: Session = Depends(get_session)):
     record_controller = RecordController(session)
 
@@ -29,3 +31,10 @@ def create_a_station(data: RecordRequest, session: Session = Depends(get_session
     handleStatus(status)
 
     return record
+
+@router.get(GET_THE_LATEST_RECORD_ROUTE,
+        status_code=HTTP_200_OK,
+        )
+def get_the_latest_record(stationName: str, data: WeatherData, session: Session = Depends(get_session), username: str = Depends(verify_token)):
+    record_controller = RecordController(session)
+
