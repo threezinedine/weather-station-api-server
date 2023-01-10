@@ -37,7 +37,7 @@ from app.controllers import (
     RecordController,
 )
 
-from main import app
+from main import application
 
 FIRST_TEST_USER_USERNAME = "threezinedine"
 FIRST_TEST_USER_PASSWORD = "threezinedine1"
@@ -184,8 +184,8 @@ def clean_database(session: Session):
     session.commit()
     session.close()
 
-app.dependency_overrides[get_session] = get_testing_session
-test_client = TestClient(app)
+application.dependency_overrides[get_session] = get_testing_session
+test_client = TestClient(application)
 
 def get_loggin_token():
     response = test_client.post(

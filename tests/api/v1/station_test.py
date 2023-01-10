@@ -3,7 +3,6 @@ import pytest
 from fastapi.testclient import TestClient
 from copy import copy
 
-from main import app
 from database.connection import get_session
 from app.controllers import (
     UserController,
@@ -61,7 +60,6 @@ from app.exceptions import (
 
 class StationTest(unittest.TestCase):
     def setUp(self):
-        app.dependency_overrides[get_session] = get_testing_session
         self.session = next(get_testing_session())
         self.user_controller = UserController(self.session)
         self.station_controller = StationController(self.session)

@@ -8,11 +8,11 @@ from app.api.v1 import (
     records,
 )
 
-app = FastAPI()
+application = FastAPI()
 
-app.include_router(users.router)
-app.include_router(stations.router)
-app.include_router(records.router)
+application.include_router(users.router)
+application.include_router(stations.router)
+application.include_router(records.router)
 
 
 if __name__ == "__main__":
@@ -20,4 +20,4 @@ if __name__ == "__main__":
     load_dotenv()
     host = os.environ.get("HOST", "0.0.0.0")
     port = int(os.environ.get("PORT", 8000))
-    uvicorn.run(app, host=host, port=port)
+    uvicorn.run(application, host=host, port=port)

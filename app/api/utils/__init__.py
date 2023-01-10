@@ -5,7 +5,7 @@ from typing import (
     Dict,
 )
 
-from tests import (
+from app.constants import (
     STATUS_CODE_KEY,
     DETAIL_KEY,
 )
