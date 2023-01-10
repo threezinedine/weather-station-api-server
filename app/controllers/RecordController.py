@@ -21,6 +21,7 @@ from app.exceptions import (
     STATION_DOES_NOT_EXIST_STATUS,
     NO_RECORD_EXIST_STATUS,
     USER_DOES_NOT_EXIST_STATUS,
+    HAVE_NO_PERMISSION_STATUS,
 )
 
 
@@ -93,9 +94,15 @@ class RecordController:
     def get_the_latest_record_by_username_and_station_name(self, username: str, stationName: str) -> Tuple[Dict[str, Union[int, Union[str, None]]], Record]:
         status, latest_record = self.get_latest_record_from_station(stationName)
         user = self._get_user_by_username(username)
+        station = self.session.query(Station).filter(Station.stationName == stationName).first()
         
         if user is None:
             status = USER_DOES_NOT_EXIST_STATUS
+            latest_record = None
+        elif station is None:
+            pass
+        elif station not in user.stations:
+            status = HAVE_NO_PERMISSION_STATUS
             latest_record = None
 
         return status, latest_record
