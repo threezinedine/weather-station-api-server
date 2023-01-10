@@ -20,6 +20,7 @@ from app.constants import (
     STATION_NAME_KEY,
     STATION_POSITION_KEY,
     PUSHING_DATA_INTERVAL_IN_SECONDS_KEY,
+    CREATED_TIME_KEY,
 )
 from database.models import (
     User,
@@ -55,7 +56,8 @@ TEST_STATION_PUSHING_DATA_INTERVAL_IN_SECONDS = 10
 WRONG_STATION_KEY = "asdadslhagsdlkfjas"
 
 
-FIRST_RECORD_DATA = dict(windDirection=1,
+FIRST_RECORD_DATA = dict(
+                    windDirection=1,
                     averageWindSpeedInOneMinute=2.3,
                     maxWindSpeedInFiveMinutes=3.4,
                     rainFallInOneHour=23.1,
@@ -65,7 +67,8 @@ FIRST_RECORD_DATA = dict(windDirection=1,
                     barPressure=-123.00,
                     createdTime="2023-01-08 18:54:12"
                     )
-SECOND_RECORD_DATA = dict(windDirection=3,
+SECOND_RECORD_DATA = dict(
+                    windDirection=3,
                     averageWindSpeedInOneMinute=4.3,
                     maxWindSpeedInFiveMinutes=13.4,
                     rainFallInOneHour=223.1,
@@ -105,7 +108,7 @@ def assertStationDict(station: Dict[str, str], stationName: str, stationPosition
 
 def assertRecord(record: Record, kwargs):
     for key, value in kwargs.items():
-        if key != "createdTime":
+        if key != CREATED_TIME_KEY:
             assert getattr(record, key) == value
         else:
             assert str(getattr(record, key)) == value

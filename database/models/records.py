@@ -8,6 +8,10 @@ from sqlalchemy import (
 )
 
 from database.base import Base
+from app.constants import (
+    CREATED_TIME_KEY,
+    DATE_TIME_FORMAT,
+)
 
 
 class Record(Base):
@@ -26,9 +30,16 @@ class Record(Base):
     createdTime = Column(DateTime)
 
     def __init__(self, **kwargs):
-        kwargs["createdTime"] = datetime.strptime(kwargs["createdTime"], "%Y-%m-%d %H:%M:%S")
+        kwargs = self.__handle_input_data(kwargs)
+
         for key, value in kwargs.items():
             setattr(self, key, value)
+
+    def __handle_input_data(self, kwargs):
+        if isinstance(kwargs[CREATED_TIME_KEY], str):
+            kwargs[CREATED_TIME_KEY] = datetime.strptime(kwargs[CREATED_TIME_KEY], DATE_TIME_FORMAT)
+
+        return kwargs
 
     def __repr__(self) -> str:
         return f"<Record recordId={self.recordId} createdTime={self.createdTime}>"

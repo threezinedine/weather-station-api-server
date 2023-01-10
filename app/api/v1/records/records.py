@@ -14,9 +14,18 @@ from app.constants import (
     HTTP_200_OK,
 )
 from database.connection import get_session
+from app.schemas import (
+    WeatherData,
+    RecordRequest,
+)
 
 
 @router.post(CREATE_RECORD_ROUTE,
         status_code=HTTP_200_OK)
-def create_a_station(session: Session = Depends(get_session)):
-    return {}
+def create_a_station(data: RecordRequest, session: Session = Depends(get_session)):
+    record_controller = RecordController(session)
+
+    status, record = record_controller.create_new_record(stationKey=data.stationKey, **data.weatherData.dict())
+    handleStatus(status)
+
+    return record

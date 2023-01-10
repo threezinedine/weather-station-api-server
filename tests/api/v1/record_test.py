@@ -33,7 +33,6 @@ class RecordTest(unittest.TestCase):
     def tearDown(self):
         clean_database(self.session)
 
-    @unittest.skip("")
     def test_create_a_record(self):
         _, station = createAStationAndAnUserAndAddRelationshipBy(self.user_controller, self.station_controller)
 
@@ -44,6 +43,7 @@ class RecordTest(unittest.TestCase):
                     WEATHER_DATA_KEY: FIRST_RECORD_TESTING,
                 }
             )
+
 
         assert response.status_code == HTTP_200_OK
 
