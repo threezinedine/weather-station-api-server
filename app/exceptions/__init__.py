@@ -8,3 +8,4 @@ from .NoRelationshipExistException import *
 from .WrongStationKey import *
 from .NoRecordExistExeception import *
 from .UnauthorizationException import *
+from .HaveNoPermissionException import *

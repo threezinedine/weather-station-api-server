@@ -14,6 +14,7 @@ from tests import (
     SECOND_RECORD_TESTING,
     FIRST_TEST_USER_USERNAME,
     FIRST_TEST_USER_WRONG_USERNAME,
+    SECOND_TEST_USER_USERNAME,
     createAStationBy,
     createAStationWithExampleRecordBy,
     createAStationWithTwoExampleRecordsBy,
@@ -31,6 +32,7 @@ from app.exceptions import (
     NO_RECORD_EXIST_STATUS,
     OK_STATUS,
     USER_DOES_NOT_EXIST_STATUS,
+    HAVE_NO_PERMISSION_STATUS,
 )
 
 
@@ -164,4 +166,12 @@ class RecordControllerTest(unittest.TestCase):
         status, record = self.record_controller.get_the_latest_record_by_username_and_station_name(username=FIRST_TEST_USER_WRONG_USERNAME, stationName=FIRST_TEST_STATION_STATION_NAME)
 
         assertStatus(status, USER_DOES_NOT_EXIST_STATUS)
+        assert record is None
+
+    def test_given_a_record_station_users_are_created_with_relationship_of_the_first_user_when_querying_the_latest_one_with_the_second_user_then_return_have_not_permission_and_none(self):
+        createARecordAStationAndTwoUserBy(self.user_controller, self.station_controller, self.record_controller)
+
+        status, record = self.record_controller.get_the_latest_record_by_username_and_station_name(SECOND_TEST_USER_USERNAME, FIRST_TEST_STATION_STATION_NAME)
+
+        assertStatus(status, HAVE_NO_PERMISSION_STATUS)
         assert record is None
