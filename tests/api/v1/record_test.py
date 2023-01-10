@@ -122,5 +122,4 @@ class RecordTest(unittest.TestCase):
             route,
         )
 
-
         assert response.status_code == HTTP_401_UNAUTHORIZED
