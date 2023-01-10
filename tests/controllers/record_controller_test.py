@@ -18,6 +18,7 @@ from tests import (
     createAStationWithExampleRecordBy,
     createAStationWithTwoExampleRecordsBy,
     createAStationAndAnUserAndAddRelationshipBy,
+    createARecordAStationAndTwoUserBy,
 )
 from app.controllers import (
     RecordController,
@@ -142,8 +143,7 @@ class RecordControllerTest(unittest.TestCase):
         assert record is None
 
     def test_given_a_record_station_user_are_created_with_relationship_when_querying_the_latest_one_then_returns_ok_and_that_record(self):
-        _, station = createAStationAndAnUserAndAddRelationshipBy(self.user_controller, self.station_controller)
-        self.record_controller.create_new_record(station.stationKey, **FIRST_RECORD_TESTING)
+        createARecordAStationAndTwoUserBy(self.user_controller, self.station_controller, self.record_controller)
 
         status, record = self.record_controller.get_the_latest_record_by_username_and_station_name(username=FIRST_TEST_USER_USERNAME, stationName=FIRST_TEST_STATION_STATION_NAME)
 
@@ -151,8 +151,7 @@ class RecordControllerTest(unittest.TestCase):
         assertRecord(record, FIRST_RECORD_TESTING)
 
     def test_given_a_record_station_user_are_created_with_relationship_when_querying_the_latest_one_with_non_existed_station_return_station_does_not_exist_and_none(self):
-        _, station = createAStationAndAnUserAndAddRelationshipBy(self.user_controller, self.station_controller)
-        self.record_controller.create_new_record(station.stationKey, **FIRST_RECORD_TESTING)
+        createARecordAStationAndTwoUserBy(self.user_controller, self.station_controller, self.record_controller)
 
         status, record = self.record_controller.get_the_latest_record_by_username_and_station_name(username=FIRST_TEST_USER_USERNAME, stationName=FIRST_TEST_STATION_WRONG_STATION_NAME)
 
@@ -160,8 +159,7 @@ class RecordControllerTest(unittest.TestCase):
         assert record is None
 
     def test_given_a_record_station_user_are_created_with_relationship_when_querying_the_latest_one_with_non_existed_user_then_return_user_does_not_exist_and_none(self):
-        _, station = createAStationAndAnUserAndAddRelationshipBy(self.user_controller, self.station_controller)
-        self.record_controller.create_new_record(station.stationKey, **FIRST_RECORD_TESTING)
+        createARecordAStationAndTwoUserBy(self.user_controller, self.station_controller, self.record_controller)
 
         status, record = self.record_controller.get_the_latest_record_by_username_and_station_name(username=FIRST_TEST_USER_WRONG_USERNAME, stationName=FIRST_TEST_STATION_STATION_NAME)
 

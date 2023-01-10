@@ -149,6 +149,11 @@ def createAStationWithTwoExampleRecordsBy(station_controller: StationController,
     record_controller.create_new_record(stationKey=station.stationKey, **FIRST_RECORD_TESTING)
     record_controller.create_new_record(stationKey=station.stationKey, **SECOND_RECORD_TESTING)
 
+def createARecordAStationAndTwoUserBy(user_controller: UserController, station_controller: StationController, record_controller: RecordController):
+    createTwoUsersBy(user_controller)
+    createAStationWithExampleRecordBy(station_controller, record_controller)
+    station_controller.add_username(FIRST_TEST_USER_USERNAME, FIRST_TEST_STATION_STATION_NAME)
+
 
 testing_database = os.getenv(TESTING_DATABASE_KEY, DEFAULT_TESTING_DATABASE)
 engine = create_engine(testing_database)
