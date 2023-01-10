@@ -116,6 +116,13 @@ def assertRecord(record: Record, kwargs):
         else:
             assert str(getattr(record, key)) == value
 
+def assertRecordDict(record: Dict[str, str], kwargs):
+    for key, value in kwargs.items():
+        if key != CREATED_TIME_KEY:
+            assert record[key] == value
+        else:
+            assert record[key] == value.replace(" ", "T")
+
 def createAnUserBy(controller: UserController):
     controller.create_new_user(username=FIRST_TEST_USER_USERNAME, password=FIRST_TEST_USER_PASSWORD)
 

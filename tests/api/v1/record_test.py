@@ -11,6 +11,7 @@ from tests import (
     get_testing_session,
     createAStationAndAnUserAndAddRelationshipBy,
     assertRecord,
+    assertRecordDict,
     get_loggin_token,
     getAuthorizationHeader,
     FIRST_RECORD_TESTING,
@@ -78,7 +79,6 @@ class RecordTest(unittest.TestCase):
 
         assert response.status_code == HTTP_400_BAD_REQUEST
 
-    @unittest.skip("")
     def test_get_the_latest_record(self):
         _, station = createAStationAndAnUserAndAddRelationshipBy(self.user_controller, self.station_controller)
         self.record_controller.create_new_record(station.stationKey, **FIRST_RECORD_TESTING)
@@ -90,5 +90,5 @@ class RecordTest(unittest.TestCase):
             headers=getAuthorizationHeader(token)
         )
 
-        assert response == HTTP_200_OK
-        assertRecord(response.json(), FIRST_RECORD_TESTING)
+        assert response.status_code == HTTP_200_OK
+        assertRecordDict(response.json(), FIRST_RECORD_TESTING)

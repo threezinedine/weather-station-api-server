@@ -34,7 +34,14 @@ def create_a_station(data: RecordRequest, session: Session = Depends(get_session
 
 @router.get(GET_THE_LATEST_RECORD_ROUTE,
         status_code=HTTP_200_OK,
+        response_model=WeatherData
         )
-def get_the_latest_record(stationName: str, data: WeatherData, session: Session = Depends(get_session), username: str = Depends(verify_token)):
+def get_the_latest_record(stationName: str, session: Session = Depends(get_session), username: str = Depends(verify_token)):
     record_controller = RecordController(session)
+
+    status, record = record_controller.get_the_latest_record_by_username_and_station_name(username=username, stationName=stationName)
+
+    handleStatus(status)
+
+    return record
 
