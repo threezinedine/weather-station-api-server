@@ -184,3 +184,20 @@ class RecordControllerTest(unittest.TestCase):
         assertStatus(status, OK_STATUS)
         assert len(records) == 1
         assertRecord(records[0], FIRST_RECORD_TESTING)
+
+    def test_given_a_record_station_users_are_created_with_relationship_of_the_first_user_when_querying_all_records_with_non_existed_station_then_return_station_does_not_exist_and_none(self):
+        createARecordAStationAndTwoUserBy(self.user_controller, self.station_controller, self.record_controller)
+
+        status, records = self.record_controller.get_all_stations_by_username_and_station_name(username=FIRST_TEST_USER_USERNAME, stationName=FIRST_TEST_STATION_STATION_NAME)
+
+        assertStatus(status, OK_STATUS)
+        assert len(records) == 1
+        assertRecord(records[0], FIRST_RECORD_TESTING)
+
+    def test_given_a_record_station_users_are_created_with_relationship_of_the_first_user_when_querying_all_records_with_non_existed_station_then_return_station_does_not_exist_and_none(self):
+        createARecordAStationAndTwoUserBy(self.user_controller, self.station_controller, self.record_controller)
+
+        status, records = self.record_controller.get_all_stations_by_username_and_station_name(username=FIRST_TEST_USER_USERNAME, stationName=FIRST_TEST_STATION_WRONG_STATION_NAME)
+
+        assertStatus(status, STATION_DOES_NOT_EXIST_STATUS)
+        assert records is None
