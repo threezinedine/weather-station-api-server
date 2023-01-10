@@ -198,6 +198,16 @@ def get_loggin_token():
     return response.json()[TOKEN_KEY]
 
 
+def get_loggin_token_user_2():
+    response = test_client.post(
+            LOGIN_FULL_ROUTE,
+            data={
+                USERNAME_KEY: SECOND_TEST_USER_USERNAME,
+                PASSWORD_KEY: SECOND_TEST_USER_PASSWORD
+            } 
+        )
+    return response.json()[TOKEN_KEY]
+
 
 from .api.v1 import *
 from .controllers import *

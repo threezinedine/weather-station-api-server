@@ -10,12 +10,16 @@ from tests import (
     clean_database,
     get_testing_session,
     createAStationAndAnUserAndAddRelationshipBy,
+    createARecordAStationAndTwoUserBy,
     assertRecord,
     assertRecordDict,
     get_loggin_token,
+    get_loggin_token_user_2,
     getAuthorizationHeader,
     FIRST_RECORD_TESTING,
     FIRST_WRONG_STATIONID_RECORD_TESTING,
+    FIRST_TEST_STATION_WRONG_STATION_NAME,
+    FIRST_TEST_STATION_STATION_NAME,
     WRONG_STATION_KEY,
 )
 from app.constants import (
@@ -24,6 +28,7 @@ from app.constants import (
     HTTP_200_OK,
     HTTP_404_NOT_FOUND,
     HTTP_400_BAD_REQUEST,
+    HTTP_401_UNAUTHORIZED,
 )
 from app import (
     CREATE_RECORD_FULL_ROUTE,
@@ -80,15 +85,42 @@ class RecordTest(unittest.TestCase):
         assert response.status_code == HTTP_400_BAD_REQUEST
 
     def test_get_the_latest_record(self):
-        _, station = createAStationAndAnUserAndAddRelationshipBy(self.user_controller, self.station_controller)
-        self.record_controller.create_new_record(station.stationKey, **FIRST_RECORD_TESTING)
+        createARecordAStationAndTwoUserBy(self.user_controller, self.station_controller, self.record_controller)
+
+        route = f"/records/{FIRST_TEST_STATION_STATION_NAME}/latest"
+        wrong_route = f"/records/{FIRST_TEST_STATION_WRONG_STATION_NAME}/latest"
 
         token = get_loggin_token()
+        token_2 = get_loggin_token_user_2()
 
         response = test_client.get(
-            f"/records/{station.stationName}/latest",
+            route, 
             headers=getAuthorizationHeader(token)
         )
 
         assert response.status_code == HTTP_200_OK
         assertRecordDict(response.json(), FIRST_RECORD_TESTING)
+
+
+        response = test_client.get(
+            route,
+            headers=getAuthorizationHeader(token_2)
+        )
+
+        assert response.status_code == HTTP_401_UNAUTHORIZED
+
+
+        response = test_client.get(
+            wrong_route,
+            headers=getAuthorizationHeader(token)
+        )
+
+        assert response.status_code == HTTP_404_NOT_FOUND
+
+
+        response = test_client.get(
+            route,
+        )
+
+
+        assert response.status_code == HTTP_401_UNAUTHORIZED
