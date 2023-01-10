@@ -13,6 +13,7 @@ from tests import (
     FIRST_WRONG_STATIONID_RECORD_TESTING,
     SECOND_RECORD_TESTING,
     FIRST_TEST_USER_USERNAME,
+    FIRST_TEST_USER_WRONG_USERNAME,
     createAStationBy,
     createAStationWithExampleRecordBy,
     createAStationWithTwoExampleRecordsBy,
@@ -28,6 +29,7 @@ from app.exceptions import (
     STATION_DOES_NOT_EXIST_STATUS,
     NO_RECORD_EXIST_STATUS,
     OK_STATUS,
+    USER_DOES_NOT_EXIST_STATUS,
 )
 
 
@@ -155,4 +157,13 @@ class RecordControllerTest(unittest.TestCase):
         status, record = self.record_controller.get_the_latest_record_by_username_and_station_name(username=FIRST_TEST_USER_USERNAME, stationName=FIRST_TEST_STATION_WRONG_STATION_NAME)
 
         assertStatus(status, STATION_DOES_NOT_EXIST_STATUS)
+        assert record is None
+
+    def test_given_a_record_station_user_are_created_with_relationship_when_querying_the_latest_one_with_non_existed_user_then_return_user_does_not_exist_and_none(self):
+        _, station = createAStationAndAnUserAndAddRelationshipBy(self.user_controller, self.station_controller)
+        self.record_controller.create_new_record(station.stationKey, **FIRST_RECORD_TESTING)
+
+        status, record = self.record_controller.get_the_latest_record_by_username_and_station_name(username=FIRST_TEST_USER_WRONG_USERNAME, stationName=FIRST_TEST_STATION_STATION_NAME)
+
+        assertStatus(status, USER_DOES_NOT_EXIST_STATUS)
         assert record is None
