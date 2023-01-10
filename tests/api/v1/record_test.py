@@ -140,3 +140,17 @@ class RecordTest(unittest.TestCase):
 
         assert response.status_code == HTTP_200_OK
         assertRecordDict(response.json()[0], FIRST_RECORD_TESTING)
+
+        response = test_client.get(
+            wrong_route,
+            headers=getAuthorizationHeader(token)
+            )
+
+        assert response.status_code == HTTP_404_NOT_FOUND
+
+        response = test_client.get(
+            route,
+            headers=getAuthorizationHeader(token_2)
+        )
+
+        assert response.status_code == HTTP_401_UNAUTHORIZED

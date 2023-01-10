@@ -57,6 +57,5 @@ def get_all_record(stationName: str, session: Session = Depends(get_session), us
 
     status, records = record_controller.get_all_records_by_username_and_station_name(username=username, stationName=stationName)
     handleStatus(status)
-    print(records)
 
     return records
