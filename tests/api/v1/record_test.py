@@ -12,11 +12,15 @@ from tests import (
     createAStationAndAnUserAndAddRelationshipBy,
     assertRecord,
     FIRST_RECORD_TESTING,
+    FIRST_WRONG_STATIONID_RECORD_TESTING,
+    WRONG_STATION_KEY,
 )
 from app.constants import (
     STATION_STATION_KEY_KEY,
     WEATHER_DATA_KEY,
     HTTP_200_OK,
+    HTTP_404_NOT_FOUND,
+    HTTP_400_BAD_REQUEST,
 )
 from app import (
     CREATE_RECORD_FULL_ROUTE,
@@ -50,3 +54,23 @@ class RecordTest(unittest.TestCase):
         _, records = self.record_controller.get_all_records()
         assert len(records) == 1
         assertRecord(records[0], FIRST_RECORD_TESTING)
+
+        response = test_client.post(
+            CREATE_RECORD_FULL_ROUTE,
+            json={
+                STATION_STATION_KEY_KEY: station.stationKey,
+                WEATHER_DATA_KEY: FIRST_WRONG_STATIONID_RECORD_TESTING
+            }
+        )
+
+        assert response.status_code == HTTP_404_NOT_FOUND
+
+        response = test_client.post(
+            CREATE_RECORD_FULL_ROUTE,
+            json={
+                STATION_STATION_KEY_KEY: WRONG_STATION_KEY,
+                WEATHER_DATA_KEY: FIRST_RECORD_TESTING
+            }
+        )
+
+        assert response.status_code == HTTP_400_BAD_REQUEST
