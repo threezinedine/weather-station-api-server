@@ -5,13 +5,14 @@ import os
 from app.api.v1 import (
     users,
     stations,
+    records,
 )
 
 app = FastAPI()
-print(stations.router, users.router)
 
 app.include_router(users.router)
 app.include_router(stations.router)
+app.include_router(records.router)
 
 
 if __name__ == "__main__":

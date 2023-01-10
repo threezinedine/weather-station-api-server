@@ -82,8 +82,8 @@ SECOND_RECORD_TESTING = dict(stationId=1, **SECOND_RECORD_DATA)
 FIRST_STATION_WRONG_STATION_KEY = "asfagfaodhfahi29183alsdkjfafq0h"
 
 
-def get_sent_token(token: str) -> str:
-    return f"Bearer {token}"
+def getAuthorizationHeader(token: str) -> str:
+    return {AUTHORIZATION_KEY: f"Bearer {token}"}
 
 def assertStatus(status: Dict[str, Union[int, Union[str, None]]], reference_status: Dict[str, Union[int, Union[str, None]]]):
     assert status[STATUS_CODE_KEY] == reference_status[STATUS_CODE_KEY]

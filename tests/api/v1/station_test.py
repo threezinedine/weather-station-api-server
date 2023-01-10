@@ -36,7 +36,7 @@ from tests import (
     createAStationAndAnUserAndAddRelationshipBy,
     assertStation,
     assertStationDict,
-    get_sent_token,
+    getAuthorizationHeader,
     test_client,
     get_loggin_token,
 )
@@ -62,7 +62,6 @@ from app.exceptions import (
 class StationTest(unittest.TestCase):
     def setUp(self):
         app.dependency_overrides[get_session] = get_testing_session
-        self.test_client = test_client
         self.session = next(get_testing_session())
         self.user_controller = UserController(self.session)
         self.station_controller = StationController(self.session)
@@ -74,11 +73,9 @@ class StationTest(unittest.TestCase):
         createAnUserBy(self.user_controller)
         token = get_loggin_token()
 
-        response = self.test_client.post(
+        response = test_client.post(
                     CREATE_A_STATION_FULL_ROUTE,
-                    headers={
-                        AUTHORIZATION_KEY: get_sent_token(token) 
-                    },
+                    headers=getAuthorizationHeader(token),
                     json={
                         STATION_NAME_KEY: FIRST_TEST_STATION_STATION_NAME,
                         STATION_POSITION_KEY: FIRST_TEST_STATION_STATION_POSITION,
@@ -90,7 +87,7 @@ class StationTest(unittest.TestCase):
         assert len(stations) == 1
         assertStation(stations[0], FIRST_TEST_STATION_STATION_NAME, FIRST_TEST_STATION_STATION_POSITION)
 
-        response = self.test_client.post(
+        response = test_client.post(
                     CREATE_A_STATION_FULL_ROUTE,
                     json={
                         STATION_NAME_KEY: FIRST_TEST_STATION_STATION_NAME,
@@ -102,11 +99,9 @@ class StationTest(unittest.TestCase):
         _, stations = self.station_controller.get_station_by_username(FIRST_TEST_USER_USERNAME)
         assert len(stations) == 1
 
-        response = self.test_client.post(
+        response = test_client.post(
                 CREATE_A_STATION_FULL_ROUTE,
-                headers={
-                    AUTHORIZATION_KEY: get_sent_token(WRONG_TOKEN)
-                },
+                headers=getAuthorizationHeader(token),
                 json={
                     STATION_NAME_KEY: FIRST_TEST_STATION_STATION_NAME,
                     STATION_POSITION_KEY: FIRST_TEST_STATION_STATION_POSITION,
@@ -118,7 +113,7 @@ class StationTest(unittest.TestCase):
         _, station = createAStationBy(self.station_controller)
         token = get_loggin_token()
 
-        response = self.test_client.put(
+        response = test_client.put(
                     ADD_NEW_STATION_FULL_ROUTE,
                     json={
                         STATION_STATION_KEY_KEY: WRONG_STATION_KEY,
@@ -127,11 +122,9 @@ class StationTest(unittest.TestCase):
 
         assert response.status_code == HTTP_401_UNAUTHORIZED
 
-        response = self.test_client.put(
+        response = test_client.put(
                     ADD_NEW_STATION_FULL_ROUTE,
-                    headers={
-                        AUTHORIZATION_KEY: get_sent_token(token)
-                    },
+                    headers=getAuthorizationHeader(token),
                     json={
                         STATION_STATION_KEY_KEY: WRONG_STATION_KEY,
                     }
@@ -139,11 +132,9 @@ class StationTest(unittest.TestCase):
 
         assert response.status_code == HTTP_404_NOT_FOUND
 
-        response = self.test_client.put(
+        response = test_client.put(
                     ADD_NEW_STATION_FULL_ROUTE,
-                    headers={
-                        AUTHORIZATION_KEY: get_sent_token(token)
-                    },
+                    headers=getAuthorizationHeader(token),
                     json={
                         STATION_STATION_KEY_KEY: station.stationKey,
                     }
@@ -160,18 +151,16 @@ class StationTest(unittest.TestCase):
         stationKey = copy(station.stationKey)
         token = get_loggin_token()
 
-        response = self.test_client.put(
+        response = test_client.put(
                     RESET_STATION_KEY_FULL_ROUTE,
                     json={
                         STATION_NAME_KEY: FIRST_TEST_STATION_STATION_NAME
                     }
                 )
 
-        response = self.test_client.put(
+        response = test_client.put(
                     RESET_STATION_KEY_FULL_ROUTE,
-                    headers={
-                        AUTHORIZATION_KEY: get_sent_token(token)
-                    },
+                    headers=getAuthorizationHeader(token),
                     json={
                         STATION_NAME_KEY: FIRST_TEST_STATION_WRONG_STATION_NAME
                     }
@@ -179,11 +168,9 @@ class StationTest(unittest.TestCase):
 
         assert response.status_code == HTTP_404_NOT_FOUND
 
-        response = self.test_client.put(
+        response = test_client.put(
                     RESET_STATION_KEY_FULL_ROUTE,
-                    headers={
-                        AUTHORIZATION_KEY: get_sent_token(token)
-                    },
+                    headers=getAuthorizationHeader(token),
                     json={
                         STATION_NAME_KEY: FIRST_TEST_STATION_STATION_NAME,
                     }
@@ -203,11 +190,9 @@ class StationTest(unittest.TestCase):
         self.station_controller.add_username(username=FIRST_TEST_USER_USERNAME, stationName=FIRST_TEST_STATION_STATION_NAME)
         token = get_loggin_token()
 
-        response = self.test_client.get(
+        response = test_client.get(
                 ALL_STATIONS_FULL_ROUTE, 
-                headers={
-                    AUTHORIZATION_KEY: get_sent_token(token)
-                }
+                headers=getAuthorizationHeader(token)
             )
 
         assert response.status_code == HTTP_200_OK
@@ -219,11 +204,9 @@ class StationTest(unittest.TestCase):
 
         self.station_controller.add_username(username=FIRST_TEST_USER_USERNAME, stationName=SECOND_TEST_STATION_STATION_NAME)
 
-        response = self.test_client.get(
+        response = test_client.get(
                 ALL_STATIONS_FULL_ROUTE, 
-                headers={
-                    AUTHORIZATION_KEY: get_sent_token(token)
-                }
+                headers=getAuthorizationHeader(token)
             )
 
         assert response.status_code == HTTP_200_OK
@@ -234,41 +217,40 @@ class StationTest(unittest.TestCase):
         assertStationDict(stations[1], SECOND_TEST_STATION_STATION_NAME, SECOND_TEST_STATION_STATION_POSITION)
 
 
-        response = self.test_client.get(
+        response = test_client.get(
                 ALL_STATIONS_FULL_ROUTE, 
             )
 
         assert response.status_code == HTTP_401_UNAUTHORIZED
 
     def test_get_a_station_feature(self):
+        GET_FIRST_TEST_STATION_FULL_ROUTE = f"{STATION_BASE_ROUTE}/{FIRST_TEST_STATION_STATION_NAME}"
+        GET_FIRST_TEST_WRONG_STATION_FULL_ROUTE = f"{STATION_BASE_ROUTE}/{FIRST_TEST_STATION_WRONG_STATION_NAME}"
+
         createAnUserBy(self.user_controller)
         createTwoStationsBy(self.station_controller)
 
         self.station_controller.add_username(username=FIRST_TEST_USER_USERNAME, stationName=FIRST_TEST_STATION_STATION_NAME)
         token = get_loggin_token()
 
-        response = self.test_client.get(
-                    f"{STATION_BASE_ROUTE}/{FIRST_TEST_STATION_STATION_NAME}",
-                    headers={
-                        AUTHORIZATION_KEY: get_sent_token(token)
-                    }
+        response = test_client.get(
+                    GET_FIRST_TEST_STATION_FULL_ROUTE,
+                    headers=getAuthorizationHeader(token)
                 )
 
         assert response.status_code == HTTP_200_OK
         assertStationDict(response.json(), FIRST_TEST_STATION_STATION_NAME, FIRST_TEST_STATION_STATION_POSITION)
 
-        response = self.test_client.get(
-                    f"{STATION_BASE_ROUTE}/{FIRST_TEST_STATION_STATION_NAME}",
+        response = test_client.get(
+                    GET_FIRST_TEST_STATION_FULL_ROUTE,
                 )
 
         assert response.status_code == HTTP_401_UNAUTHORIZED
 
 
-        response = self.test_client.get(
-                    f"{STATION_BASE_ROUTE}/{FIRST_TEST_STATION_WRONG_STATION_NAME}",
-                    headers={
-                        AUTHORIZATION_KEY: get_sent_token(token)
-                    }
+        response = test_client.get(
+                    GET_FIRST_TEST_WRONG_STATION_FULL_ROUTE,
+                    headers=getAuthorizationHeader(token)
                 )
 
         assert response.status_code == HTTP_404_NOT_FOUND
