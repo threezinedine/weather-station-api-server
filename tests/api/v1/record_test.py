@@ -123,3 +123,20 @@ class RecordTest(unittest.TestCase):
         )
 
         assert response.status_code == HTTP_401_UNAUTHORIZED
+
+    def test_get_all_records(self):
+        createARecordAStationAndTwoUserBy(self.user_controller, self.station_controller, self.record_controller)
+
+        route = f"/records/{FIRST_TEST_STATION_STATION_NAME}/"
+        wrong_route = f"/records/{FIRST_TEST_STATION_WRONG_STATION_NAME}/"
+
+        token = get_loggin_token()
+        token_2 = get_loggin_token_user_2()
+
+        response = test_client.get(
+            route,    
+            headers=getAuthorizationHeader(token)
+        )
+
+        assert response.status_code == HTTP_200_OK
+        assertRecordDict(response.json()[0], FIRST_RECORD_TESTING)
