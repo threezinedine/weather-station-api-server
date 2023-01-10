@@ -1,3 +1,6 @@
+from typing import (
+    List,
+)
 from fastapi import (
     Depends,
 )
@@ -10,6 +13,7 @@ from app.controllers import RecordController
 from app import (
     CREATE_RECORD_ROUTE,
     GET_THE_LATEST_RECORD_ROUTE,
+    GET_ALL_RECORDS_ROUTE,
 )
 from app.constants import (
     HTTP_200_OK,
@@ -45,3 +49,14 @@ def get_the_latest_record(stationName: str, session: Session = Depends(get_sessi
 
     return record
 
+@router.get(GET_ALL_RECORDS_ROUTE,
+        status_code=HTTP_200_OK,
+        response_model=List[WeatherData])
+def get_all_record(stationName: str, session: Session = Depends(get_session), username: str = Depends(verify_token)):
+    record_controller = RecordController(session)
+
+    status, records = record_controller.get_all_records_by_username_and_station_name(username=username, stationName=stationName)
+    handleStatus(status)
+    print(records)
+
+    return records
