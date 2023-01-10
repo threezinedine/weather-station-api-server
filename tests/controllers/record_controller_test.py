@@ -201,3 +201,11 @@ class RecordControllerTest(unittest.TestCase):
 
         assertStatus(status, STATION_DOES_NOT_EXIST_STATUS)
         assert records is None
+
+    def test_given_a_record_station_users_are_created_with_relationship_of_the_first_user_when_querying_all_records_with_non_existed_username_then_return_user_does_not_exist_and_none(self):
+        createARecordAStationAndTwoUserBy(self.user_controller, self.station_controller, self.record_controller)
+
+        status, records = self.record_controller.get_all_stations_by_username_and_station_name(username=FIRST_TEST_USER_WRONG_USERNAME, stationName=FIRST_TEST_STATION_STATION_NAME)
+
+        assertStatus(status, USER_DOES_NOT_EXIST_STATUS)
+        assert records is None
