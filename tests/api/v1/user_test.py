@@ -28,6 +28,7 @@ from app import (
 from app.controllers import UserController
 from app.exceptions import (
     HTTP_200_OK,
+    HTTP_401_UNAUTHORIZED,
     USER_DOES_NOT_EXIST_STATUS_CODE,
     USER_EXIST_STATUS_CODE,
 )
@@ -99,3 +100,9 @@ class UserTest(unittest.TestCase):
                 )
 
         assert response.status_code == HTTP_200_OK
+
+        response = test_client.get(
+                    TOKEN_VALIDATION_FULL_ROUTE
+                )
+
+        assert response.status_code == HTTP_401_UNAUTHORIZED
