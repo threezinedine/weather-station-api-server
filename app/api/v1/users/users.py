@@ -17,6 +17,7 @@ from app.schemas import (
 )
 from app.auth import (
     generate_token,
+    verify_token,
 )
 from app.constants import (
     USERNAME_KEY,
@@ -32,6 +33,7 @@ from app.exceptions import (
 from app import (
     LOGIN_ROUTE,
     REGISTER_ROUTE,
+    TOKEN_VALIDATION_ROUTE,
 )
 from app.constants import (
     USERNAME_KEY,
@@ -66,3 +68,9 @@ def login_a_new_user(username: str = Form(), password: str = Form(), session: Se
         }))
 
     return response
+
+@router.get(TOKEN_VALIDATION_ROUTE,
+        status_code=HTTP_200_OK)
+def validate_validation(username: str = Depends(verify_token)):
+    return {}
+

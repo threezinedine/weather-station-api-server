@@ -26,11 +26,10 @@ def generate_token(payload: Dict[str, str], expired_delta: timedelta = timedelta
     return token
 
 def verify_token(token: str = Depends(auth2_scheme)) -> Dict[str, str]:
-    print(token)
     try:
         payload = jwt.decode(token, secret_key, algorithms=["HS256"])
     except (jwt.DecodeError, jwt.ExpiredSignatureError) as e:
-        print(e)
+        print("Error: ", e)
         raise HTTPException(status_code=401, detail="Unauthorized")
     
     return payload[USERNAME_KEY]

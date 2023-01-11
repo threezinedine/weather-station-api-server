@@ -10,6 +10,8 @@ from tests import (
     FIRST_TEST_USER_WRONG_USERNAME,
     FIRST_TEST_USER_NEW_PASSWORD,
     test_client,
+    get_loggin_token,
+    getAuthorizationHeader,
 )
 from app.constants import (
     USERNAME_KEY,
@@ -21,6 +23,7 @@ from app.constants import (
 from app import (
     LOGIN_FULL_ROUTE,
     REGISTER_FULL_ROUTE,
+    TOKEN_VALIDATION_FULL_ROUTE,
 )
 from app.controllers import UserController
 from app.exceptions import (
@@ -85,3 +88,14 @@ class UserTest(unittest.TestCase):
                 )
 
         assert response.status_code == USER_DOES_NOT_EXIST_STATUS_CODE
+
+    def test_token_validation(self):
+        createAnUserBy(self.user_controller)
+        token = get_loggin_token()
+
+        response = test_client.get(
+                    TOKEN_VALIDATION_FULL_ROUTE,
+                    headers=getAuthorizationHeader(token)
+                )
+
+        assert response.status_code == HTTP_200_OK
