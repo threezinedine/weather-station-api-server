@@ -72,5 +72,7 @@ def login_a_new_user(username: str = Form(), password: str = Form(), session: Se
 @router.get(TOKEN_VALIDATION_ROUTE,
         status_code=HTTP_200_OK)
 def validate_validation(username: str = Depends(verify_token)):
-    return {}
+    return {
+        USERNAME_KEY: username
+    }
 

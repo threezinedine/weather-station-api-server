@@ -100,6 +100,7 @@ class UserTest(unittest.TestCase):
                 )
 
         assert response.status_code == HTTP_200_OK
+        assert response.json()[USERNAME_KEY] == FIRST_TEST_USER_USERNAME
 
         response = test_client.get(
                     TOKEN_VALIDATION_FULL_ROUTE
